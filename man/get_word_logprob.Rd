@@ -2,17 +2,21 @@
 % Please edit documentation in R/minicons.R
 \name{get_word_logprob}
 \alias{get_word_logprob}
-\title{Get log probability of each word of a vector of words given its previous context.}
+\title{Get the log probability of each word of a vector of words given its previous context.}
 \usage{
 get_word_logprob(
-  word,
-  text_id = rep(1, length(word)),
+  x,
+  by = rep(1, length(x)),
   model = "gpt2",
   device = "cpu",
   return_token = TRUE
 )
 }
 \arguments{
+\item{x}{Vector of words or texts.}
+
+\item{by}{Vector that indicates how the text should be split}
+
 \item{model}{Name of the model, should either be a path  to a model (.pt or .bin file) stored locally, or a  pretrained model stored on the Huggingface Model Hub.}
 
 \item{device}{device type that the model should be loaded on, options: "cpu" or "cuda:{0, 1, ...}"?}
@@ -21,5 +25,5 @@ get_word_logprob(
 
 }
 \description{
-Get log probability of each word of a vector of words given its previous context.
+Get the log probability of each word of a vector of words given its previous context.
 }

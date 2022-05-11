@@ -1,5 +1,9 @@
-# global reference to scipy (will be initialized in .onLoad)
+# global references (will be initialized in .onLoad)
 minicons <- NULL
+## store the datasets here:
+.pkg_env <- new.env(parent=emptyenv())
+# data table :=
+.datatable.aware <- TRUE
 
 .onLoad <- function(libname, pkgname) {
   # use superassignment to update global reference
@@ -11,6 +15,7 @@ minicons <- NULL
     )
     toset <- !(names(op.pangolang) %in% names(op))
     if (any(toset)) options(op.pangolang[toset])
+
 
     invisible()
 

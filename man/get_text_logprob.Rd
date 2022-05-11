@@ -2,11 +2,13 @@
 % Please edit documentation in R/minicons.R
 \name{get_text_logprob}
 \alias{get_text_logprob}
-\title{Get log probability of each word of a text given its previous context.}
+\title{Get the log probability of each word of a text given its previous context.}
 \usage{
-get_text_logprob(text, model = "gpt2", device = "cpu")
+get_text_logprob(x, model = "gpt2", device = "cpu")
 }
 \arguments{
+\item{x}{Text}
+
 \item{model}{Name of the model, should either be a path  to a model (.pt or .bin file) stored locally, or a  pretrained model stored on the Huggingface Model Hub.}
 
 \item{device}{device type that the model should be loaded on, options: "cpu" or "cuda:{0, 1, ...}"?}
@@ -15,5 +17,5 @@ get_text_logprob(text, model = "gpt2", device = "cpu")
 
 }
 \description{
-Get log probability of each word of a text given its previous context.
+Get the log probability of each word of a text given its previous context.
 }
