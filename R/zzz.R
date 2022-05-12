@@ -11,7 +11,8 @@ minicons <- NULL
     #TODO message or something if it's not installed
     op <- options()
     op.pangolang <- list(
-      pangolang.verbose = TRUE
+      pangolang.verbose = TRUE,
+      pangolang.cache = cachem::cache_mem(max_size = 1024 * 1024^2)
     )
     toset <- !(names(op.pangolang) %in% names(op))
     if (any(toset)) options(op.pangolang[toset])

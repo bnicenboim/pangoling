@@ -34,9 +34,10 @@ get_text_logprob <- function(x, model = "gpt2", device = "cpu"){
 #' @export
 get_word_logprob <- function(x, by = rep(1, length(x)), model = "gpt2", device = "cpu"){
   texts <- split(x, by)
-  word_logprob_ls <- lapply(texts, function(t){
+  N <- length(texts)
+  word_logprob_ls <- tidytable::map2.(texts, seq_along(texts), function(t,i){
     text <- t %>% paste(collapse = " ")
-    message_verbose("Probabilities for text:\n '", text, "'")
+    message_verbose("Probabilities for text (",i,"/",N,"):\n '", text, "'")
     tokens <- get_text_logprob(text, model = model, device = device)
     out_t <- tidytable::tidytable(x = t, logprob =0,token = "|")
     r <- 1

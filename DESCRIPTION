@@ -10,6 +10,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    cachem,
     data.table,
     magrittr,
     memoise,
@@ -17,6 +18,7 @@ Imports:
     reticulate,
     tidytable
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    openxlsx
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2

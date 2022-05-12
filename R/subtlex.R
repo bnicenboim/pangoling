@@ -2,12 +2,11 @@
 #'
 #' @param x
 #' @param source
-#' @param language
-#' @param location
 #' @param ignore_case
 #' @param remove_punc
 #' @param regex
 #'
+#' @return
 #' From https://www.ugent.be/pp/experimentele-psychologie/en/research/documents/subtlexus
 #' The word. This starts with a capital when the word more often starts with an uppercase letter than with a lowercase letter.
 #' FREQcount. This is the number of times the word appears in the corpus (i.e., on the total of 51 million words).
@@ -29,23 +28,23 @@
 #' 1.93 	1
 #' 2.92 	10
 #' 3.92 	100
-#' @return
+#'
+#' The dominant (most frequent) PoS of each entry
+#' The frequency of the dominant PoS
+#' The relative frequency of the dominant PoS
+#' All PoS observed for the entry
+#' The frequencies of each PoS
 #' @export
 #'
 #' @examples
-get_word_freq_tbl <- function(x, source = "subtlex",
-                              language = "english",
-                              location = "US",
+get_word_freq_tbl <- function(x, source =list(language = "english",
+                                              location = "US"),
                           ignore_case = TRUE,
                           remove_punc = "[[:punct:][:blank:]]",
                           regex = FALSE){
 
-  if(source == "subtlex" & language == "english" & location == "US") {
-   if(is.null(.pkg_env$subtlexus)) create_SUBTLEXus_rds()
-     df_freq <- .pkg_env$subtlexus
-  } else {
-    stop("Source/language/location is not available.", call. = FALSE)
-  }
+  df_freq <- get_all_word_freq_tbl(source)
+
   if(ignore_case == TRUE) {
     df_freq <- tidytable::mutate.(df_freq, word = tolower(word))
     x <- tolower(x)
@@ -60,48 +59,94 @@ get_word_freq_tbl <- function(x, source = "subtlex",
   }
 }
 
-create_SUBTLEXus_rds <- function(force = FALSE){
-  fileRDS <- "subtlexus.RDS"
+freq_source <- list(subtlexus = list(
+  description = "SUBTLEX-US word frequencies for American English with parts of speech",
+  url = "http://crr.ugent.be/papers/SUBTLEX-US_frequency_list_with_PoS_information_final_text_version.zip",
+  name = "subtlexus-pos",
+  language = "english",
+  location = "US",
+  filetype = "zip",
+  doi = c("10.3758/BRM.41.4.977", "10.3758/s13428-012-0190-4")),
+  subtlexnl = list(
+    description = "SUBTLEX-NL word frequencies for Dutch with parts of speech",
+    url = "http://crr.ugent.be/subtlex-nl/SUBTLEX-NL.cd-above2.with-pos.txt.zip",
+    name = "subtlexnl-pos",
+    language = "dutch",
+    location = "NL",
+    filetype = "zip",
+    doi = c("10.3758/BRM.42.3.643"))
+)
+
+
+create_rds <- function(source, force = FALSE){
+  fileRDS <- paste0(source$name,".RDS")
   if(!force){
   file_1 <- file.path(rappdirs::user_data_dir("pangolang"), fileRDS)
   file_2 <- file.path(tempdir(), fileRDS)
   which_file <- which.max(c(file.mtime(file_1), file.mtime(file_2)))
   if(length(which_file)!=0){
     # subtlexus <<- readRDS(c(file_1, file_2)[which_file])
-    assign("subtlexus", readRDS(c(file_1, file_2)[which_file]), envir=.pkg_env)
-
+    assign(source$name, readRDS(c(file_1, file_2)[which_file]), envir=.pkg_env)
     return(invisible())
+    }
   }
-  }
-  url <- "https://www.ugent.be/pp/experimentele-psychologie/en/research/documents/subtlexus/subtlexus2.zip"
-  file <- file.path(tempdir(),"subtlexus2.zip")
+  file <- file.path(tempdir(),paste0(source$name,".",source$filetype))
   if(interactive()){
     choices <- c("yes","no")
-  choice <- menu(choices, title = paste0("Do you want to download subtlexus data set from [",url,"] ?"))
+  choice <- menu(choices, title = paste0("Do you want to download ", source$name," data set from [",source$url,"] ?"))
   if(choices[choice] != "yes") stop("Cannot continue without downloading the dataset."
                       )
   }
-  httr::GET(url,
+  httr::GET(source$url,
             httr::write_disk(file, overwrite = TRUE),
             httr::progress())
-  metadata <- unzip(file, exdir = tempdir(), list = TRUE)
-  utils::unzip(file, exdir = tempdir())
-  subtlexus <- tidytable::fread.(file.path(tempdir(),metadata$Name)) %>%
-    tidytable::rename.(word = Word,
-                       freq_count = FREQcount,
-                       cd_count = CDcount,
-                       freq_count_lc = FREQlow,
-                       cd_count_lc = Cdlow,
-                       freq_per_million = SUBTLWF,
-                       log10_freq_count = Lg10WF,
-                       cd_percent = SUBTLCD,
-                       log10_cd_count = Lg10WF)
+  if(source$filetype =="zip"){
+    metadata <- unzip(file, exdir = tempdir(), list = TRUE)
+    utils::unzip(file, exdir = tempdir())
+    file <- file.path(tempdir(),metadata$Name)
+  } else if(source$filetype =="xlsx"){
+  #TODO
+    }
 
-  attributes(subtlexus)$original_filename <- metadata$Name
-  attributes(subtlexus)$original_date <- metadata$Date
-  attributes(subtlexus)$download_date <- Sys.Date()
-  assign("subtlexus", subtlexus, envir=.pkg_env)
-  writeRDS(subtlexus,filename = fileRDS)
+  namekey <- c(freq_count = "FREQcount",
+          cd_count = "CDcount",
+    freq_count_lc = "FREQlow",
+    cd_count_lc = "Cdlow",
+    cd_count_lc = "CDlow",
+    freq_per_million = "SUBTLWF",
+    freq_per_million = "SUBTLEXWF",
+    freq_lemma = "FREQlemma",
+    log10freq_count = "Lg10WF",
+    cd_percent = "SUBTLCD",
+    cd_percent = "SUBTLEXCD",
+
+    log10cd_count = "Lg10WF",
+    log10_cd = "Lg10CD",
+    dom_pos = "Dom_PoS_SUBTLEX",
+    dom_pos = "dominant.pos",
+
+    freq_dom_pos = "Freq_dom_PoS_SUBTLEX",
+    freq_dom_pos = "dominant.pos.freq",
+    dom_pos_perc = "Percentage_dom_PoS",
+    dom_pos_lemma = "dominant.pos.lemma",
+    all_pos = "All_PoS_SUBTLEX",
+    all_pos = "all.pos",
+    freq_all_pos = "All_freqs_SUBTLEX",
+    freq_all_pos = "all.pos.freq",
+    freq_all_pos_lemma = "all.pos.lemma.freq",
+    word = "Word"
+    )
+
+  freq_tbl <- tidytable::fread.(file)
+  old_names <- names(freq_tbl)
+  new_names <- names(namekey)
+  names(freq_tbl)[old_names %in% namekey] <- names(namekey[match(old_names, namekey, nomatch= 0) ])
+
+  # attributes(freq_tbl)$original_filename <- metadata$Name
+  # attributes(freq_tbl)$original_date <- metadata$Date
+  attributes(freq_tbl)$download_date <- Sys.Date()
+  assign(source$name, freq_tbl, envir=.pkg_env)
+  writeRDS(freq_tbl,filename = fileRDS)
   invisible()
 }
 
@@ -116,15 +161,14 @@ create_SUBTLEXus_rds <- function(force = FALSE){
 #' @export
 #'
 #' @examples
-get_all_word_freq_tbl <- function(x, source = "subtlex",
-                              language = "english",
-                              location = "US"){
-  if(source == "subtlex" & language == "english" & location == "US") {
-    if(is.null(.pkg_env$subtlexus)) {
-      create_SUBTLEXus_rds()
-    }
-    return(.pkg_env$subtlexus)
-  } else {
-    stop("Source/language/location is not available.", call. = FALSE)
-  }
+get_all_word_freq_tbl <- function(source =list(
+                                                  language = "english")){
+  possible_sources <- tidytable::map2.(source, names(source), ~ which(sapply(freq_source, function(x) x[[.y]] == .x)))
+  source_index <- Reduce(intersect, possible_sources)
+  if(length(source_index)==0) stop("Source/language/location is not available.", call. = FALSE)
+  source <- freq_source[[source_index]]
+
+  if(is.null(.pkg_env[[source$name]])) create_rds(source)
+
+ .pkg_env[[source$name]]
 }
