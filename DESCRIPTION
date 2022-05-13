@@ -22,3 +22,4 @@ Suggests:
     openxlsx
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2
+Roxygen: list(markdown = TRUE)

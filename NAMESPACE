@@ -2,9 +2,9 @@
 
 export("%>%")
 export(get_all_word_freq_tbl)
-export(get_text_logprob)
+export(get_text_log_prob)
 export(get_word_freq_tbl)
-export(get_word_logprob)
+export(get_word_log_prob)
 export(install_minicons)
 importFrom(magrittr,"%>%")
 importFrom(memoise,memoise)

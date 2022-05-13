@@ -9,14 +9,14 @@
 #'
 #' @examples
 #' @export
-get_text_logprob <- function(x, model = "gpt2", device = "cpu"){
+get_text_log_prob <- function(x, model = "gpt2", device = "cpu"){
   if(!memoise::has_cache(incremental_LM_scorer)(model, device) ){
     message_verbose("Loading model ", model," in ", device,"...\n")
   }
   LM <- incremental_LM_scorer(model, device)
-  py_logprobs <- LM$logprobs(LM$prepare_text(x))
-  tidytable::tidytable(logprob = reticulate::py_to_r(py_logprobs)[[1]][[1]]$numpy(),
-                       token = reticulate::py_to_r(py_logprobs)[[1]][[2]] %>%
+  py_log_probs <- LM$logprobs(LM$prepare_text(x))
+  tidytable::tidytable(log_prob = reticulate::py_to_r(py_log_probs)[[1]][[1]]$numpy(),
+                       token = reticulate::py_to_r(py_log_probs)[[1]][[2]] %>%
                          chr_remove("Ġ"))
 }
 
@@ -32,18 +32,18 @@ get_text_logprob <- function(x, model = "gpt2", device = "cpu"){
 #'
 #' @examples
 #' @export
-get_word_logprob <- function(x, by = rep(1, length(x)), model = "gpt2", device = "cpu"){
+get_word_log_prob <- function(x, by = rep(1, length(x)), model = "gpt2", device = "cpu"){
   texts <- split(x, by)
   N <- length(texts)
-  word_logprob_ls <- tidytable::map2.(texts, seq_along(texts), function(t,i){
+  word_log_prob_ls <- tidytable::map2.(texts, seq_along(texts), function(t,i){
     text <- t %>% paste(collapse = " ")
     message_verbose("Probabilities for text (",i,"/",N,"):\n '", text, "'")
-    tokens <- get_text_logprob(text, model = model, device = device)
-    out_t <- tidytable::tidytable(x = t, logprob =0,token = "|")
+    tokens <- get_text_log_prob(text, model = model, device = device)
+    out_t <- tidytable::tidytable(x = t, log_prob =0,token = "|")
     r <- 1
     for(i in 1:nrow(tokens)){
       #i=2
-      out_t$logprob[r] <- out_t[r,]$logprob + tokens$logprob[i]
+      out_t$log_prob[r] <- out_t[r,]$log_prob + tokens$log_prob[i]
       out_t$token[r] <- paste0(out_t[r,]$token, tokens$token[i],"|")
       if(out_t$x[r] == tokens$token[i] || chr_ends(out_t$x[r], tokens$token[i])){
         r <- r+1
@@ -52,7 +52,7 @@ get_word_logprob <- function(x, by = rep(1, length(x)), model = "gpt2", device =
     out_t
   })
 
-  tidytable::bind_rows.(word_logprob_ls) %>% tidytable::rename.(phrase = x)
+  tidytable::bind_rows.(word_log_prob_ls) %>% tidytable::rename.(phrase = x)
 }
 
 #' @noRd

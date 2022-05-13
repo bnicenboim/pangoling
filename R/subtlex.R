@@ -1,44 +1,36 @@
 #' Get a table with word frequencies.
 #'
-#' @param x
-#' @param source
-#' @param ignore_case
-#' @param remove_punc
-#' @param regex
+#' Produces a table with word frequencies from subtlex EXPLAIN ABOUT CITATIONS.
 #'
-#' @return
-#' From https://www.ugent.be/pp/experimentele-psychologie/en/research/documents/subtlexus
-#' The word. This starts with a capital when the word more often starts with an uppercase letter than with a lowercase letter.
-#' FREQcount. This is the number of times the word appears in the corpus (i.e., on the total of 51 million words).
-#' CDcount. This is the number of films in which the word appears (i.e., it has a maximum value of 8,388).
-#' FREQlow. This is the number of times the word appears in the corpus starting with a lowercase letter. This allows users to further match their stimuli.
-#' CDlow. This is the number of films in which the word appears starting with a lowercase letter.
-#' SUBTLWF. This is the word frequency per million words. It is the measure you would preferably use in your manuscripts, because it is a standard measure of word frequency independent of the corpus size. It is given with two digits precision, in order not to lose precision of the frequency counts.
-#' Lg10WF. This value is based on log10(FREQcount+1) and has four digit precision. Because FREQcount is based on 51 million words, the following conversions apply for SUBTLEXUS:
-#'   Lg10WF 	SUBTLWF
-#' 1.00 	0.2
-#' 2.00 	2
-#' 3.00 	20
-#' 4.00 	200
-#' 5.00 	2000
-#' SUBTLCD indicates in how many percent of the films the word appears. This value has two-digit precision in order not to lose information.
-#' Lg10CD. This value is based on log10(CDcount+1) and has four digit precision. It is the best value to use if you want to match words on word frequency. As CDcount is based on 8388 films, the following conversions apply:
-#'   Lg10CD 	SUBTLCD
-#' 0.95 	0.1
-#' 1.93 	1
-#' 2.92 	10
-#' 3.92 	100
+#' @details Frequencies extracted from subtlex return (a subset) of the following columns:
 #'
-#' The dominant (most frequent) PoS of each entry
-#' The frequency of the dominant PoS
-#' The relative frequency of the dominant PoS
-#' All PoS observed for the entry
-#' The frequencies of each PoS
+#' * word. This starts with a capital when the word more often starts with an uppercase letter than with a lowercase letter.
+#' * freq_count. This is the number of times the word appears in the corpus (i.e., on the total of 51 million words).
+#' * cd_count. This is the number of films in which the word appears (i.e., it has a maximum value of 8,388).
+#' * freq_count_lc. This is the number of times the word appears in the corpus starting with a lowercase letter. This allows users to further match their stimuli.
+#' * cd_count_lc. This is the number of films in which the word appears starting with a lowercase letter.
+#' * freq_per_million. This is the word frequency per million words. It is the measure you would preferably use in your manuscripts, because it is a standard measure of word frequency independent of the corpus size. It is given with two digits precision, in order not to lose precision of the frequency counts.
+#' * log10freq_count. This value is based on log10(freq_count+1) and has four digit precision.
+#' * cd_percent. indicates in how many percent of the films the word appears. This value has two-digit precision in order not to lose information.
+#' *log10_cd. This value is based on log10(CDcount+1) and has four digit precision. It is the best value to use if you want to match words on word frequency.
+#' * dom_pos. The dominant (most frequent) PoS of each entry
+#' * freq_dom_pos. The frequency of the dominant PoS
+#' * dom_pos_perc. The relative frequency of the dominant PoS
+#' * all_pos. All PoS observed for the entry
+#' * freq_all_pos.The frequencies of each PoS
+#'
+#' @param x a vector of words.
+#' @param source source of the frequency values. By default uses the locale of the system. Either a source name from `freq_sources()` or a list with the approriate constraints e.g., `list(language = "English")`.
+#' @param ignore_case ignores case.
+#' @param remove_punc removes punctuation.
+#' @param regex allows for regex.
+#'
+#' @return a data frame.
 #' @export
+#' @family frequency
 #'
 #' @examples
-get_word_freq_tbl <- function(x, source =list(language = "english",
-                                              location = "US"),
+get_word_freq_tbl <- function(x, source = NULL,
                           ignore_case = TRUE,
                           remove_punc = "[[:punct:][:blank:]]",
                           regex = FALSE){
@@ -53,18 +45,39 @@ get_word_freq_tbl <- function(x, source =list(language = "english",
     x <-  chr_remove(x, remove_punc)
   }
   if(regex) {
-    data.table::like(vector, pattern, ignore.case = FALSE, fixed = FALSE)
+    df_freq[data.table::like(df_freq$word, x, ignore.case = FALSE, fixed = FALSE),]
   } else {
     df_freq[data.table::chmatch(x,df_freq$word),]
   }
 }
 
-freq_source <- list(subtlexus = list(
+
+#' @rdname get_word_freq_tbl
+#' @export
+get_all_word_freq_tbl <- function(source = NULL){
+  if(is.character(source)){
+    source<- freq_sources_lst[[source]]
+  } else {
+    if(is.null(source)) source = list(locale = paste0(get_lang_locale(), collapse = "_"))
+
+    possible_sources <- tidytable::map2.(source, names(source), ~ which(sapply(freq_sources_lst, function(x) tolower(x[[.y]]) == tolower(.x))))
+    source_index <- Reduce(intersect, possible_sources)
+    if(length(source_index)==0) stop("Source/language/location is not available.", call. = FALSE)
+    source <- freq_sources_lst[[source_index]]
+  }
+  if(is.null(.pkg_env[[source$name]])) create_rds(source)
+
+  .pkg_env[[source$name]]
+}
+
+
+freq_sources_lst <- list(subtlexus = list(
   description = "SUBTLEX-US word frequencies for American English with parts of speech",
   url = "http://crr.ugent.be/papers/SUBTLEX-US_frequency_list_with_PoS_information_final_text_version.zip",
   name = "subtlexus-pos",
   language = "english",
   location = "US",
+  locale = "en_US",
   filetype = "zip",
   doi = c("10.3758/BRM.41.4.977", "10.3758/s13428-012-0190-4")),
   subtlexnl = list(
@@ -73,9 +86,21 @@ freq_source <- list(subtlexus = list(
     name = "subtlexnl-pos",
     language = "dutch",
     location = "NL",
+    locale = "nl_NL",
     filetype = "zip",
     doi = c("10.3758/BRM.42.3.643"))
 )
+
+#' List of frequency sources
+#'
+#'
+#' @return list of frequency sources for [get_all_word_freq_tbl()] and [get_word_freq_tbl()]
+#' @family frequency
+#'
+#' @examples
+freq_sources <- function(){
+  freq_sources_lst
+}
 
 
 create_rds <- function(source, force = FALSE){
@@ -150,25 +175,3 @@ create_rds <- function(source, force = FALSE){
   invisible()
 }
 
-#' Title
-#'
-#' @param x
-#' @param source
-#' @param language
-#' @param location
-#'
-#' @return
-#' @export
-#'
-#' @examples
-get_all_word_freq_tbl <- function(source =list(
-                                                  language = "english")){
-  possible_sources <- tidytable::map2.(source, names(source), ~ which(sapply(freq_source, function(x) x[[.y]] == .x)))
-  source_index <- Reduce(intersect, possible_sources)
-  if(length(source_index)==0) stop("Source/language/location is not available.", call. = FALSE)
-  source <- freq_source[[source_index]]
-
-  if(is.null(.pkg_env[[source$name]])) create_rds(source)
-
- .pkg_env[[source$name]]
-}
