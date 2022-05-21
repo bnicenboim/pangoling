@@ -7,7 +7,13 @@ chr_remove <- function(string, pattern) {
 chr_ends <- function(string, pattern) {
   endsWith(x = string, suffix = pattern)
 }
-
+#' @noRd
+chr_split <- function(string, pattern) {
+  strsplit(x = string, split = pattern)
+}
+chr_replace_all <- function(string, pattern, replacement){
+  gsub(pattern, replacement, string)
+}
 #' Replacement of str_match
 #' @noRd
 chr_match <- function(string, pattern) {

@@ -65,7 +65,7 @@ get_all_word_freq_tbl <- function(source = NULL){
     if(length(source_index)==0) stop("Source/language/location is not available.", call. = FALSE)
     source <- freq_sources_lst[[source_index]]
   }
-  if(is.null(.pkg_env[[source$name]])) create_rds(source)
+  if(is.null(.pkg_env[[source$name]])) create_subtlex_rds(source)
 
   .pkg_env[[source$name]]
 }
@@ -103,36 +103,8 @@ freq_sources <- function(){
 }
 
 
-create_rds <- function(source, force = FALSE){
-  fileRDS <- paste0(source$name,".RDS")
-  if(!force){
-  file_1 <- file.path(rappdirs::user_data_dir("pangolang"), fileRDS)
-  file_2 <- file.path(tempdir(), fileRDS)
-  which_file <- which.max(c(file.mtime(file_1), file.mtime(file_2)))
-  if(length(which_file)!=0){
-    # subtlexus <<- readRDS(c(file_1, file_2)[which_file])
-    assign(source$name, readRDS(c(file_1, file_2)[which_file]), envir=.pkg_env)
-    return(invisible())
-    }
-  }
-  file <- file.path(tempdir(),paste0(source$name,".",source$filetype))
-  if(interactive()){
-    choices <- c("yes","no")
-  choice <- menu(choices, title = paste0("Do you want to download ", source$name," data set from [",source$url,"] ?"))
-  if(choices[choice] != "yes") stop("Cannot continue without downloading the dataset."
-                      )
-  }
-  httr::GET(source$url,
-            httr::write_disk(file, overwrite = TRUE),
-            httr::progress())
-  if(source$filetype =="zip"){
-    metadata <- unzip(file, exdir = tempdir(), list = TRUE)
-    utils::unzip(file, exdir = tempdir())
-    file <- file.path(tempdir(),metadata$Name)
-  } else if(source$filetype =="xlsx"){
-  #TODO
-    }
-
+create_subtlex_rds <- function(source, force = FALSE){
+  freq_tbl <- download_data(source, force)
   namekey <- c(freq_count = "FREQcount",
           cd_count = "CDcount",
     freq_count_lc = "FREQlow",
@@ -162,14 +134,12 @@ create_rds <- function(source, force = FALSE){
     word = "Word"
     )
 
-  freq_tbl <- tidytable::fread.(file)
   old_names <- names(freq_tbl)
   new_names <- names(namekey)
   names(freq_tbl)[old_names %in% namekey] <- names(namekey[match(old_names, namekey, nomatch= 0) ])
 
   # attributes(freq_tbl)$original_filename <- metadata$Name
   # attributes(freq_tbl)$original_date <- metadata$Date
-  attributes(freq_tbl)$download_date <- Sys.Date()
   assign(source$name, freq_tbl, envir=.pkg_env)
   writeRDS(freq_tbl,filename = fileRDS)
   invisible()

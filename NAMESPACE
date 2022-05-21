@@ -3,6 +3,8 @@
 export("%>%")
 export(get_all_word_freq_tbl)
 export(get_text_log_prob)
+export(get_tr_log_prob)
+export(get_tr_next_tokens_tbl)
 export(get_word_freq_tbl)
 export(get_word_log_prob)
 export(install_minicons)
