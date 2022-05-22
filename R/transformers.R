@@ -18,7 +18,7 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
   out <- tidytable::map2.(texts,names(texts), function(words,item) {
     # words <- texts[[1]]
     mat <- tr_log_prob_mat(words, eot = eot)
-    vocab <- get_vocab(model)
+    vocab <- get_tr_vocab(model)
     if(length(words) >1){
       words_lm <- c(words[1], paste0(" ", words[-1]))
     } else {
@@ -55,6 +55,70 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
   out
 }
 
+#' Title
+#'
+#' @param x
+#' @param by
+#' @param eot
+#' @param model
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_tr_entropy <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
+  x <- trimws(x, whitespace = "[ \t]")
+  texts <- split(x, by)
+  N <- length(texts)
+  out <- tidytable::map2.(texts,names(texts), function(words,item) {
+    # words <- texts[[1]]
+    mat <- tr_log_prob_mat(words, eot = eot)
+    #vocab <- get_tr_vocab(model)
+    if(length(words) >1){
+      words_lm <- c(words[1], paste0(" ", words[-1]))
+    } else {
+      words_lm <- words
+    }
+    tokens <- get_token.list(get_id(words_lm))
+    token_n <- tidytable::map_dbl.(tokens, length)
+    #index_vocab <- data.table::chmatch(unlist(tokens), vocab)
+    token_entropy <- apply(mat, 2, function(lp) -sum(exp(lp)*lp))
+    message_verbose("Text id: ",item,"\n`", text,"`")
+    if(options()$pangolang.debug) {
+      print("******")
+      sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
+      print(paste0("[",sent,"]", collapse = " "))
+      print(token_entropy)
+    }
+    n <- 1
+    word_entropy <- vector(mode="numeric", length(words))
+    for(i in seq_along(token_n)){
+      t <- token_n[i]
+      if(eot!=0 && n ==1){
+        # ignores the NA in the first column
+        word_entropy[i] <- sum(token_entropy[(n+1):(n+(t-1))])
+      } else {
+        word_entropy[i] <- sum(token_entropy[n:(n+(t-1))])
+      }
+      n <- n + t
+    }
+    word_entropy
+  })
+  out <- unlist(out)
+  names(out) <- x
+  out
+}
+#' Title
+#'
+#' @param x
+#' @param by
+#' @param eot
+#' @param model
+#'
+#' @return
+#' @export
+#'
+#' @examples
 get_tr_log_prob_mat <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
@@ -80,7 +144,7 @@ tr_log_prob_mat <- function(words, eot = 0){
   mat <- do.call("cbind",lp)
   # remove the last prediction, and the first is NA
   mat <- cbind(rep(NA,nrow(mat)), mat[,-ncol(mat)])
-  rownames(mat)  <- get_vocab(model)
+  rownames(mat)  <- get_tr_vocab(model)
   colnames(mat) <- unlist(tokens)
   mat
 }
@@ -105,7 +169,7 @@ get_tr_next_tokens_tbl <- function(context, model = "gpt2") {
   logits_next_word <- generated_outputs$logits[0][n_tokens-1]
   lp <- reticulate::py_to_r(torch$log_softmax(logits_next_word, dim = -1L)$tolist())%>% unlist()
 
-  tidytable::tidytable(token = get_vocab(model),  log_prob = lp) %>%
+  tidytable::tidytable(token = get_tr_vocab(model),  log_prob = lp) %>%
     tidytable::arrange.(-log_prob)
 }
 
@@ -125,6 +189,9 @@ tokenizer_init <- function(model = "gpt2") {
 tokenizer <- memoise::memoise(tokenizer_init)
 #' @noRd
 lang_model <- memoise::memoise(lang_model_init)
+
+
+
 #' @noRd
 get_vocab_init <- function(model = "gpt2") {
   size <- reticulate::py_to_r(tokenizer(model)$vocab_size)
@@ -132,8 +199,15 @@ get_vocab_init <- function(model = "gpt2") {
                                                                    1L)))
 }
 
-#' @noRd
-get_vocab <- memoise::memoise(get_vocab_init)
+#' Title
+#'
+#' @param model
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_tr_vocab <- memoise::memoise(get_vocab_init)
 
 
 
