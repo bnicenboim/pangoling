@@ -17,5 +17,5 @@ get_tr_log_prob(x, by = rep(1, length(x)), eot = 0, model = "gpt2")
 a vector of log probabilities.
 }
 \description{
-Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
+In case of errors check the status of https://status.huggingface.co/
 }
