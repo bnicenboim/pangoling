@@ -5,26 +5,27 @@
 #' @param x Vector of words, phrases or texts.
 #' @param by Vector that indicates how the text should be split.
 #' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
+#' @ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
 #' @eot 0 Does nothing, 1 adds an end of text tag at the beginning of a vector, 2 adds an end of text tag and a space at the beginning of a vector.
 #'
 #' @return a vector of log probabilities.
 #'
 #' @examples
 #' @export
-get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
+get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, ignore_regex = "",  model = "gpt2") {
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
   N <- length(texts)
   out <- tidytable::map2.(texts,names(texts), function(words,item) {
     # words <- texts[[1]]
-    mat <- tr_log_prob_mat(words, eot = eot)
+    mat <- tr_log_prob_mat(words, eot= eot, model = model)
     vocab <- get_tr_vocab(model)
     if(length(words) >1){
       words_lm <- c(words[1], paste0(" ", words[-1]))
     } else {
       words_lm <- words
     }
-    tokens <- get_token.list(get_id(words_lm))
+    tokens <- get_token.list(get_id(words_lm, model), model)
     token_n <- tidytable::map_dbl.(tokens, length)
     index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     token_lp <- tidytable::map2_dbl.(index_vocab,1:ncol(mat), ~ mat[.x,.y])
@@ -35,17 +36,21 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
       print(paste0("[",sent,"]", collapse = " "))
       print(token_lp)
     }
-
     n <- 1
     word_lp <- vector(mode="numeric", length(words))
-    for(i in seq_along(token_n)){
+    # It might ignore punctuation if ignore_regex is used
+    if(length(ignore_regex) >0 && ignore_regex != "") {
+      pos <- which(grepl(pattern = ignore_regex, x = unlist(tokens)))
+      token_lp[pos] <- 0
+    }
+    # ignores the NA in the first column if it starts with a special character
+    if(unlist(tokens)[1] %in% reticulate::py_to_r(tokenizer(model)$all_special_tokens)) token_lp[1] <- 0
+
+    for(i in  seq_along(token_n)){
       t <- token_n[i]
-      if(eot!=0 && n ==1){
-        # ignores the NA in the first column
-        word_lp[i] <- sum(token_lp[(n+1):(n+(t-1))])
-      } else {
-        word_lp[i] <- sum(token_lp[n:(n+(t-1))])
-      }
+
+
+      word_lp[i] <- sum(token_lp[n:(n+(t-1))])
       n <- n + t
     }
     word_lp
@@ -56,6 +61,8 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
 }
 
 #' Title
+#'
+#' Incorrect for multi-token words.
 #'
 #' @param x
 #' @param by
@@ -79,7 +86,7 @@ get_tr_entropy <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
     } else {
       words_lm <- words
     }
-    tokens <- get_token.list(get_id(words_lm))
+    tokens <- get_token.list(get_id(words_lm, model), model)
     token_n <- tidytable::map_dbl.(tokens, length)
     #index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     token_entropy <- apply(mat, 2, function(lp) -sum(exp(lp)*lp))
@@ -119,21 +126,22 @@ get_tr_entropy <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
 #' @export
 #'
 #' @examples
-get_tr_log_prob_mat <- function(x, by = rep(1, length(x)),eot = 0, model = "gpt2") {
+get_tr_log_prob_mat <- function(x, by = rep(1, length(x)),eot = 0,  model = "gpt2") {
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
   N <- length(texts)
   out <- tidytable::map2.(texts,names(texts), function(words,item) {
-    tr_log_prob_mat(words, eot= eot)
+    tr_log_prob_mat(words, eot= eot, model = model)
 
   })
 }
 
-tr_log_prob_mat <- function(words, eot = 0){
-  if(eot==1){
-    words[1] <- paste0("<|endoftext|>",words[1])
-  } else if(eot==2){
-    words[1] <- paste0("<|endoftext|> ",words[1])
+tr_log_prob_mat <- function(words, eot = 0,  model = "gpt2"){
+  if(eot !=0) {
+  eos <- tokenizer(model)$eos_token
+  eos_t <- tokenizer(model)$convert_tokens_to_string(eos)
+   if(eot==1)words[1] <- paste0(eos_t,words[1])
+   if(eot==2) words[1] <- paste0(eos_t," ",words[1])
   }
   text <-  paste0(words, collapse = " ")
   tensor <- tokenizer(model)(text, return_tensors = "pt")$input_ids
@@ -190,6 +198,18 @@ tokenizer <- memoise::memoise(tokenizer_init)
 #' @noRd
 lang_model <- memoise::memoise(lang_model_init)
 
+#' Title
+#'
+#' @param method
+#' @param conda
+#'
+#' @return
+#' @export
+#'
+#' @examples
+install_transformers <- function(method = "auto", conda = "auto") {
+  reticulate::py_install("transformers", method = method, conda = conda)
+}
 
 
 #' @noRd
@@ -221,11 +241,11 @@ get_token <- function(x, model = "gpt2") {
 }
 
 get_token.list <- function(x, model = "gpt2") {
-  lapply(x, get_token.numeric)
+  lapply(x, get_token.numeric, model = model)
 }
 get_token.character <- function(x, model = "gpt2") {
-  id <- get_id(x, model)
-  get_token.int(id)
+  id <- get_id(x, model = model)
+  get_token.int(id, model = model)
 }
 
 get_token.numeric <- function(x, model = "gpt2"){

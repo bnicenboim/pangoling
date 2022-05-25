@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     data.table,
+    LexOPS (>= 0.3.0),
     magrittr,
     memoise,
     reticulate,
@@ -22,3 +23,5 @@ RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 2.10)
+Remotes:  
+    JackEdTaylor/LexOPS

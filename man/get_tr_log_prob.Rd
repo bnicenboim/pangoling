@@ -4,7 +4,13 @@
 \alias{get_tr_log_prob}
 \title{Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.}
 \usage{
-get_tr_log_prob(x, by = rep(1, length(x)), eot = 0, model = "gpt2")
+get_tr_log_prob(
+  x,
+  by = rep(1, length(x)),
+  eot = 0,
+  ignore_regex = "",
+  model = "gpt2"
+)
 }
 \arguments{
 \item{x}{Vector of words, phrases or texts.}
