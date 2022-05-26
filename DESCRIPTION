@@ -2,8 +2,9 @@ Package: pangolang
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.0.0.9000
-Author: Bruno Nicenboim
-Maintainer: Bruno Nicenboim <bruno.nicenboim@gmail.com>
+Authors@R: c(
+    person("Bruno", "Nicenboim", email = "bruno.nicenboim@gmail.com", role = c( "aut","cre")),
+    person("Chris", "Emmerly",, role = "ctb"))
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
@@ -15,7 +16,8 @@ Imports:
     magrittr,
     memoise,
     reticulate,
-    tidytable
+    tidyselect,
+    tidytable (>= 0.7.2)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -23,5 +25,6 @@ RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 2.10)
-Remotes:  
-    JackEdTaylor/LexOPS
+Remotes: 
+    JackEdTaylor/LexOPS,
+    markfairbanks/tidytable

@@ -8,4 +8,13 @@
 \description{
 More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
 }
+\author{
+\strong{Maintainer}: Bruno Nicenboim \email{bruno.nicenboim@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Chris Emmerly [contributor]
+}
+
+}
 \keyword{internal}

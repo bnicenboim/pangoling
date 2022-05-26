@@ -1,3 +1,12 @@
+stop2 <- function (...){
+  stop(..., call. = FALSE)
+}
+
+collapse_comma <- function (...){
+  paste0("'", ..., "'", collapse = ", ")
+}
+
+
 #' From https://github.com/dapperstats/gendrendr
 get_lang_locale <- function(){
   ismac <- Sys.info()["sysname"] == "Darwin"

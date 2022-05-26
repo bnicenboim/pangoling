@@ -13,5 +13,5 @@ get_tr_entropy(x, by = rep(1, length(x)), eot = 0, model = "gpt2")
 
 }
 \description{
-Title
+Incorrect for multi-token words.
 }
