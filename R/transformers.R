@@ -18,6 +18,7 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, ignore_regex = ""
   N <- length(texts)
   out <- tidytable::map2.(texts,names(texts), function(words,item) {
     # words <- texts[[1]]
+    #item <- names(texts[1])
     mat <- tr_log_prob_mat(words, eot= eot, model = model)
     vocab <- get_tr_vocab(model)
     if(length(words) >1){
@@ -29,7 +30,7 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, ignore_regex = ""
     token_n <- tidytable::map_dbl.(tokens, length)
     index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     token_lp <- tidytable::map2_dbl.(index_vocab,1:ncol(mat), ~ mat[.x,.y])
-    message_verbose("Text id: ",item,"\n`", text,"`")
+    message_verbose("Text id: ",item,"\n`", paste(words, collapse =" "),"`")
     if(options()$pangolang.debug) {
       print("******")
       sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
@@ -45,11 +46,8 @@ get_tr_log_prob <- function(x, by = rep(1, length(x)),eot = 0, ignore_regex = ""
     }
     # ignores the NA in the first column if it starts with a special character
     if(unlist(tokens)[1] %in% reticulate::py_to_r(tokenizer(model)$all_special_tokens)) token_lp[1] <- 0
-
     for(i in  seq_along(token_n)){
       t <- token_n[i]
-
-
       word_lp[i] <- sum(token_lp[n:(n+(t-1))])
       n <- n + t
     }
