@@ -92,6 +92,15 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
     token_n <- tidytable::map_dbl.(tokens, length)
     index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     message_verbose("Text id: ",item,"\n`", paste(words, collapse =" "),"`")
+    if(length(ls_mat)>1){
+    # when there is a matrix for the predictions made from each word,
+    # remove the predictions made in a token in the middle of a word:
+    # for example from 'nt
+    token_remove <- tidytable::map.(tokens, ~ cumsum(seq_along(.x)) >1) %>%
+      unlist()
+    ls_mat[token_remove] <- NULL
+    }
+
     # predictions for word n+1, n+2, etc...
     if(npred==0) npred <- length(ls_mat)
     ls_preds <-  lapply(ls_mat[1:npred], function(mat){
@@ -120,8 +129,16 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
       word_lp
     })
     pred_mat <- do.call("rbind",ls_preds)
+    #change order so that they start from pred n+1
+    pred_mat <- pred_mat[nrow(pred_mat):1, , drop = FALSE]
     colnames(pred_mat)  <- words_lm
-    as.list(as.data.frame(pred_mat))
+    lapply(as.list(as.data.frame(pred_mat)), function(x){
+      #removes the NA from the front
+      x <- x[!is.na(x)]
+      # puts them at the end
+      length(x) <- npred
+      x
+      })
   })
  out <- unlist(out, recursive = FALSE)
  # names(out) <- x

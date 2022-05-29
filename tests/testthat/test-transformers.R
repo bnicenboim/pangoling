@@ -77,27 +77,17 @@ test_that("masked models work", {
                lp_1[mask_n==2 & token == "isn",]$log_prob +
                 lp_1[mask_n==3 & token == "'",]$log_prob+
                lp_1[mask_n==4 & token == "t",]$log_prob, tolerance =  0.01)
-  lp_wbw[[2]]
+  expect_equal(lp_wbw[[3]][[1]], lp_3[mask_n==1 & token == "a",]$log_prob)
+  expect_equal(lp_wbw[[2]][[1]],
   lp_2[mask_n==1 & token == "isn",]$log_prob +
     lp_2[mask_n==2 & token == "'",]$log_prob+
-    lp_2[mask_n==3 & token == "t",]$log_prob
+    lp_2[mask_n==3 & token == "t",]$log_prob)
 
-  lp_3 <- get_masked_tokens_tbl("This isn't a [MASK][MASK]" )
-  dream. <- lp_3[mask_n==1 & token =="dream",]$log_prob + lp_3[mask_n==2 & token ==".",]$log_prob
+  lp_4 <- get_masked_tokens_tbl("This isn't a [MASK][MASK]" )
+  dream. <- lp_4[mask_n==1 & token =="dream",]$log_prob + lp_4[mask_n==2 & token ==".",]$log_prob
   expect_equal(lp_wbw$`1. dream.`[1], dream.)
 })
 
-lp[[1]][get_tr_vocab(model)=="isn", "isn"]+
-lp[[1]][get_tr_vocab(model)=="'", "'"]+
-lp[[1]][get_tr_vocab(model)=="t", "t"]
-isn <- out_lm$logits[0][2]
-a <- out_lm$logits[0][3]
-tt <- out_lm$logits[0][4]
-lsm2 <- reticulate::py_to_r(torch$log_softmax(isn, dim = -1L)$tolist())
-lsm3 <- reticulate::py_to_r(torch$log_softmax(a, dim = -1L)$tolist())
-lsm4 <- reticulate::py_to_r(torch$log_softmax(tt, dim = -1L)$tolist())
-lsm2[get_tr_vocab(model)=="isn"] + lsm3[get_tr_vocab(model)=="'"] +
-lsm4[get_tr_vocab(model)=="t"]
 
 test_that("entropy works", {
   ent_prov <- get_causal_entropy(x = strsplit(prov, " ")[[1]], eot = 0)
