@@ -6,6 +6,8 @@ collapse_comma <- function (...){
   paste0("'", ..., "'", collapse = ", ")
 }
 
+list_fields <- function(data) cat(paste0("#' * `",colnames(data), "`: DESCRIPTION\n"))
+
 
 #' From https://github.com/dapperstats/gendrendr
 get_lang_locale <- function(){

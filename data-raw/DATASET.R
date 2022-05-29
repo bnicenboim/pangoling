@@ -1,4 +1,5 @@
 ## code to prepare `DATASET` dataset goes here
+library(tidytable)
 
 provo_et <- list(url = "https://osf.io/a32be///?action=download",
                  name = "provo_et",
@@ -12,6 +13,7 @@ provo_cloze = list(
   locale = "en_US",
   filetype = "csv",
   doi = c("10.3758/s13428-017-0908-4", "10.1016/j.cogpsych.2016.06.002"))
+
 
 provo_tbl <- download_data(provo_et)
 # description:
@@ -41,9 +43,74 @@ provo_cloze <- tidytable::bind_rows.(provo_clz, provo_first_word %>% tidytable::
 
 data_provo_cloze <- provo_cloze %>% tidytable::left_join.(provo_first_word %>% tidytable::select.(text_id, text))
 
+data_provo_cloze <- data_provo_cloze %>% rename.(word_n = word_number)
+
 # tidytable::map_chr.(colnames(data_provo_cloze), ~  paste0("#' * ", .x," explain\n")) %>%
 #   cat(.,"\n")
 
 
-usethis::use_data(data_provo_cloze, overwrite = TRUE)
+
+url_franks = "http://stefanfrank.info/readingdata/Data.zip"
+#https://doi.org/10.3758/s13428-012-0313-y
+file <- paste0(tempfile(),".zip")
+httr::GET(url_franks,
+          httr::write_disk(file, overwrite = TRUE),
+          httr::progress())
+metadata <- unzip(file, exdir = tempdir(), list = TRUE)
+unzip(file, exdir = tempdir())
+data_spr <- fread.(file.path(tempdir(), "selfpacedreading.RT.txt")) %>%
+  rename.(subj = subj_nr, sent_id = sent_nr, word_n = word_pos) %>%
+  mutate.(acc_comprehension = case_when.(correct =="c" ~ 1,
+                                         correct == "e" ~ 0,
+                                         TRUE ~ NA) , correct =NULL)
+data_spr_subj <-  fread.(file.path(tempdir(), "selfpacedreading.subj.txt")) %>%
+    rename.(subj = subj_nr)
+
+data_spr <- data_spr %>% left_join.(data_spr_subj)
+
+stimuli_pos <- fread.(file.path(tempdir(), "stimuli_pos.txt"),sep="\t")
+names(stimuli_pos) <- c("sent_id", "pos")
+stimuli<- fread.(file.path(tempdir(), "stimuli.txt"),sep="\t")
+data_frank2013_stimuli <- stimuli %>% rename.(sent_id = sent_nr) %>% left_join.(stimuli_pos)
+
+data_frank2013_spr_complete <- data_spr %>%
+  mutate.(typo = case_when.(sent_id==43 & word == "Sott" ~ 1, sent_id==269 & word == "that" ~ 1, sent_id==337 & word == "Margeret" ~ 1, TRUE ~ 0)) %>%
+  rename.(correct_perc = correct, sent_n = sent_pos)
+
+data_frank2013_spr <- data_frank2013_spr_complete %>%
+  filter.(age_en ==0, correct_perc > .8, !sent_id %in% c(43,269,337)) %>%
+  select.(-age_en, -typo)
+
+
+data_frank2013_et_rt <- fread.(file.path(tempdir(), "eyetracking.RT.txt"),sep="\t") %>%
+  rename.(subj = subj_nr, acc_comprehension = correct, word_n= word_pos, sent_n = sent_pos, sent_id = sent_nr)
+
+data_frank2013_et_fix <- fread.(file.path(tempdir(), "eyetracking.fix.txt"),sep="\t")%>%
+  rename.(subj = subj_nr,  word_n= word_pos,  sent_id = sent_nr, letter_n = letter_pos )
+
+# stimuli_pos <- stimuli_pos %>% mutate.(pos = chr_replace_all(pos," \\.",".") %>%
+#                           chr_replace_all(" ,",",")) %>%
+#                         separate_rows.("pos") %>%
+#   mutate.(word_number = 1:n(), .by ="sent_id")
+
+#surprisal values
+#Frank, S.L. (2013). Uncertainty reduction as a measure of cognitive load in sentence comprehension. Topics in Cognitive Science.
+url_franks2 <- "http://stefanfrank.info/TopiCS2013/data.zip"
+file2 <- paste0(tempfile(),"2.zip")
+httr::GET(url_franks2,
+          httr::write_disk(file2, overwrite = TRUE),
+          httr::progress())
+metadata <- unzip(file2, exdir = tempdir(), list = TRUE)
+unzip(file2, exdir = tempdir())
+data_surp <-  fread.(file.path(tempdir(), "info.txt")) %>%
+  rename.(sent_id = sent_nr, word_n = word_pos)
+data_frank2013_stimuli <- data_frank2013_stimuli %>% left_join.(data_surp)
+
+
+### Natural stories corpus:
+
+#https://link.springer.com/article/10.1007/s10579-020-09503-7
+#https://github.com/languageMIT/naturalstories
+
+usethis::use_data(data_provo_cloze, data_frank2013_stimuli, data_frank2013_spr, data_frank2013_spr_complete, data_frank2013_et_fix,data_frank2013_et_rt, overwrite = TRUE)
 

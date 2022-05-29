@@ -7,22 +7,22 @@
 \format{
 A data frame with 2730 rows and 16 variables:
 \itemize{
-\item word_unique_id explain
-\item text_id explain
-\item word_number explain
-\item word explain
-\item word_cleaned explain
-\item word_length explain
-\item total_response_count explain
-\item cp explain
-\item modal_response explain
-\item pos_claws explain
-\item word_content_or_function explain
-\item word_pos explain
-\item pos_cp explain
-\item lsa_context_score explain
-\item lsa_response_match_score explain
-\item text explain
+\item \code{word_unique_id}: DESCRIPTION
+\item \code{text_id}: DESCRIPTION
+\item \code{word_n}: DESCRIPTION
+\item \code{word}: DESCRIPTION
+\item \code{word_cleaned}: DESCRIPTION
+\item \code{word_length}: DESCRIPTION
+\item \code{total_response_count}: DESCRIPTION
+\item \code{cp}: DESCRIPTION
+\item \code{modal_response}: DESCRIPTION
+\item \code{pos_claws}: DESCRIPTION
+\item \code{word_content_or_function}: DESCRIPTION
+\item \code{word_pos}: DESCRIPTION
+\item \code{pos_cp}: DESCRIPTION
+\item \code{lsa_context_score}: DESCRIPTION
+\item \code{lsa_response_match_score}: DESCRIPTION
+\item \code{text}: DESCRIPTION
 }
 }
 \source{
