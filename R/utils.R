@@ -101,5 +101,10 @@ require_pkg <- function(pkg) {
 }
 #' @noRd
 message_verbose <- function(...) {
-  if (options()$pangolang.verbose) message(...)
+  if (options()$pangolang.verbose > 0) message(...)
+}
+
+#' @noRd
+message_debug <- function(...) {
+  if (options()$pangolang.verbose > 1) message(...)
 }

@@ -82,6 +82,10 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
   })
   #makes a tensor for the language model
   tinput_ids_masked <- torch$tensor(input_ids_masked)
+
+  message_verbose("Processing ", tinput_ids_masked$shape[0]," batches of ",tinput_ids_masked$shape[1]," tokens.")
+  message_verbose("Processing using masked model '", model,"'...")
+
   out_lm <- lang_model(model, task = "masked")(tinput_ids_masked)
   tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(input_ids[masks]))
   # python objects below, indexes need to start from 0

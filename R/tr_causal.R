@@ -102,6 +102,8 @@ causal_log_prob_mat <- function(words, model = "gpt2", eot = 0){
   }
   text <-  paste0(words, collapse = " ")
   tensor <- tokenizer(model)(text, return_tensors = "pt")$input_ids
+  message_verbose("Processing ", tensor$shape[0]," batch(es) of ",tensor$shape[1]," tokens.")
+  message_verbose("Processing using causal model '", model,"'...")
   out_lm <- lang_model(model, task = "causal")(tensor)
   logits <- out_lm$logits[0]
   tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(tensor[0]))

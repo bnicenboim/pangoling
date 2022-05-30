@@ -14,7 +14,7 @@ torch <- NULL
     op <- options()
     op.pangolang <- list(
       pangolang.debug = FALSE,
-      pangolang.verbose = TRUE,
+      pangolang.verbose = 2,
       pangolang.cache = cachem::cache_mem(max_size = 1024 * 1024^2)
     )
     toset <- !(names(op.pangolang) %in% names(op))
