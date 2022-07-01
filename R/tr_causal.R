@@ -27,7 +27,6 @@ get_causal_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  m
 #' @param model
 #'
 #' @return
-#' @export
 #'
 #' @examples
 get_causal_entropy <- function(x, by = rep(1, length(x)), model = "gpt2", eot = 0) {
@@ -72,14 +71,12 @@ get_causal_entropy <- function(x, by = rep(1, length(x)), model = "gpt2", eot = 
   names(out) <- x
   out
 }
-#' Title
 #'
-#' @param x
-#' @param by
-#' @param eot
-#' @param model
+#' Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com
 #'
-#' @return
+#' @inheritParams get_causal_log_prob
+#'
+#' @return matrix
 #' @export
 #'
 #' @examples

@@ -19,6 +19,8 @@ Imports:
     tidyselect,
     tidytable (>= 0.7.2)
 Suggests: 
+    rmarkdown,
+    knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2
@@ -28,3 +30,4 @@ Depends:
 Remotes: 
     JackEdTaylor/LexOPS,
     markfairbanks/tidytable
+VignetteBuilder: knitr

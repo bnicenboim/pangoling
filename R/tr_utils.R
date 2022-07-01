@@ -1,11 +1,45 @@
 #' @noRd
 lm_init <- function(model = "gpt2", task = "causal") {
+  # to prevent memory leaks:
+  reticulate::py_run_string('there = "lm" in locals()')
+  if(reticulate::py$there) reticulate::py_run_string("del lm")
+  reticulate::py_run_string("import torch
+torch.cuda.empty_cache()")
+  gc(full = TRUE)
+  reticulate::py_run_string("import gc
+gc.collect()")
+  gc(full = TRUE)
+  # make the model name available for python:
+  e <- new.env()
+  options("reticulate.engine.environment" = e)
+  assign(model, model, envir = e)
+  model <- model
+
+  # disable grad to speed up things
   torch$set_grad_enabled(FALSE)
-  if(task == "causal")  lm <- reticulate::py_to_r(transformers$AutoModelForCausalLM$from_pretrained(model, return_dict_in_generate =TRUE))
-  if(task == "masked") lm <- reticulate::py_to_r(transformers$AutoModelForMaskedLM$from_pretrained(model, return_dict_in_generate =TRUE))
+
+  reticulate::py_run_string("import transformers")
+  automodel <- switch(task,
+         causal= "AutoModelForCausalLM",
+         masked = "AutoModelForMaskedLM"
+         )
+
+    reticulate::py_run_string(paste0("lm = transformers.",automodel,".from_pretrained(r.model, return_dict_in_generate =True)"))
+
+  lm <- reticulate::py$lm
   lm$eval()
+
+  options("reticulate.engine.environment" = NULL)  # unset option
+  # trys to remove everything from memory
+  reticulate::py_run_string("import gc
+gc.collect()")
+  gc(full = TRUE)
+
   lm
 }
+
+#https://github.com/rstudio/reticulate/issues/185
+
 #' @noRd
 tokenizer_init <- function(model = "gpt2") {
   reticulate::py_to_r(transformers$AutoTokenizer$from_pretrained(model))
@@ -74,6 +108,8 @@ get_token.numeric <- function(x, model = "gpt2"){
 
 ####
 get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causal", model = "gpt2",npred =0,...) {
+  if(length(x)!= length(by)) stop2("The argument `by` has an incorrect length.")
+  if(length(x) <=1 ) stop2("The argument `x` needs at least two elements.")
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
   N <- length(texts)
