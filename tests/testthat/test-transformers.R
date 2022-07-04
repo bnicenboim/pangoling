@@ -39,7 +39,17 @@ test_that("gp2 get prob work", {
   expect_equal(unname(lp_sent_rep[1:length(sent_w)]),
                unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))]))
   lp_sent_rep_j <- get_causal_log_prob(x = rep(sent_w, 2), eot = 0)
-})
+
+  num0 <- paste0(1:485, sep=",")
+  ntokens(paste(num0, collapse =" "),model ="sshleifer/tiny-gpt2")
+  lp_num0 <- get_causal_log_prob(x = num0, model ="sshleifer/tiny-gpt2")
+
+  num1 <- paste0(1:500, sep=",")
+
+  tictoc::tic()
+  lp_num1 <- get_causal_log_prob(x = num1, model = "sshleifer/tiny-gpt2")
+  tictoc::toc()
+  })
 
 test_that("other models using get prob work", {
   lp_provd <-

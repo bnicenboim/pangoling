@@ -38,7 +38,6 @@ gc.collect()")
   lm
 }
 
-#https://github.com/rstudio/reticulate/issues/185
 
 #' @noRd
 tokenizer_init <- function(model = "gpt2") {
@@ -89,21 +88,42 @@ get_id <- function(x, model = "gpt2"){
   } )
 }
 
-get_token <- function(x, model = "gpt2") {
-  UseMethod("get_token")
+
+#' Tokenize the input
+#'
+#' @param x input
+#' @inheritParams get_causal_log_prob
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_tokens <- function(x, model = "gpt2") {
+  UseMethod("get_tokens")
 }
 
-get_token.list <- function(x, model = "gpt2") {
-  lapply(x, get_token.numeric, model = model)
-}
-get_token.character <- function(x, model = "gpt2") {
+#' @export
+get_tokens.character <- function(x, model = "gpt2") {
   id <- get_id(x, model = model)
-  get_token.int(id, model = model)
+  lapply(id, function(i) get_tokens.numeric(i, model = model))
 }
-
-get_token.numeric <- function(x, model = "gpt2"){
+#' @export
+get_tokens.numeric <- function(x, model = "gpt2"){
   tidytable::map_chr.(as.integer(x), function(x)
     reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(x)))
+}
+
+#' The number of tokens in a string or vector of strings
+#'
+#' @param x character input
+#' @inheritParams get_causal_log_prob
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ntokens <- function(x, model = "gpt2") {
+  length(unlist(get_tokens(x, model), recursive = TRUE))
 }
 
 ####
@@ -124,7 +144,8 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
     } else {
       words_lm <- words
     }
-    tokens <- get_token.list(get_id(words_lm, model), model)
+
+    tokens <- lapply(get_id(words_lm, model), get_tokens.numeric, model = model)
     token_n <- tidytable::map_dbl.(tokens, length)
     index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     message_verbose("Text id: ",item,"\n`", paste(words, collapse =" "),"`")

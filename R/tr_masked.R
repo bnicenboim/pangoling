@@ -72,7 +72,7 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
     reticulate::py_to_r(tokenizer(model)(text, return_tensors = "pt")$input_ids$tolist())[[1]]
   mask_id <- reticulate::py_to_r(tokenizer(model)$mask_token_id)
   special_ids <- reticulate::py_to_r(tokenizer(model)$all_special_ids)
-  # number of maskes that need to be applied and where
+  # number of masks that need to be applied and where
   nmasks <- sum(!input_ids %in% special_ids)
   masks <- which(!input_ids %in% special_ids) #starts from 1
   n_input_ids <- rep(list(input_ids), nmasks)

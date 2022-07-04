@@ -112,5 +112,46 @@ data_frank2013_stimuli <- data_frank2013_stimuli %>% left_join.(data_surp)
 #https://link.springer.com/article/10.1007/s10579-020-09503-7
 #https://github.com/languageMIT/naturalstories
 
-usethis::use_data(data_provo_cloze, data_frank2013_stimuli, data_frank2013_spr, data_frank2013_spr_complete, data_frank2013_et_fix,data_frank2013_et_rt, overwrite = TRUE)
+
+url_natural <- "https://raw.githubusercontent.com/languageMIT/naturalstories/master/naturalstories_RTS/"
+
+file_stories <- file.path(tempdir(),"all_stories.tok")
+file_batch1 <- file.path(tempdir(),"batch1_pro.csv")
+file_batch2 <- file.path(tempdir(),"batch2_pro.csv")
+httr::GET(paste0(url_natural, "all_stories.tok"),
+          httr::write_disk(file_stories, overwrite = TRUE),
+          httr::progress())
+httr::GET(paste0(url_natural, "batch1_pro.csv"),
+          httr::write_disk(file_batch1, overwrite = TRUE),
+          httr::progress())
+httr::GET(paste0(url_natural, "batch2_pro.csv"),
+          httr::write_disk(file_batch2, overwrite = TRUE),
+          httr::progress())
+#based on https://github.com/languageMIT/naturalstories/blob/master/naturalstories_RTS/process_RTs.R
+
+b1 = fread.(file_batch1)
+b2 = fread.(file_batch2)
+words = fread.(file_stories)
+
+b = bind_rows.(b1, b2)
+
+offset = 230
+
+data_natural_spr <- b %>%
+  filter.(!(item == 3 & zone == offset + 1)) %>%
+  mutate.(zone=if_else(item == 3 & zone > offset, zone - 3, zone - 2)) %>%
+  inner_join.(words) %>%
+  #filter(RT > 100, RT < 3000, correct > 4) %>%
+  arrange.(WorkerId, item, zone) %>%
+  rename.(subj = WorkerId, word_n = zone) %>%
+  select.(-WorkTimeInSeconds) %>%
+  mutate.(subj = as.numeric(factor(subj)))
+
+
+# Item is the story number, zone is the region where the word falls within the story. Note that some wordforms in all_stories.tok differ from those in words.tsv, reflecting typos in the SPR experiment as run.
+
+
+
+usethis::use_data(data_provo_cloze, data_frank2013_stimuli, data_frank2013_spr, data_frank2013_spr_complete, data_frank2013_et_fix,data_frank2013_et_rt,
+                  data_natural_spr, overwrite = TRUE)
 

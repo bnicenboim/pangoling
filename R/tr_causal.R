@@ -12,8 +12,8 @@
 #'
 #' @examples
 #' @export
-get_causal_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  model = "gpt2",eot = 0) {
-  get_lm_lp(x =x, by=by, ignore_regex = ignore_regex, type = "causal",model=model, eot =eot, npred = 1)
+get_causal_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  model = "gpt2",eot = 0, stride = 1) {
+  get_lm_lp(x =x, by=by, ignore_regex = ignore_regex, type = "causal",model=model, eot =eot, npred = 1, stride = stride)
 }
 
 
@@ -80,30 +80,69 @@ get_causal_entropy <- function(x, by = rep(1, length(x)), model = "gpt2", eot = 
 #' @export
 #'
 #' @examples
-get_causal_log_prob_mat <- function(x, by = rep(1, length(x)),  model = "gpt2", eot = 0) {
+get_causal_log_prob_mat <- function(x, by = rep(1, length(x)),  model = "gpt2", eot = 0, stride = 1) {
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
   N <- length(texts)
   tidytable::map2.(texts,names(texts), function(words,item) {
-    causal_log_prob_mat(words, eot= eot, model = model)
+    causal_log_prob_mat(words, eot= eot, model = model, stride = stride)
 
   })
 }
 
-causal_log_prob_mat <- function(words, model = "gpt2", eot = 0){
+#' Title
+#'
+#' @param model
+#'
+#' @return
+#' @export
+#'
+#' @examples
+max_tokens_causal <- function(model = "gpt2"){
+  lang_model(model, task = "causal")$config$n_positions
+}
+
+causal_log_prob_mat <- function(words, model = "gpt2", eot = 0, stride = 1){
   if(eot !=0) {
     eos <- tokenizer(model)$eos_token
     eos_t <- tokenizer(model)$convert_tokens_to_string(eos)
     if(eot==1)words[1] <- paste0(eos_t,words[1])
     if(eot==2) words[1] <- paste0(eos_t," ",words[1])
   }
+  # max tokens allowed in the model
+  max_tokens <- max_tokens_causal(model)
+
   text <-  paste0(words, collapse = " ")
   tensor <- tokenizer(model)(text, return_tensors = "pt")$input_ids
+  # max_length=512, truncation=True
+  ids <- unlist(reticulate::py_to_r(tensor$tolist()))
+  tensor_size <- length(ids)
+  tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(tensor[0]))
+
+  if(tensor_size > max_tokens) {
+    message_verbose("Number of tokens larger than the maximum allowed ",max_tokens,". Using a sliding window." )
+      #build a matrix with max tokens rows, and as many columns as needed
+    ids_matrix <- embed(ids,max_tokens)[,max_tokens:1]
+    rel_rows <- c(seq(1,nrow(ids_matrix)-1, stride),nrow(ids_matrix))
+    rel_token_pos <-  diff(rel_rows)
+    ids_matrix <- ids_matrix[rel_rows,]
+    tensor <- torch$tensor(lapply(seq_len(nrow(ids_matrix)), function(i) ids_matrix[i, ]))
+  }
+
+
   message_verbose("Processing ", tensor$shape[0]," batch(es) of ",tensor$shape[1]," tokens.")
   message_verbose("Processing using causal model '", model,"'...")
+
   out_lm <- lang_model(model, task = "causal")(tensor)
-  logits <- out_lm$logits[0]
-  tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(tensor[0]))
+  logits_b <- out_lm$logits
+  if(logits_b$shape[0] >1){
+    # if there is a sliding window
+    final_words <- tidytable::map2.(1:(logits_b$shape[0]-1),rel_token_pos, function(b,pos) logits_b[b][(max_tokens-pos):(max_tokens-1)])
+    logits <- torch$row_stack(c(logits_b[0],final_words ))
+  } else {
+    logits <- logits_b[0]
+  }
+
   lp <- reticulate::py_to_r(torch$log_softmax(logits, dim=-1L))$tolist()
   mat <- do.call("cbind",lp)
   # remove the last prediction, and the first is NA
