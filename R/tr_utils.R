@@ -1,5 +1,7 @@
 #' @noRd
 lm_init <- function(model = "gpt2", task = "causal") {
+  reticulate::py_run_string('import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"')
+
   # to prevent memory leaks:
   reticulate::py_run_string('there = "lm" in locals()')
   if(reticulate::py$there) reticulate::py_run_string("del lm")
@@ -153,7 +155,7 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
     # when there is a matrix for the predictions made from each word,
     # remove the predictions made in a token in the middle of a word:
     # for example from 'nt
-    token_remove <- tidytable::map.(tokens, ~ cumsum(seq_along(.x)) >1) %>%
+    token_remove <- tidytable::map.(tokens, ~ cumsum(seq_along(.x)) >1) |>
       unlist()
     ls_mat[token_remove] <- NULL
     }
@@ -201,3 +203,4 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
  # names(out) <- x
   out
 }
+

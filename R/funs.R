@@ -49,3 +49,4 @@ chr_extract <- function(string, pattern, ignore.case = FALSE, perl = TRUE, ...) 
   )
   unlist(list_matches)
 }
+

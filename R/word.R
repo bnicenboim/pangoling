@@ -16,7 +16,7 @@ get_word_fpmw <- function(x, source = "SUBTLEX_US",
                           remove_punc = "[[:punct:][:blank:]]"){
   df_source <- get_source(source, feature="fpmw", ignore_case = ignore_case)
   x <- clean_string(x, ignore_case, remove_punc)
-  df_source[data.table::chmatch(x,df_source$string),] %>%
+  df_source[data.table::chmatch(x,df_source$string),] |>
     tidytable::pull.(name = "string")
 }
 
@@ -38,7 +38,7 @@ get_word_feature <- function(x, source = "SUBTLEX_US",
                           remove_punc = "[[:punct:][:blank:]]"){
   df_source <- get_source(source, feature=feature, ignore_case = ignore_case)
   x <- clean_string(x, ignore_case, remove_punc)
-  df_source[data.table::chmatch(x,df_source$string),] %>%
+  df_source[data.table::chmatch(x,df_source$string),] |>
     tidytable::pull.(name = "string")
 }
 
@@ -60,7 +60,7 @@ get_regex_fpmw_lst <- function(x, source = "SUBTLEX_US",
                                ignore_case = TRUE){
 
   list_sel <- lapply(x, function(w) {
-    out <- df_freq[data.table::like(df_freq$string, pattern = w, ignore.case = FALSE, fixed = FALSE),] %>%
+    out <- df_freq[data.table::like(df_freq$string, pattern = w, ignore.case = FALSE, fixed = FALSE),] |>
       tidytable::select.(string, tidyselect::all_of(fpmw_source))
     out[complete.cases(out)]
   })
@@ -74,18 +74,18 @@ get_source <- function(source, feature="fpmw", ignore_case = ignore_case){
   m_source <- tolower(paste0(feature,".", source))
   rfeature <- tolower(paste0("^",feature,"\\."))
   valid_source <- chr_replace_all(feat_source[-1],"^.*?\\.", "")
-  valid_features <- chr_extract(feat_source[-1], "^.*?\\.") %>%
+  valid_features <- chr_extract(feat_source[-1], "^.*?\\.") |>
     chr_remove(".$")
   col <- feat_source[tolower(feat_source)==tolower(m_source)]
   if(length(col)=="") {
     stop2("Feature '", feature, "' is not a valid feature for source ", source,". Valid source - features combinations are:\n", collapse_comma(paste0("'",valid_source,"'-'", valid_features,"'")))
   }
-  #%>%
+  #|>
   #   .[chr_detect(.,rfeature)]
   #
-  tidytable::as_tidytable(LexOPS::lexops) %>%
-  tidytable::mutate.(string = tolower(string)) %>%
-    tidytable::rename_with.(tolower) %>%
+  tidytable::as_tidytable(LexOPS::lexops) |>
+  tidytable::mutate.(string = tolower(string)) |>
+    tidytable::rename_with.(tolower) |>
     tidytable::select.(string, tidyselect::all_of(m_source))
 }
 

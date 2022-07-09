@@ -4,7 +4,13 @@
 \alias{get_causal_log_prob_mat}
 \title{Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com}
 \usage{
-get_causal_log_prob_mat(x, by = rep(1, length(x)), model = "gpt2", eot = 0)
+get_causal_log_prob_mat(
+  x,
+  by = rep(1, length(x)),
+  model = "gpt2",
+  eot = 0,
+  stride = 1
+)
 }
 \arguments{
 \item{x}{Vector of words, phrases or texts.}

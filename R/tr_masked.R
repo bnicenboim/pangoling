@@ -16,10 +16,10 @@ get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-unca
   lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
   if(length(mask_pos)==1) lp <- list(lp) #to keep it consistent
   #names(lp) <- paste0("mask_",1:length(lp))
-    lp %>% tidytable::map_dfr.(~ tidytable::tidytable(token = get_tr_vocab(model), log_prob = .x) %>%
+    lp |> tidytable::map_dfr.(~ tidytable::tidytable(token = get_tr_vocab(model), log_prob = .x) |>
                                  tidytable::arrange.(-log_prob), .id = "mask_n" )
-    #   as_tidytable() %>%
-    #   tidytable::mutate.(token = get_tr_vocab(model), .before = tidyselect::everything()) %>%
+    #   as_tidytable() |>
+    #   tidytable::mutate.(token = get_tr_vocab(model), .before = tidyselect::everything()) |>
     #   tidytable
     # tidytable::arrange.(-mask_1)
 }
@@ -97,8 +97,8 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
     #masks-1 are the indexes of the masks in the sentences (starts from 0), takes the last n:nmasks masks
     logits <- out_lm$logits[n-1][(masks-1)[n:nmasks]]
     lsm <- torch$log_softmax(logits, dim = -1L)
-    mat_mask <- reticulate::py_to_r(lsm)$tolist() %>%
-      unlist() %>%
+    mat_mask <- reticulate::py_to_r(lsm)$tolist() |>
+      unlist() |>
       matrix(ncol =length(n:nmasks))
     mat_mask <- cbind(matrix(NA, nrow = nrow(mat_mask), ncol = n-1), mat_mask)
     rownames(mat_mask)  <- get_tr_vocab(model)
@@ -113,7 +113,8 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
   #   cbind(matrix(NA, nrow = nrow(lp[[1]]), ncol = m),
   #         lapply(1:(nmasks-m), function(n){
   #           lp[[n]][,n+m,drop = FALSE]
-  #         }) %>% do.call("cbind",.))
+  #         }) |> do.call("cbind",.))
   # })
   #  lp_by_pred
 }
+

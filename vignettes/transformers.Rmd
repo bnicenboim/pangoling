@@ -1,0 +1,47 @@
+---
+title: "Using transformer models to get word predictability."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{transformers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pangolang)
+library(tidytable)
+library(tictoc)
+```
+
+```{r, cache = TRUE}
+data_natural_stim <- data_natural_spr |> 
+  distinct.(item, word_n, word)
+```
+
+```{r, cache = TRUE}
+data_natural_stim |>
+  summarize.(item_text = paste0(word, collapse =" "), 
+             nwords = length(word),
+             .by = "item") |>
+  mutate.(ntokens_gpt2 = ntokens(item_text, model = "gpt2"),
+          ntokens_bert = ntokens(item_text, model = "bert-base-uncased"),
+          .by = "item")
+
+```
+
+```{r}
+tic()
+data_natural_stim <- data_natural_stim |>
+  mutate.(data_natural_stim, lp_gpt2 = get_causal_log_prob(word, 
+                                                 stride = 100,
+                                                 model = "gpt2",
+                                                 by = item))
+toc()
+```

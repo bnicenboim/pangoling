@@ -1,4 +1,31 @@
-
+# get_causal_next_tokens_tbl("The apple doesn't fall far from the")
+# get_causal_next_tokens_tbl("Actions speak")
+#
+# context = "The apple doesn't fall far from"
+# context ="Actions speak"
+#
+# model = "gpt2"
+# context_tensor <-
+#   tokenizer(model)(context, return_tensors = "pt")$input_ids
+# lm <- lang_model(model, "causal")
+# nvocab <- length(get_tr_vocab())
+#
+# generated_outputs <- lm$generate(input_ids= context_tensor,
+#                                  max_length=5L, min_length=5L,
+#             top_k = as.integer(nvocab),
+#             do_sample=TRUE,  #?
+#             num_return_sequences=1L, output_scores=TRUE )
+#
+#
+# #get_tokens(262)
+# get_tokens(generated_outputs$sequences$tolist()[[1]])
+#
+# n_tokens <- length(context_tensor$tolist()[0])
+# logits_next_word <- generated_outputs$scores[[1]]
+# lp <- reticulate::py_to_r(torch$log_softmax(logits_next_word, dim = -1L)$tolist())%>% unlist()
+#
+# tidytable::tidytable(token = get_tr_vocab(model),  log_prob = lp) %>%
+#   tidytable::arrange.(-log_prob)
 
 test_that("gp2 get prob work", {
   cont <-
@@ -41,14 +68,12 @@ test_that("gp2 get prob work", {
   lp_sent_rep_j <- get_causal_log_prob(x = rep(sent_w, 2), eot = 0)
 
   num0 <- paste0(1:485, sep=",")
-  ntokens(paste(num0, collapse =" "),model ="sshleifer/tiny-gpt2")
+  # ntokens(paste(num0, collapse =" "),model ="sshleifer/tiny-gpt2")
   lp_num0 <- get_causal_log_prob(x = num0, model ="sshleifer/tiny-gpt2")
 
   num1 <- paste0(1:500, sep=",")
-
-  tictoc::tic()
-  lp_num1 <- get_causal_log_prob(x = num1, model = "sshleifer/tiny-gpt2")
-  tictoc::toc()
+  lp_num1 <- get_causal_log_prob(x = num1, model = "sshleifer/tiny-gpt2", stride = 10)
+  expect_equal(lp_num0, lp_num1[1:485])
   })
 
 test_that("other models using get prob work", {

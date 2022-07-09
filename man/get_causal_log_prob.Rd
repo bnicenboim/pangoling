@@ -9,7 +9,8 @@ get_causal_log_prob(
   by = rep(1, length(x)),
   ignore_regex = "",
   model = "gpt2",
-  eot = 0
+  eot = 0,
+  stride = 1
 )
 }
 \arguments{

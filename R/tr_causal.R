@@ -171,9 +171,9 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2") {
   generated_outputs <- lang_model(model, "causal")(context_tensor)
   n_tokens <- length(context_tensor$tolist()[0])
   logits_next_word <- generated_outputs$logits[0][n_tokens-1]
-  lp <- reticulate::py_to_r(torch$log_softmax(logits_next_word, dim = -1L)$tolist())%>% unlist()
+  lp <- reticulate::py_to_r(torch$log_softmax(logits_next_word, dim = -1L)$tolist())|> unlist()
 
-  tidytable::tidytable(token = get_tr_vocab(model),  log_prob = lp) %>%
+  tidytable::tidytable(token = get_tr_vocab(model),  log_prob = lp) |>
     tidytable::arrange.(-log_prob)
 }
 

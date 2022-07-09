@@ -108,3 +108,4 @@ message_verbose <- function(...) {
 message_debug <- function(...) {
   if (options()$pangolang.verbose > 1) message(...)
 }
+

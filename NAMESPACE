@@ -2,7 +2,6 @@
 
 S3method(get_tokens,character)
 S3method(get_tokens,numeric)
-export("%>%")
 export(get_causal_log_prob)
 export(get_causal_log_prob_mat)
 export(get_causal_next_tokens_tbl)
@@ -17,5 +16,4 @@ export(get_word_fpmw)
 export(install_transformers)
 export(max_tokens_causal)
 export(ntokens)
-importFrom(magrittr,"%>%")
 importFrom(memoise,memoise)
