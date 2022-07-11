@@ -144,6 +144,8 @@ causal_log_prob_mat <- function(words, model = "gpt2", eot = 0, stride = 1){
   }
 
   lp <- reticulate::py_to_r(torch$log_softmax(logits, dim=-1L))$tolist()
+  rm(logits)
+  gc(full = TRUE)
   mat <- do.call("cbind",lp)
   # remove the last prediction, and the first is NA
   mat <- cbind(rep(NA,nrow(mat)), mat[,-ncol(mat)])

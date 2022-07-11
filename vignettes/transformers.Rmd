@@ -31,17 +31,41 @@ data_natural_stim |>
              nwords = length(word),
              .by = "item") |>
   mutate.(ntokens_gpt2 = ntokens(item_text, model = "gpt2"),
-          ntokens_bert = ntokens(item_text, model = "bert-base-uncased"),
           .by = "item")
 
 ```
 
-```{r}
+```{r, cache = TRUE}
 tic()
 data_natural_stim <- data_natural_stim |>
-  mutate.(data_natural_stim, lp_gpt2 = get_causal_log_prob(word, 
+  mutate.(lp_gpt2 = get_causal_log_prob(word, 
                                                  stride = 100,
                                                  model = "gpt2",
                                                  by = item))
 toc()
+saveRDS(data_natural_stim,file="data_natural_stim.RDS")
+```
+
+
+```{r}
+data_natural_stim <- data_natural_stim |> mutate.(lp_gpt2 = unlist(lp_gpt2))
+# default = 1
+data_natural_stim <- data_natural_stim |> mutate.(fpmw = get_word_fpmw(word)) |>
+  mutate.(log_fpmw = log(fpmw),
+          wl = nchar(word))
+
+data_natural_spr <- left_join.(data_natural_spr, data_natural_stim)
+```
+```{r}
+library(lme4)
+summary(m <- lmer(log(RT) ~ scale(lp_gpt2) + scale(log_fpmw) + scale(wl)  +(scale(lp_gpt2) + scale(log_fpmw) + scale(wl)||subj), data = data_natural_spr |> filter.(RT > 100)))
+```
+
+```{r}
+
+data_natural_stim <- data_natural_stim |>
+  mutate.(lp_gpt2 = get_masked_log_prob(word, 
+                                            #     stride = 100,
+                                                 model = "bert-base-uncased",
+                                                 by = item))
 ```

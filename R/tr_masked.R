@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param model
+#'
+#' @return
+#' @export
+#'
+#' @examples
+max_tokens_masked <- function(model = "distilbert-base-uncased"){
+  lang_model(model, task = "masked")$config$max_position_embeddings
+}
+
+
 #'
 #' @param context Context
 #' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
@@ -40,8 +53,8 @@ get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-unca
 #'
 #' @examples
 #' @export
-get_masked_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  model = "distilbert-base-uncased", npred = 0) {
-  get_lm_lp(x =x, by=by, ignore_regex = ignore_regex, type = "masked",model=model,  npred = npred)
+get_masked_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  model = "distilbert-base-uncased", npred = 0, max_batch_size = 50) {
+  get_lm_lp(x =x, by=by, ignore_regex = ignore_regex, type = "masked",model=model,  npred = npred, max_batch_size = max_batch_size)
 }
 
 
@@ -56,17 +69,17 @@ get_masked_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "",  m
 #' @export
 #'
 #' @examples
-get_masked_log_prob_mat <- function(x, by = rep(1, length(x)),  model = "distilbert-base-uncased", n = 0) {
+get_masked_log_prob_mat <- function(x, by = rep(1, length(x)),  model = "distilbert-base-uncased", max_batch_size = 50) {
   x <- trimws(x, whitespace = "[ \t]")
   texts <- split(x, by)
   N <- length(texts)
   tidytable::map2.(texts,names(texts), function(words,item) {
-    masked_log_prob_mat(words, model = model, n = n)
+    masked_log_prob_mat(words, model = model,max_batch_size =max_batch_size)
 
   })
 }
 
-masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
+masked_log_prob_mat <- function(words, model = "distilbert-base-uncased", max_batch_size = 50){
   text <-  paste0(words, collapse = " ")
   input_ids  <-
     reticulate::py_to_r(tokenizer(model)(text, return_tensors = "pt")$input_ids$tolist())[[1]]
@@ -82,11 +95,20 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
   })
   #makes a tensor for the language model
   tinput_ids_masked <- torch$tensor(input_ids_masked)
+  n_tensors <- reticulate::py_to_r(tinput_ids_masked$shape[0])
+  n_groups <-  n_tensors/ max_batch_size
 
-  message_verbose("Processing ", tinput_ids_masked$shape[0]," batches of ",tinput_ids_masked$shape[1]," tokens.")
+  tensor_groups <- split(0:(n_tensors-1), ceiling((1:n_tensors)/max_batch_size))
+  tinput_ids_masked_lst <- lapply(tensor_groups, function(i) tinput_ids_masked[i])
+
+
+  message_verbose("Processing ", n_tensors," tensors in ", length(tinput_ids_masked_lst)," groups of (maximum) ",max(sapply(tensor_groups, length)) , " batches of ",tinput_ids_masked$shape[1]," tokens.")
   message_verbose("Processing using masked model '", model,"'...")
 
-  out_lm <- lang_model(model, task = "masked")(tinput_ids_masked)
+  #out_lm <- lang_model(model, task = "masked")(tinput_ids_masked)
+  out_lm_lst <- lapply(tinput_ids_masked_lst, function(t) lang_model(model, task = "masked")(t)$logits)
+  out_lm <-  torch$row_stack(unname(out_lm_lst))
+
   tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(input_ids[masks]))
   # python objects below, indexes need to start from 0
   # .x is the batch index, iterates over the input_ids_masked
@@ -95,7 +117,7 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
   lp <- lapply(1:nmasks, function(n)
   { # n-1 indexes the masked sentence (Starts from 0)
     #masks-1 are the indexes of the masks in the sentences (starts from 0), takes the last n:nmasks masks
-    logits <- out_lm$logits[n-1][(masks-1)[n:nmasks]]
+    logits <- out_lm[n-1][(masks-1)[n:nmasks]]
     lsm <- torch$log_softmax(logits, dim = -1L)
     mat_mask <- reticulate::py_to_r(lsm)$tolist() |>
       unlist() |>
@@ -118,3 +140,7 @@ masked_log_prob_mat <- function(words, model = "distilbert-base-uncased"){
   #  lp_by_pred
 }
 
+
+# get_masked_log_prior
+
+#https://www.kaggle.com/datasets/toddcook/bert-english-uncased-unigrams

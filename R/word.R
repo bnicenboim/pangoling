@@ -13,12 +13,15 @@
 #'
 get_word_fpmw <- function(x, source = "SUBTLEX_US",
                           ignore_case = TRUE,
-                          remove_punc = "[[:punct:][:blank:]]"){
+                          remove_punc = "'s|[[:punct:][:blank:]]$",
+                          nomatch = NA){
   df_source <- get_source(source, feature="fpmw", ignore_case = ignore_case)
   x <- clean_string(x, ignore_case, remove_punc)
-  df_source[data.table::chmatch(x,df_source$string),] |>
+  df_source[data.table::chmatch(x,df_source$string, nomatch = nomatch),] |>
     tidytable::pull.(name = "string")
 }
+
+
 
 #' Get the word feature
 #'

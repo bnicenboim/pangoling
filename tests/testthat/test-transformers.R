@@ -121,6 +121,13 @@ test_that("masked models work", {
   lp_4 <- get_masked_tokens_tbl("This isn't a [MASK][MASK]" )
   dream. <- lp_4[mask_n==1 & token =="dream",]$log_prob + lp_4[mask_n==2 & token ==".",]$log_prob
   expect_equal(lp_wbw$`1. dream.`[1], dream.)
+
+  num0 <- paste0(1:30, sep=",")
+  ntokens(paste(num0, collapse =" "), model ="prajjwal1/bert-tiny")
+  lp_num0_all <- get_masked_log_prob(x = num0, model ="prajjwal1/bert-tiny", max_batch_size = 100)
+  lp_num0_g <- get_masked_log_prob(x = num0, model ="prajjwal1/bert-tiny", max_batch_size = 23)
+  expect_equal(lp_num0_all,lp_num0_g)
+
 })
 
 
