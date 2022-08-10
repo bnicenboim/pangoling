@@ -109,3 +109,21 @@ message_debug <- function(...) {
   if (options()$pangolang.verbose > 1) message(...)
 }
 
+
+log_softmax <- function(x) {
+  # 1.4 from https://academic.oup.com/imajna/article/41/4/2311/5893596
+  a <- max(x)
+  log(exp(x - a)/sum(exp(x-a)))
+}
+
+log_softmax2 <- function(x) {
+  # 1.5 from https://academic.oup.com/imajna/article/41/4/2311/5893596
+  x - matrixStats::logSumExp(x)
+}
+
+split_in_sentences <- function(x){
+  pot_end <- which(chr_detect(x, "(\\.|\\?|\\!)$"))
+  pot_end <- pot_end[chr_detect(x[pot_end+1], "^([A-Z])")]
+  tidytable::map2.(c(1, pot_end+1), c(pot_end, length(x)), ~ x[.x:.y])
+}
+

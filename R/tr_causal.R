@@ -120,13 +120,14 @@ causal_log_prob_mat <- function(words, model = "gpt2", eot = 0, stride = 1){
   tokens <- reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(tensor[0]))
 
   if(tensor_size > max_tokens) {
-    message_verbose("Number of tokens larger than the maximum allowed ",max_tokens,". Using a sliding window." )
-      #build a matrix with max tokens rows, and as many columns as needed
-    ids_matrix <- embed(ids,max_tokens)[,max_tokens:1]
-    rel_rows <- c(seq(1,nrow(ids_matrix)-1, stride),nrow(ids_matrix))
-    rel_token_pos <-  diff(rel_rows)
-    ids_matrix <- ids_matrix[rel_rows,]
-    tensor <- torch$tensor(lapply(seq_len(nrow(ids_matrix)), function(i) ids_matrix[i, ]))
+    # message_verbose("Number of tokens larger than the maximum allowed ",max_tokens,". Using a sliding window." )
+    #   #build a matrix with max tokens rows, and as many columns as needed
+    # ids_matrix <- embed(ids,max_tokens)[,max_tokens:1]
+    # rel_rows <- c(seq(1,nrow(ids_matrix)-1, stride),nrow(ids_matrix))
+    # rel_token_pos <-  diff(rel_rows)
+    # ids_matrix <- ids_matrix[rel_rows,]
+    # tensor <- torch$tensor(lapply(seq_len(nrow(ids_matrix)), function(i) ids_matrix[i, ]))
+    tensor <- torch$tensor(slide_tokens(ids, max_tokens, stride))
   }
 
 
@@ -137,7 +138,7 @@ causal_log_prob_mat <- function(words, model = "gpt2", eot = 0, stride = 1){
   logits_b <- out_lm$logits
   if(logits_b$shape[0] >1){
     # if there is a sliding window
-    final_words <- tidytable::map2.(1:(logits_b$shape[0]-1),rel_token_pos, function(b,pos) logits_b[b][(max_tokens-pos):(max_tokens-1)])
+    final_words <- tidytable::map2.(1:(logits_b$shape[0]-1),rel_pos_slide(ids, max_tokens, stride), function(b,pos) logits_b[b][(max_tokens-pos):(max_tokens-1)])
     logits <- torch$row_stack(c(logits_b[0],final_words ))
   } else {
     logits <- logits_b[0]

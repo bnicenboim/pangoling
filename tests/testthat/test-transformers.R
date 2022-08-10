@@ -86,6 +86,11 @@ test_that("other models using get prob work", {
 # cont <- get_tr_next_tokens_tbl("The apple doesn't fall far from the",model = "distilbert-base-uncased")
 
 test_that("masked models work", {
+  gets_0 <- get_masked_tokens_tbl(masked_sentence = "This isn't  [MASK]", model ="prajjwal1/bert-tiny" )
+  gets_1 <- get_masked_tokens_tbl("[CLS] This isn't  [MASK] [SEP]", model ="prajjwal1/bert-tiny" ,add_special_tokens = FALSE)
+  expect_equal(gets_0,gets_1)
+
+
   sent <- "This is it, is it?"
   sent_w <- strsplit(sent, " ")[[1]]
   lp_sent_rep_m <-
@@ -102,31 +107,44 @@ test_that("masked models work", {
   pr_mask3 <- get_masked_tokens_tbl(masked_sentence3)
   expect_snapshot(pr_mask3)
 
-  lp_wbw <- get_masked_log_prob(x = c("This","isn't","a","dream."))
+  lp_wbw <- get_masked_log_prob(x = c("This","isn't","a","dream."), n_plus = 0)
   lp_1 <- get_masked_tokens_tbl("[MASK][MASK][MASK][MASK][MASK] [MASK][MASK]" )
   lp_2 <- get_masked_tokens_tbl("This [MASK][MASK][MASK][MASK] [MASK][MASK]" )
-  lp_3 <- get_masked_tokens_tbl("This isn't [MASK] [MASK][MASK]" )
+  lp_3 <- get_masked_tokens_tbl("This isn[MASK][MASK][MASK] [MASK][MASK]" )
+  lp_4 <- get_masked_tokens_tbl("This isn'[MASK] [MASK][MASK]" )
+  lp_5 <- get_masked_tokens_tbl("This isn't [MASK] [MASK][MASK]" )
+  lp_6 <- get_masked_tokens_tbl("This isn't a [MASK][MASK]" )
+  lp_7 <- get_masked_tokens_tbl("This isn't a dream[MASK]" )
 
-  expect_equal(lp_wbw[[1]][[1]], lp_1[mask_n==1 & token == "this",]$log_prob)
+  expect_equal(lp_wbw[[1]][[1]], lp_1[mask_n==1 & token == "this",]$log_prob, tolerance =  0.0001)
+  expect_equal(lp_wbw[[2]][[1]],
+                lp_2[mask_n==1 & token == "isn",]$log_prob +
+                  lp_3[mask_n==1 & token == "'",]$log_prob+
+                  lp_4[mask_n==1 & token == "t",]$log_prob, tolerance = 0.001)
+
+  expect_equal(lp_wbw[[3]][[1]], lp_5[mask_n==1 & token == "a",]$log_prob, tolerance =  0.01)
+  dream. <- lp_6[mask_n==1 & token =="dream",]$log_prob + lp_7[mask_n==1 & token ==".",]$log_prob
+  expect_equal(lp_wbw$`1. dream.`[1], dream., tolerance = 0.0001)
+
+  #n + 2 pred
+
   expect_equal(lp_wbw[[2]][[2]],
                lp_1[mask_n==2 & token == "isn",]$log_prob +
-                lp_1[mask_n==3 & token == "'",]$log_prob+
-               lp_1[mask_n==4 & token == "t",]$log_prob, tolerance =  0.01)
-  expect_equal(lp_wbw[[3]][[1]], lp_3[mask_n==1 & token == "a",]$log_prob)
-  expect_equal(lp_wbw[[2]][[1]],
-  lp_2[mask_n==1 & token == "isn",]$log_prob +
-    lp_2[mask_n==2 & token == "'",]$log_prob+
-    lp_2[mask_n==3 & token == "t",]$log_prob)
+                 lp_2[mask_n==2 & token == "'",]$log_prob+
+                 lp_3[mask_n==2 & token == "t",]$log_prob, tolerance =  0.01)
+ #NOTICE HERE, IMPORTANT TO EXPLAIN
+  expect_equal(lp_wbw[[3]][[2]],
+               lp_2[mask_n==4 & token == "a",]$log_prob, tolerance =  0.01)
 
-  lp_4 <- get_masked_tokens_tbl("This isn't a [MASK][MASK]" )
-  dream. <- lp_4[mask_n==1 & token =="dream",]$log_prob + lp_4[mask_n==2 & token ==".",]$log_prob
-  expect_equal(lp_wbw$`1. dream.`[1], dream.)
 
+  ###
   num0 <- paste0(1:30, sep=",")
   ntokens(paste(num0, collapse =" "), model ="prajjwal1/bert-tiny")
   lp_num0_all <- get_masked_log_prob(x = num0, model ="prajjwal1/bert-tiny", max_batch_size = 100)
   lp_num0_g <- get_masked_log_prob(x = num0, model ="prajjwal1/bert-tiny", max_batch_size = 23)
   expect_equal(lp_num0_all,lp_num0_g)
+
+
 
 })
 
