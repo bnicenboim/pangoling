@@ -11,9 +11,6 @@ get_tokens(x, model = "gpt2")
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 }
-\value{
-
-}
 \description{
 Tokenize the input
 }

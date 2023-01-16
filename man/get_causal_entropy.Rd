@@ -9,9 +9,6 @@ get_causal_entropy(x, by = rep(1, length(x)), model = "gpt2", eot = 0)
 \arguments{
 \item{model}{}
 }
-\value{
-
-}
 \description{
 Incorrect for multi-token words.
 }

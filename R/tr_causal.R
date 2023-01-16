@@ -47,7 +47,7 @@ get_causal_entropy <- function(x, by = rep(1, length(x)), model = "gpt2", eot = 
     #index_vocab <- data.table::chmatch(unlist(tokens), vocab)
     token_entropy <- apply(mat, 2, function(lp) -sum(exp(lp)*lp))
     message_verbose("Text id: ",item,"\n`", text,"`")
-    if(options()$pangolang.debug) {
+    if(options()$pangoling.debug) {
       print("******")
       sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
       print(paste0("[",sent,"]", collapse = " "))

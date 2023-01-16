@@ -9,9 +9,6 @@ get_tr_vocab(model = "gpt2")
 \arguments{
 \item{model}{}
 }
-\value{
-
-}
 \description{
 Title
 }

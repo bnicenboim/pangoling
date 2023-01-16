@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(pangolang)
+library(pangoling)
 library(tidytable)
 library(tictoc)
 ```
@@ -69,3 +69,5 @@ data_natural_stim <- data_natural_stim |>
                                                  model = "bert-base-uncased",
                                                  by = item))
 ```
+
+$p_affected = logit^{-1}({affected} + trial_n {trial})\ {affected} Beta(8,2)\ {trial} Normal(0, .1)$$

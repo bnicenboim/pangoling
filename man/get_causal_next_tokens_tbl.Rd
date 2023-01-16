@@ -11,9 +11,6 @@ get_causal_next_tokens_tbl(context, model = "gpt2")
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 }
-\value{
-
-}
 \description{
 Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
 }

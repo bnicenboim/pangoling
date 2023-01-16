@@ -8,14 +8,14 @@ get_masked_log_prob_mat(
   x,
   by = rep(1, length(x)),
   model = "distilbert-base-uncased",
-  n = 0
+  max_batch_size = 50,
+  window_stride = 5,
+  n_plus = 3,
+  max_tokens = max_tokens_masked(model)
 )
 }
 \arguments{
 \item{model}{}
-}
-\value{
-
 }
 \description{
 Title

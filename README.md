@@ -1,14 +1,14 @@
 
-# pangolang
+# pangoling
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of pangolang is to ...
+The goal of pangoling is to ...
 
 ## Installation
 
-You can install the development version of pangolang like so:
+You can install the development version of pangoling like so:
 
 ``` r
 # FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
@@ -19,7 +19,7 @@ You can install the development version of pangolang like so:
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(pangolang)
+library(pangoling)
 ## basic example code
 ```
 

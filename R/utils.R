@@ -26,7 +26,7 @@ get_lang_locale <- function(){
 writeRDS <- function(object, filename, choice = NULL, ...){
   writable <- file.access(rappdirs::user_data_dir(),
                           mode = 2) == 0
-  data_dir <- rappdirs::user_data_dir("pangolang")
+  data_dir <- rappdirs::user_data_dir("pangoling")
 
   choices <- c(if (writable)
     paste0("Store in ",data_dir," directory."),
@@ -54,7 +54,7 @@ download_dataset <- function(url, filename = basename(url), name =""){
 
   writable <- file.access(rappdirs::user_data_dir(),
               mode = 2) == 0
-   DATA_DIR <- rappdirs::user_data_dir("pangolang")
+   DATA_DIR <- rappdirs::user_data_dir("pangoling")
 
     choices <- c(if (writable)
       paste0("Download to ",DATA_DIR," directory"),
@@ -101,12 +101,12 @@ require_pkg <- function(pkg) {
 }
 #' @noRd
 message_verbose <- function(...) {
-  if (options()$pangolang.verbose > 0) message(...)
+  if (options()$pangoling.verbose > 0) message(...)
 }
 
 #' @noRd
 message_debug <- function(...) {
-  if (options()$pangolang.verbose > 1) message(...)
+  if (options()$pangoling.verbose > 1) message(...)
 }
 
 

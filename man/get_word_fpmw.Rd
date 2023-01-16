@@ -8,14 +8,12 @@ get_word_fpmw(
   x,
   source = "SUBTLEX_US",
   ignore_case = TRUE,
-  remove_punc = "[[:punct:][:blank:]]"
+  remove_punc = "'s|[[:punct:][:blank:]]$",
+  nomatch = NA
 )
 }
 \arguments{
 \item{remove_punc}{}
-}
-\value{
-
 }
 \description{
 Get the word frequency per million words of a string

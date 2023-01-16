@@ -15,9 +15,6 @@ get_word_feature(
 \arguments{
 \item{remove_punc}{}
 }
-\value{
-
-}
 \description{
 Get the word feature
 }

@@ -39,7 +39,6 @@ chr_extract_all <- function(string, pattern, ignore.case = FALSE, perl = TRUE, .
   )
   list_matches
 }
-
 #' @noRd
 chr_extract <- function(string, pattern, ignore.case = FALSE, perl = TRUE, ...) {
   matches <- gregexpr(pattern = pattern, text = string, ignore.case = ignore.case, perl = perl, ...)

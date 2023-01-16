@@ -9,9 +9,6 @@ get_regex_fpmw_lst(x, source = "SUBTLEX_US", ignore_case = TRUE)
 \arguments{
 \item{remove_punc}{}
 }
-\value{
-
-}
 \description{
 Get the word frequency per million words using regex
 }

@@ -9,9 +9,6 @@ install_transformers(method = "auto", conda = "auto")
 \arguments{
 \item{conda}{}
 }
-\value{
-
-}
 \description{
 Title
 }

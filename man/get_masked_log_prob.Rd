@@ -9,7 +9,10 @@ get_masked_log_prob(
   by = rep(1, length(x)),
   ignore_regex = "",
   model = "distilbert-base-uncased",
-  npred = 0
+  max_batch_size = 50,
+  window_stride = 5,
+  n_plus = 0,
+  max_tokens = max_tokens_masked(model)
 )
 }
 \arguments{

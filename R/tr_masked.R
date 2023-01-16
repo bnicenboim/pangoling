@@ -298,7 +298,47 @@ masked_log_prob_mat <- function(x,
   #  lp_by_pred
 }
 
+#' #' @export
+#' get_log_prior <- function(x, model = "distilbert-base-uncased") {
+#'
+#'   #models using uncased wikipedia and bookcorpus
+#'   model_wiki_bookcorpus <- c("distilbert-base-uncased", "bert-base-uncased", "bert-large-uncased")
+#'   if(!model %in% model_wiki_bookcorpus) {
+#'     stop2("Only the following uncased models based on wikipedia and bookcorpus are supported for now: ", paste(model_wiki_bookcorpus, collapse =", "))
+#'   }
+#'   tokens <- get_tokens(x = x, model = model)
+#'   tidytable::map_dbl.(tokens, function(t) {
+#'     t <- tokens[[3]]
+#'     df_bert_unigram |>
+#'       tidytable::filter.(unigram == x[[3]]) |>
+#'       tidytable::pull.(lprior)
+#'     sum(tidytable::map_dbl.(t, ~ df_bert_unigram |>
+#'                               tidytable::filter.(unigram == .x) |>
+#'                               tidytable::pull.(lprior)))
+#' })
+#'   ## another attemped based on looking at the lp of everyword in a completely masked sentence
+#'   # mask_token_id <- reticulate::py_to_r(tokenizer(model)$mask_token_id)
+#'   # mask_tensor <- torch$tensor(rep(mask_token_id,512))$unsqueeze(0L)
+#'   mask_tensor <-
+#'   tokenizer(model)(paste0(rep("[MASK]",510), collapse=""), return_tensors = "pt")$input_ids
+#'    vocab_l <-  lang_model(model, task = "masked")(mask_tensor)$logits
+#'   vocab_l <- vocab_l$tolist()
+#'   vocab <- get_tr_vocab(model)
+#'   vocab_lp <- lapply(vocab_l[[1]], log_softmax)
+#'   vocab_lp_mat <- unlist(vocab_lp) |>
+#'           matrix(nrow =length(vocab))
+#'   #dim(vocab_lp_mat)
+#'   vocab_lp <- rowSums(vocab_lp_mat[,2:511])
+#'
+#'   names(vocab_lp) <- vocab
+#'   vocab_lp[names(vocab_lp) =="."]
+#'   exp(vocab_lp[names(vocab_lp) =="a"])
+#'   df_freq <- LexOPS::lexops |> select.(string, fpmw.SUBTLEX_US)
+#'   df_bfreq <- tidytable(string = names(vocab_lp), lp = vocab_lp)
+#'   df_f <- left_join.(df_freq, df_bfreq)
+#'   cor(log(df_f$fpmw.SUBTLEX_US), df_f$lp,"complete")
+#'   df2 <- left_join.(df_bert_unigram, rename.(df_bfreq, unigram= string))
+#'   cor(df2$lprior,df2$lp, "complete")
+#' }
+#' #
 
-# get_masked_log_prior
-
-#https://www.kaggle.com/datasets/toddcook/bert-english-uncased-unigrams

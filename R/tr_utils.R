@@ -170,7 +170,7 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
       #mat[vocab =="isn",2]
       token_lp <- tidytable::map2_dbl.(index_vocab,1:ncol(mat), ~ mat[.x,.y])
 
-      if(options()$pangolang.debug) {
+      if(options()$pangoling.debug) {
         print("******")
         sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
         print(paste0("[",sent,"]", collapse = " "))

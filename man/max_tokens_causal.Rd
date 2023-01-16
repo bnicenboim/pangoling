@@ -9,9 +9,6 @@ max_tokens_causal(model = "gpt2")
 \arguments{
 \item{model}{}
 }
-\value{
-
-}
 \description{
 Title
 }

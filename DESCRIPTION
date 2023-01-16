@@ -1,18 +1,23 @@
-Package: pangolang
+Package: pangoling
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Access to language model predictions in R
 Version: 0.0.0.9000
 Authors@R: c(
     person("Bruno", "Nicenboim", email = "bruno.nicenboim@gmail.com", role = c( "aut","cre")),
     person("Chris", "Emmerly",, role = "ctb"))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Access to language model predictions in R.
+    That's it for now.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Config/reticulate:
+  list(
+    packages = list(
+      list(package = c("torch", "transformers"))
+    )
+  )
 Imports: 
     data.table,
-    LexOPS (>= 0.3.0),
     magrittr,
     memoise,
     reticulate,
@@ -23,11 +28,9 @@ Suggests:
     knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 2.10)
-Remotes: 
-    JackEdTaylor/LexOPS,
-    markfairbanks/tidytable
 VignetteBuilder: knitr
+StagedInstall: no
