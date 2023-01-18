@@ -1,3 +1,24 @@
+
+#' Show the version of python and relevant packages
+#'
+#' @return a list with the python version, and the packages needed for `pangoling`
+#'
+#' @export
+#'
+#' @examples
+#'
+#' versions()
+#'
+versions <- function(){
+  df_packages <- reticulate::py_list_packages()
+  ver <- reticulate::py_version()
+  print(paste0("Python version ", ver))
+  print("Following version packages. (For the entire list use `reticulate::py_list_packages()`).")
+  rel_packages <- df_packages |> filter.(package %in% c("transformers","torch"))
+  print(rel_packages)
+  invisible(list(python= ver, rel_packages = rel_packages))
+}
+
 stop2 <- function (...){
   stop(..., call. = FALSE)
 }

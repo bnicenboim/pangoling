@@ -13,7 +13,8 @@ LazyData: true
 Config/reticulate:
   list(
     packages = list(
-      list(package = c("torch", "transformers"))
+      list(package = "torch"),
+      list(package = "transformers")
     )
   )
 Imports: 

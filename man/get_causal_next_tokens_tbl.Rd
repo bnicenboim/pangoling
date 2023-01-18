@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{get_causal_next_tokens_tbl}
 \alias{get_causal_next_tokens_tbl}
-\title{Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.}
+\title{Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com.}
 \usage{
 get_causal_next_tokens_tbl(context, model = "gpt2")
 }
@@ -12,5 +12,5 @@ get_causal_next_tokens_tbl(context, model = "gpt2")
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 }
 \description{
-Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
+Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com.
 }

@@ -40,10 +40,18 @@ gc.collect()")
   lm
 }
 
-
+#' https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer
+#' @param ...
+#' @param add_bos_token
 #' @noRd
-tokenizer_init <- function(model = "gpt2") {
-  reticulate::py_to_r(transformers$AutoTokenizer$from_pretrained(model))
+tokenizer_init <- function(model = "gpt2",add_bos_token = NULL, ...) {
+  if(model == "gpt2" && !is.null(add_bos_token)){
+    reticulate::py_to_r(transformers$GPT2Tokenizer$from_pretrained(model,add_bos_token = add_bos_token, ...))
+  } else {
+    reticulate::py_to_r(transformers$AutoTokenizer$from_pretrained(model, ...))
+  }
+
+
 }
 
 #' @noRd
@@ -51,25 +59,13 @@ tokenizer <- memoise::memoise(tokenizer_init)
 #' @noRd
 lang_model <- memoise::memoise(lm_init)
 
-#' Title
-#'
-#' @param method
-#' @param conda
-#'
-#' @return
-#' @export
-#'
-#' @examples
-install_transformers <- function(method = "auto", conda = "auto") {
-  reticulate::py_install("transformers", method = method, conda = conda)
-}
 
 
 #' @noRd
 get_vocab_init <- function(model = "gpt2") {
   size <- reticulate::py_to_r(tokenizer(model)$vocab_size)
   reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(0L:(size -
-                                                                   1L)))
+                                                                 1L)))
 }
 
 #' Title
@@ -82,11 +78,11 @@ get_vocab_init <- function(model = "gpt2") {
 #' @examples
 get_tr_vocab <- memoise::memoise(get_vocab_init)
 
-#' Get ids without adding special characters at beginning or end
-get_id <- function(x, model = "gpt2"){
+#' Get ids (without adding special characters at beginning or end?)
+get_id <- function(x, model = "gpt2", add_bos_token, ...){
   lapply(x, function(i){
-    t <- tokenizer(model)$tokenize(i)
-    reticulate::py_to_r(tokenizer(model)$convert_tokens_to_ids(t))
+    t <- tokenizer(model, add_bos_token = add_bos_token, ...)$tokenize(i)
+    reticulate::py_to_r(tokenizer(model, add_bos_token = add_bos_token, ...)$convert_tokens_to_ids(t))
   } )
 }
 
@@ -100,19 +96,19 @@ get_id <- function(x, model = "gpt2"){
 #' @export
 #'
 #' @examples
-get_tokens <- function(x, model = "gpt2") {
+get_tokens <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
   UseMethod("get_tokens")
 }
 
 #' @export
-get_tokens.character <- function(x, model = "gpt2") {
-  id <- get_id(x, model = model)
+get_tokens.character <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
+  id <- get_id(x, model = model, add_bos_token= add_bos_token, ...)
   lapply(id, function(i) get_tokens.numeric(i, model = model))
 }
 #' @export
-get_tokens.numeric <- function(x, model = "gpt2"){
+get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, ...){
   tidytable::map_chr.(as.integer(x), function(x)
-    reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(x)))
+    reticulate::py_to_r(tokenizer(model, add_bos_token = add_bos_token, ...)$convert_ids_to_tokens(x)))
 }
 
 #' The number of tokens in a string or vector of strings
@@ -124,8 +120,8 @@ get_tokens.numeric <- function(x, model = "gpt2"){
 #' @export
 #'
 #' @examples
-ntokens <- function(x, model = "gpt2") {
-  length(unlist(get_tokens(x, model), recursive = TRUE))
+ntokens <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
+  length(unlist(get_tokens(x, model, add_bos_token = add_bos_token, ...), recursive = TRUE))
 }
 
 ####

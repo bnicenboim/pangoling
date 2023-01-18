@@ -14,60 +14,81 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+Transformer models are a type of neural network architecture used for natural language processing tasks such as language translation and text generation. They were introduced in the 2017 paper "Attention Is All You Need" by researchers at Google. 
+
+Large Language Models (LLMs) are pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
+
+There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model.
+
+One interesting side-effect of the these models is that the probability of a word given a certain context can be extracted. Here we take advantage that GPT-2 can give us the probability of a word given its left context which can be used to approximate the psycholinguistic measure of *surprisal* (citation).
+
+
+
+```{r setup, message = FALSE}
 library(pangoling)
 library(tidytable)
 library(tictoc)
 ```
 
-```{r, cache = TRUE}
-data_natural_stim <- data_natural_spr |> 
-  distinct.(item, word_n, word)
-```
+First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
 
-```{r, cache = TRUE}
-data_natural_stim |>
-  summarize.(item_text = paste0(word, collapse =" "), 
-             nwords = length(word),
-             .by = "item") |>
-  mutate.(ntokens_gpt2 = ntokens(item_text, model = "gpt2"),
-          .by = "item")
 
-```
-
-```{r, cache = TRUE}
+```{r}
 tic()
-data_natural_stim <- data_natural_stim |>
-  mutate.(lp_gpt2 = get_causal_log_prob(word, 
-                                                 stride = 100,
-                                                 model = "gpt2",
-                                                 by = item))
+(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
-saveRDS(data_natural_stim,file="data_natural_stim.RDS")
 ```
 
+The first time will take some time, and it will download some files. Afterwards, it will be much faster.
 
 ```{r}
-data_natural_stim <- data_natural_stim |> mutate.(lp_gpt2 = unlist(lp_gpt2))
-# default = 1
-data_natural_stim <- data_natural_stim |> mutate.(fpmw = get_word_fpmw(word)) |>
-  mutate.(log_fpmw = log(fpmw),
-          wl = nchar(word))
+tic()
+(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
+toc()
+```
+Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence.
 
-data_natural_spr <- left_join.(data_natural_spr, data_natural_stim)
-```
-```{r}
-library(lme4)
-summary(m <- lmer(log(RT) ~ scale(lp_gpt2) + scale(log_fpmw) + scale(wl)  +(scale(lp_gpt2) + scale(log_fpmw) + scale(wl)||subj), data = data_natural_spr |> filter.(RT > 100)))
-```
+In fact this is the way GPT2 interprets the sentence:
 
 ```{r}
-
-data_natural_stim <- data_natural_stim |>
-  mutate.(lp_gpt2 = get_masked_log_prob(word, 
-                                            #     stride = 100,
-                                                 model = "bert-base-uncased",
-                                                 by = item))
+get_tokens("The apple doesn't fall far from the")
 ```
 
-$p_affected = logit^{-1}({affected} + trial_n {trial})\ {affected} Beta(8,2)\ {trial} Normal(0, .1)$$
+Because they are log probabilities if we exponentiate them and we sum them we should get 1:
+
+```{r}
+sum(exp(df_pred$log_prob))
+```
+
+Because of approximation errors, this is not exactly one.
+
+
+When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But notice that the predictions are quite bad.
+
+```{r}
+preload_causal("sshleifer/tiny-gpt2")
+tic()
+get_causal_next_tokens_tbl("The apple doesn't fall far from the", model = "sshleifer/tiny-gpt2")
+toc()
+```
+
+But the intended use of this package is given a (toy) dataset like this.
+
+```{r, cache = TRUE}
+sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book by its cover.")
+df_sent <- strsplit(x = sentences, split = " ") |> 
+  map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n")
+df_sent
+```
+
+To get the log-probability (`-suprisal`) of each word.
+
+```{r}
+df_sent <- df_sent |>
+  mutate(lp = get_causal_log_prob(word, by = sent_n))
+df_sent
+```
+
+
+
+
