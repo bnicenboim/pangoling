@@ -4,11 +4,25 @@
 \alias{preload_causal}
 \title{Preloads a causal language model}
 \usage{
-preload_causal(model = "gpt2")
+preload_causal(
+  model = "gpt2",
+  add_bos_token = NULL,
+  config_model = list(),
+  config_tokenizer = list()
+)
 }
 \arguments{
-\item{model}{}
+\item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
+
+\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+
+\item{config_model}{list with other arguments that control how the model from hugging face is accessed.}
+
+\item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
+}
+\value{
+Nothing
 }
 \description{
-Preloads a causal language model
+Preloads a causal language model to speed up next runs.
 }

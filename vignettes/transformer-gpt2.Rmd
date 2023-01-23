@@ -1,8 +1,8 @@
 ---
-title: "Using transformer models to get word predictability."
+title: "Using a GPT2 transformer model to get word predictability."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{transformers}
+  %\VignetteIndexEntry{transformer-gpt2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -46,6 +46,7 @@ tic()
 (df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
 ```
+
 Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence.
 
 In fact this is the way GPT2 interprets the sentence:
@@ -72,7 +73,7 @@ get_causal_next_tokens_tbl("The apple doesn't fall far from the", model = "sshle
 toc()
 ```
 
-But the intended use of this package is given a (toy) dataset like this.
+The intended use of this package is the following. Given a (toy) dataset like this.
 
 ```{r, cache = TRUE}
 sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book by its cover.")
@@ -81,13 +82,14 @@ df_sent <- strsplit(x = sentences, split = " ") |>
 df_sent
 ```
 
-To get the log-probability (`-suprisal`) of each word.
+It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2.
 
 ```{r}
 df_sent <- df_sent |>
   mutate(lp = get_causal_log_prob(word, by = sent_n))
 df_sent
 ```
+
 
 
 

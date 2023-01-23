@@ -4,12 +4,14 @@
 \alias{ntokens}
 \title{The number of tokens in a string or vector of strings}
 \usage{
-ntokens(x, model = "gpt2")
+ntokens(x, model = "gpt2", add_bos_token = NULL, config = NULL)
 }
 \arguments{
 \item{x}{character input}
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
+
+\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
 }
 \description{
 The number of tokens in a string or vector of strings

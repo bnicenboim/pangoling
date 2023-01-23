@@ -2,10 +2,10 @@
 % Please edit documentation in R/tr_utils.R
 \name{get_id}
 \alias{get_id}
-\title{Get ids without adding special characters at beginning or end}
+\title{Get ids (without adding special characters at beginning or end?)}
 \usage{
-get_id(x, model = "gpt2")
+get_id(x, model = "gpt2", add_bos_token = NULL, config = NULL)
 }
 \description{
-Get ids without adding special characters at beginning or end
+Get ids (without adding special characters at beginning or end?)
 }

@@ -1,5 +1,21 @@
+#' Sends a var to python
+#' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r
+var_to_py <- function(var_name, x ) {
+e <- new.env()
+options("reticulate.engine.environment" = e)
+assign(var_name, x, envir = e)
+#options("reticulate.engine.environment" = NULL)
+}
+
+lst_to_kwargs <- function(x){
+ x <- x[lengths(x) > 0]
+ if(!is.list(x)) x <- as.list(x)
+ x <- reticulate::r_to_py(x)
+ var_to_py("kwargs", x)
+}
+
 #' @noRd
-lm_init <- function(model = "gpt2", task = "causal") {
+lm_init <- function(model = "gpt2", task = "causal", config = list()) {
   reticulate::py_run_string('import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"')
 
   # to prevent memory leaks:
@@ -11,11 +27,6 @@ torch.cuda.empty_cache()")
   reticulate::py_run_string("import gc
 gc.collect()")
   gc(full = TRUE)
-  # make the model name available for python:
-  e <- new.env()
-  options("reticulate.engine.environment" = e)
-  assign(model, model, envir = e)
-  model <- model
 
   # disable grad to speed up things
   torch$set_grad_enabled(FALSE)
@@ -25,9 +36,21 @@ gc.collect()")
          causal= "AutoModelForCausalLM",
          masked = "AutoModelForMaskedLM"
          )
+  # dots <- list(...)
+  # args <- c(pretrained_model_name_or_path = model, return_dict_in_generate =TRUE, dots)
+  # args <- args[lengths(args) > 0] # remove empty elements
+  # extra_args <- reticulate::r_to_py(args)
+  # var_to_py("extra_args", extra_args)
+  lst_to_kwargs(c(pretrained_model_name_or_path = model, return_dict_in_generate = TRUE, config))
+  reticulate::py_run_string(paste0("lm = transformers.",automodel,".from_pretrained(**r.kwargs)"))
 
-    reticulate::py_run_string(paste0("lm = transformers.",automodel,".from_pretrained(r.model, return_dict_in_generate =True)"))
-
+#   remove:
+#   if(length(unlist(dots))>0) {
+#
+#     reticulate::py_run_string(paste0("lm = transformers.",automodel,".from_pretrained(r.model, return_dict_in_generate =True, **r.extra_args)"))
+#   } else {
+#     reticulate::py_run_string(paste0("lm = transformers.",automodel,".from_pretrained(r.model, return_dict_in_generate =True)"))
+# }
   lm <- reticulate::py$lm
   lm$eval()
 
@@ -41,17 +64,31 @@ gc.collect()")
 }
 
 #' https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer
-#' @param ...
 #' @param add_bos_token
 #' @noRd
-tokenizer_init <- function(model = "gpt2",add_bos_token = NULL, ...) {
+tokenizer_init <- function(model = "gpt2", add_bos_token = NULL, config = NULL) {
+  reticulate::py_run_string("import transformers")
   if(model == "gpt2" && !is.null(add_bos_token)){
-    reticulate::py_to_r(transformers$GPT2Tokenizer$from_pretrained(model,add_bos_token = add_bos_token, ...))
+    lst_to_kwargs(c(pretrained_model_name_or_path = model, add_bos_token = add_bos_token, config))
+    reticulate::py_to_r(reticulate::py_run_string("tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"))
+    #
+    # tkzr <- transformers$GPT2Tokenizer$from_pretrained(model,add_bos_token = add_bos_token, ...)
   } else {
-    reticulate::py_to_r(transformers$AutoTokenizer$from_pretrained(model, ...))
+    lst_to_kwargs(c(pretrained_model_name_or_path = model, config))
+
+    ## extra_args <- reticulate::r_to_py(args)
+    ## var_to_py("extra_args", extra_args)
+    reticulate::py_to_r(reticulate::py_run_string("tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"))
+    # tkzr <- transformers$AutoTokenizer$from_pretrained(model, ...)
   }
 
+  tkzr <- reticulate::py$tkzr
 
+  # trys to remove everything from memory
+  reticulate::py_run_string("import gc
+gc.collect()")
+  gc(full = TRUE)
+  tkzr
 }
 
 #' @noRd
@@ -62,10 +99,11 @@ lang_model <- memoise::memoise(lm_init)
 
 
 #' @noRd
-get_vocab_init <- function(model = "gpt2") {
-  size <- reticulate::py_to_r(tokenizer(model)$vocab_size)
-  reticulate::py_to_r(tokenizer(model)$convert_ids_to_tokens(0L:(size -
-                                                                 1L)))
+get_vocab_init <- function(model = "gpt2", add_bos_token = NULL, config = list()) {
+  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config = config)
+  size <- tkzr$vocab_size
+  tkzr$convert_ids_to_tokens(0L:(size -
+                                                                 1L))
 }
 
 #' Title
@@ -79,10 +117,10 @@ get_vocab_init <- function(model = "gpt2") {
 get_tr_vocab <- memoise::memoise(get_vocab_init)
 
 #' Get ids (without adding special characters at beginning or end?)
-get_id <- function(x, model = "gpt2", add_bos_token, ...){
+get_id <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL){
   lapply(x, function(i){
-    t <- tokenizer(model, add_bos_token = add_bos_token, ...)$tokenize(i)
-    reticulate::py_to_r(tokenizer(model, add_bos_token = add_bos_token, ...)$convert_tokens_to_ids(t))
+    t <- tokenizer(model, add_bos_token = add_bos_token, config = config)$tokenize(i)
+    tokenizer(model, add_bos_token = add_bos_token, config = config)$convert_tokens_to_ids(t)
   } )
 }
 
@@ -96,19 +134,19 @@ get_id <- function(x, model = "gpt2", add_bos_token, ...){
 #' @export
 #'
 #' @examples
-get_tokens <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
+get_tokens <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL) {
   UseMethod("get_tokens")
 }
 
 #' @export
-get_tokens.character <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
-  id <- get_id(x, model = model, add_bos_token= add_bos_token, ...)
+get_tokens.character <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL) {
+  id <- get_id(x, model = model, add_bos_token= add_bos_token, config = config)
   lapply(id, function(i) get_tokens.numeric(i, model = model))
 }
 #' @export
-get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, ...){
+get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL){
   tidytable::map_chr.(as.integer(x), function(x)
-    reticulate::py_to_r(tokenizer(model, add_bos_token = add_bos_token, ...)$convert_ids_to_tokens(x)))
+    tokenizer(model, add_bos_token = add_bos_token, config = config)$convert_ids_to_tokens(x))
 }
 
 #' The number of tokens in a string or vector of strings
@@ -120,8 +158,8 @@ get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, ...){
 #' @export
 #'
 #' @examples
-ntokens <- function(x, model = "gpt2", add_bos_token = NULL, ...) {
-  length(unlist(get_tokens(x, model, add_bos_token = add_bos_token, ...), recursive = TRUE))
+ntokens <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL) {
+  length(unlist(get_tokens(x, model, add_bos_token = add_bos_token, config = config), recursive = TRUE))
 }
 
 ####
@@ -137,8 +175,7 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
     if(type == "causal")  ls_mat <- causal_log_prob_mat(words, model = model, ...)
     if(type == "masked")  ls_mat <- masked_log_prob_mat(words, model = model, n_plus =n_plus, ...)
 
-    #ls_mat <- masked_log_prob_mat(words, model = model, n_plus = n_plus, max_batch_size = max_batch_size)
-    vocab <- get_tr_vocab(model)
+
     if(length(words) >1){
       words_lm <- c(words[1], paste0(" ", words[-1]))
     } else {

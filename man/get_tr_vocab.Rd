@@ -4,7 +4,7 @@
 \alias{get_tr_vocab}
 \title{Title}
 \usage{
-get_tr_vocab(model = "gpt2")
+get_tr_vocab(model = "gpt2", add_bos_token = NULL, config = list())
 }
 \arguments{
 \item{model}{}

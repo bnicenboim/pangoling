@@ -9,8 +9,10 @@ get_causal_log_prob(
   by = rep(1, length(x)),
   ignore_regex = "",
   model = "gpt2",
-  eot = 0,
-  stride = 1
+  add_bos_token = NULL,
+  stride = 1,
+  config_model = NULL,
+  config_tokenizer = NULL
 )
 }
 \arguments{
@@ -19,6 +21,12 @@ get_causal_log_prob(
 \item{by}{Vector that indicates how the text should be split.}
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
+
+\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+
+\item{config_model}{list with other arguments that control how the model from hugging face is accessed.}
+
+\item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
 }
 \value{
 a vector of log probabilities.
