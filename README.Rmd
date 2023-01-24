@@ -20,7 +20,7 @@ The goal of pangoling is to use transformer models to get log-probabilities of w
 
 ## Installation
 
-There is still no released version of `pangoling`. The package is in the early stages of development, and it will be subject to a lot of changes. To install the latest version from github use:
+There is still no released version of `pangoling`. The package is in the **very early** stages of development, it's **not well tested**, and it will be subject to a lot of changes. To install the latest version from github use:
 
 ```{r, eval = FALSE}
 # install.packages("remotes") # if needed

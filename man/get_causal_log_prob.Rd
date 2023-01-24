@@ -34,5 +34,8 @@ get_causal_log_prob(
 A vector of log probabilities.
 }
 \description{
-In case of errors check the status of https://status.huggingface.co/
+Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+}
+\details{
+\code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using \code{...} it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
 }

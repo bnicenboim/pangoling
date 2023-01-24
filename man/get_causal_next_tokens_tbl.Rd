@@ -27,7 +27,7 @@ get_causal_next_tokens_tbl(
 a table with possible next tokes and their log-probabilities
 }
 \description{
-Get the possible next tokens and their log probabilities its previous context using a causal transformer model from huggingface.com.
+Get the possible next tokens and their log probabilities its previous context using a causal transformer model from huggingface.com.  Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 }
 \details{
 \code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using \code{...} it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details.

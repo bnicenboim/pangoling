@@ -26,12 +26,12 @@ Imports:
     memoise,
     reticulate,
     tidyselect,
-    tidytable (>= 0.7.2)
+    tidytable (>= 0.7.2),
+    Rdpack
 Suggests: 
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0),
-    Rdpack
+    testthat (>= 3.0.0)
 RdMacros: Rdpack
 Config/testthat/edition: 3
 RoxygenNote: 7.2.2

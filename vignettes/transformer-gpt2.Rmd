@@ -21,7 +21,7 @@ Transformer models are a type of neural network architecture used for natural la
 
 Large Language Models (LLMs) are pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
 
-There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model.
+There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
 
 One interesting side-effect of the these models is that the probability of a word given a certain context can be extracted. Here we take advantage that GPT-2 can give us the probability of a word given its left context which can be used to approximate the psycholinguistic measure of *surprisal* (citation).
 

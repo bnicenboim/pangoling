@@ -5,3 +5,4 @@ _test
 .httr-oauth
 .DS_Store
 inst/doc
+docs
