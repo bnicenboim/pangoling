@@ -9,7 +9,7 @@
 Access to language model predictions in R. That's it for now.
 }
 \author{
-\strong{Maintainer}: Bruno Nicenboim \email{bruno.nicenboim@gmail.com}
+\strong{Maintainer}: Bruno Nicenboim \email{bruno.nicenboim@gmail.com} (\href{https://orcid.org/0000-0002-5176-3943}{ORCID})
 
 Other contributors:
 \itemize{

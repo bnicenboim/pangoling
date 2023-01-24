@@ -3,9 +3,9 @@
 #' @param model
 #'
 #' @return
-#' @export
 #'
 #' @examples
+#' @noRd
 max_tokens_masked <- function(model = "distilbert-base-uncased"){
   lang_model(model, task = "masked")$config$max_position_embeddings
 }
@@ -18,7 +18,7 @@ max_tokens_masked <- function(model = "distilbert-base-uncased"){
 #' @return
 #'
 #' @examples
-#' @export
+#' @noRd
 get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-uncased", add_special_tokens = TRUE) {
   if(add_special_tokens){
     masked_tensor <-
@@ -55,8 +55,7 @@ get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-unca
 #'
 #' @return a vector of log probabilities.
 #'
-#' @examples
-#' @export
+#' @noRd
 get_masked_log_prob <- function(x,
                                 by = rep(1, length(x)),
                                 ignore_regex = "",
@@ -83,9 +82,8 @@ get_masked_log_prob <- function(x,
 #' @param model
 #'
 #' @return
-#' @export
 #'
-#' @examples
+#' @noRd
 get_masked_log_prob_mat <- function(x,
                                     by = rep(1, length(x)),
                                     model = "distilbert-base-uncased",
@@ -107,6 +105,7 @@ get_masked_log_prob_mat <- function(x,
   })
 }
 
+#' @noRd
 masked_log_prob_mat <- function(x,
                                 model = "distilbert-base-uncased",
                                 max_batch_size = 50,
@@ -298,7 +297,7 @@ masked_log_prob_mat <- function(x,
   #  lp_by_pred
 }
 
-#' #' @export
+###' @noRd
 #' get_log_prior <- function(x, model = "distilbert-base-uncased") {
 #'
 #'   #models using uncased wikipedia and bookcorpus

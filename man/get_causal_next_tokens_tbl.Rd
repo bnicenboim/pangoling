@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{get_causal_next_tokens_tbl}
 \alias{get_causal_next_tokens_tbl}
-\title{Get the log probability of each word phrase of a vector given its previous context.}
+\title{Get the possible next tokens and their log probabilities its previous context using a causal transformer.}
 \usage{
 get_causal_next_tokens_tbl(
   context,
@@ -23,8 +23,11 @@ get_causal_next_tokens_tbl(
 
 \item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
 }
+\value{
+a table with possible next tokes and their log-probabilities
+}
 \description{
-Get the log probability of each word phrase of a vector given its previous context using a causal transformer model from huggingface.com.
+Get the possible next tokens and their log probabilities its previous context using a causal transformer model from huggingface.com.
 }
 \details{
 \code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using \code{...} it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details.

@@ -18,8 +18,7 @@
 #' can it has limitations. It can currently not parse the example code from the
 #' original function: \code{do.call(paste, list(as.name("A"), as.name("B")), quote = TRUE)}
 #' and the functionality of \code{quote} has not been thoroughly tested.
-#'
-#' @example inst/examples/fastDoCall_ex.R
+#' @noRd
 fastDoCall <- function(what, args, quote = FALSE, envir = parent.frame()) {
   if (quote) {
     args <- lapply(args, enquote)
@@ -72,6 +71,7 @@ fastDoCall <- function(what, args, quote = FALSE, envir = parent.frame()) {
 #'
 #' versions()
 #'
+#' @noRd
 versions <- function(){
   df_packages <- reticulate::py_list_packages()
   ver <- reticulate::py_version()
@@ -86,14 +86,17 @@ stop2 <- function (...){
   stop(..., call. = FALSE)
 }
 
+#' @noRd
 collapse_comma <- function (...){
   paste0("'", ..., "'", collapse = ", ")
 }
 
+#' @noRd
 list_fields <- function(data) cat(paste0("#' * `",colnames(data), "`: DESCRIPTION\n"))
 
 
 #' From https://github.com/dapperstats/gendrendr
+#' @noRd
 get_lang_locale <- function(){
   ismac <- Sys.info()["sysname"] == "Darwin"
   issolaris <- Sys.info()["sysname"] == "SunOS"
@@ -107,6 +110,7 @@ get_lang_locale <- function(){
   locale
 }
 
+#' @noRd
 writeRDS <- function(object, filename, choice = NULL, ...){
   writable <- file.access(rappdirs::user_data_dir(),
                           mode = 2) == 0

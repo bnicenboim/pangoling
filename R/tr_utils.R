@@ -64,7 +64,6 @@ gc.collect()")
 }
 
 #' https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer
-#' @param add_bos_token
 #' @noRd
 tokenizer_init <- function(model = "gpt2", add_bos_token = NULL, config = NULL) {
   reticulate::py_run_string("import transformers")
@@ -93,6 +92,7 @@ gc.collect()")
 
 #' @noRd
 tokenizer <- memoise::memoise(tokenizer_init)
+
 #' @noRd
 lang_model <- memoise::memoise(lm_init)
 
@@ -106,14 +106,14 @@ get_vocab_init <- function(model = "gpt2", add_bos_token = NULL, config = list()
                                                                  1L))
 }
 
-#' Title
+#' Returns the vocabulary of a model
 #'
-#' @param model
+#' @inheritParams get_causal_log_prob
 #'
-#' @return
+#' @return A vector with the vocabulary of a model
 #' @export
 #'
-#' @examples
+#'
 get_tr_vocab <- memoise::memoise(get_vocab_init)
 
 #' Get ids (without adding special characters at beginning or end?)
@@ -143,6 +143,7 @@ get_tokens.character <- function(x, model = "gpt2", add_bos_token = NULL, config
   id <- get_id(x, model = model, add_bos_token= add_bos_token, config = config)
   lapply(id, function(i) get_tokens.numeric(i, model = model))
 }
+
 #' @export
 get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL){
   tidytable::map_chr.(as.integer(x), function(x)
@@ -154,7 +155,8 @@ get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, config =
 #' @param x character input
 #' @inheritParams get_causal_log_prob
 #'
-#' @return
+#' @return The number of tokens in a string or vector of words.
+#'
 #' @export
 #'
 #' @examples
@@ -162,7 +164,7 @@ ntokens <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL) {
   length(unlist(get_tokens(x, model, add_bos_token = add_bos_token, config = config), recursive = TRUE))
 }
 
-####
+#' @noRd
 get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causal", model = "gpt2", n_plus = 3,...) {
   if(length(x)!= length(by)) stop2("The argument `by` has an incorrect length.")
   if(length(x) <=1 ) stop2("The argument `x` needs at least two elements.")
@@ -250,6 +252,7 @@ get_lm_lp <- function(x, by= rep(1, length(x)), ignore_regex = "", type = "causa
 }
 
 
+#' @noRd
 slide_tokens <- function(input_ids,max_tokens, stride ){
 message_verbose("Number of tokens larger than the maximum allowed ",max_tokens,". Using a sliding window." )
 #build a matrix with max tokens rows, and as many columns as needed
@@ -260,6 +263,7 @@ ids_matrix <- ids_matrix[rel_rows,]
 lapply(seq_len(nrow(ids_matrix)), function(i) ids_matrix[i, ])
 }
 
+#' @noRd
 rel_pos_slide <- function(input_ids,max_tokens, stride ){
   ids_matrix <- embed(input_ids,max_tokens)[,max_tokens:1]
   rel_rows <- c(seq(1,nrow(ids_matrix)-1, stride),nrow(ids_matrix))

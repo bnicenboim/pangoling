@@ -34,4 +34,12 @@ data_provo_cloze
 \description{
 A dataset containing the .. reference
 }
+\seealso{
+Other datasets: 
+\code{\link{data_frank2013_et_rt}},
+\code{\link{data_frank2013_spr_complete}},
+\code{\link{data_frank2013_spr}},
+\code{\link{data_frank2013_stimuli}}
+}
+\concept{datasets}
 \keyword{datasets}

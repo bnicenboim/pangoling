@@ -3,8 +3,11 @@ Type: Package
 Title: Access to language model predictions in R
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Bruno", "Nicenboim", email = "bruno.nicenboim@gmail.com", role = c( "aut","cre")),
-    person("Chris", "Emmerly",, role = "ctb"))
+    person("Bruno", "Nicenboim",
+    email = "bruno.nicenboim@gmail.com",
+    role = c( "aut","cre"),
+    comment = c(ORCID = "0000-0002-5176-3943")),
+    person("Chris", "Emmerly", role = "ctb"))
 Description: Access to language model predictions in R.
     That's it for now.
 License: MIT + file LICENSE
@@ -27,7 +30,9 @@ Imports:
 Suggests: 
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    Rdpack
+RdMacros: Rdpack
 Config/testthat/edition: 3
 RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)

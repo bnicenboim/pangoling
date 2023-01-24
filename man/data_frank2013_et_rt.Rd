@@ -3,9 +3,9 @@
 \docType{data}
 \name{data_frank2013_et_rt}
 \alias{data_frank2013_et_rt}
-\title{ET data  of Frank et al ...}
+\title{Eye-tracking data of \insertCite{Frank2013;textual}{pangoling}}
 \format{
-A data frame with  rows and  variables:
+A data frame with 81109 rows and 11 columns:
 \itemize{
 \item \code{subj}: Subject
 \item \code{sent_id}: Sentence unique id.
@@ -24,6 +24,16 @@ A data frame with  rows and  variables:
 data_frank2013_et_rt
 }
 \description{
-ET data  of Frank et al ...
+Eye-tracking reading data of \insertCite{Frank2013;textual}{pangoling}
 }
+\seealso{
+\link{data_frank2013_stimuli} for the enriched stimuli,  \link{data_frank2013_spr_complete} for the complete version of this dataset, \link{data_frank2013_spr} for a "cleaned" version of the self-paced reading data, and \link{data_frank2013_et_fix} for the raw fixation of this eye-tracking dataset.
+
+Other datasets: 
+\code{\link{data_frank2013_spr_complete}},
+\code{\link{data_frank2013_spr}},
+\code{\link{data_frank2013_stimuli}},
+\code{\link{data_provo_cloze}}
+}
+\concept{datasets}
 \keyword{datasets}

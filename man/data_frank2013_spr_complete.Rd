@@ -3,7 +3,7 @@
 \docType{data}
 \name{data_frank2013_spr_complete}
 \alias{data_frank2013_spr_complete}
-\title{SPR  of Frank et al ...}
+\title{Self-paced reading data of \insertCite{Frank2013;textual}{pangoling}}
 \format{
 A data frame with  rows and  variables:
 \itemize{
@@ -22,22 +22,24 @@ A data frame with  rows and  variables:
 \item \code{correct_perc}: Fraction of correct responses to comprehension questions.
 \item \code{typo}: Whether there is a typo in the word.
 }
-
-REFERENCES
-\link{1} Frank, S.L., Fernandez Monsalve, I., Thompson, R.L, & Vigliocco, G. (2018). Reading-time data for evaluating broad-coverage models of English sentence processing. Behavior Research Methods, 45, 1182-1190.
-\link{2} Fernandez Monsalve, I., Frank, S.L., & Vigliocco, G. (2012). Lexical surprisal as a general predictor of reading time. Proceedings of the 13th Conference of the European Chapter of the Association for Computational Linguistics (pp. 398-408). Avignon, France: Association for Computational Linguistics.
-\link{3} Frank, S.L. (in press). Uncertainty reduction as a measure of cognitive load in sentence comprehension. Topics in Cognitive Science.
-\link{4} Frank, S.L. & Thompson, R.L. (2012). Early effects of word surprisal on pupil size during reading. In: N. Miyake, D. Peebles, & R.P. Cooper (Eds.), Proceedings of the 34th Annual Conference of the Cognitive Science Society (pp. 1554-1559). Austin, TX: Cognitive Science Society.
-Frank, S.L. (2013). Uncertainty reduction as a measure of cognitive load in sentence comprehension. Topics in Cognitive Science.
 }
 \usage{
 data_frank2013_spr_complete
 }
 \description{
-A dataset containing the .. reference
-NOTE -- After collecting the self-paced-reading data, three typo's were found in the sentence stimuli:
+A dataset containing the self-paced reading data of \insertCite{Frank2013;textual}{pangoling}. Notice that after collecting the self-paced-reading data, three typos were found:
 sentence 43  : "Scott" was "Sott"
 sentence 269 : "at" was "that"
-sentence 337 : "Margaret" was "Margeret" These errors were fixed in the eye-tracking study.
+sentence 337 : "Margaret" was "Margeret"
 }
+\seealso{
+\link{data_frank2013_stimuli} for the enriched stimuli,  \link{data_frank2013_spr} for a cleaned version of this dataset,  \link{data_frank2013_et_fix} for the eye-tracking version of this dataset with the fixation information, and \link{data_frank2013_et} for a preprocessed eye-tracking dataset.
+
+Other datasets: 
+\code{\link{data_frank2013_et_rt}},
+\code{\link{data_frank2013_spr}},
+\code{\link{data_frank2013_stimuli}},
+\code{\link{data_provo_cloze}}
+}
+\concept{datasets}
 \keyword{datasets}

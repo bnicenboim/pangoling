@@ -3,7 +3,7 @@
 \docType{data}
 \name{data_frank2013_spr}
 \alias{data_frank2013_spr}
-\title{SPR  of Frank et al ...}
+\title{Cleaned self-paced reading data of \insertCite{Frank2013;textual}{pangoling}}
 \format{
 An object of class \code{tidytable} (inherits from \code{data.table}, \code{data.frame}) with 165040 rows and 12 columns.
 }
@@ -11,6 +11,16 @@ An object of class \code{tidytable} (inherits from \code{data.table}, \code{data
 data_frank2013_spr
 }
 \description{
-Cleaned version of dataset \link{data_frank2013_spr_complete}: No sentences with typos, only native speakers, and subjects with accuracy over 0.8.
+A cleaned version of dataset \link{"data_frank2013_spr_complete"}: No sentences with typos, only native speakers, and subjects with accuracy over 0.8.
 }
+\seealso{
+\link{data_frank2013_stimuli} for the enriched stimuli,  \link{data_frank2013_spr_complete} for the complete version of this dataset, \link{data_frank2013_et_fix} for the eye-tracking version of this dataset with the fixation information, and \link{data_frank2013_et_rt} for a preprocessed eye-tracking dataset.
+
+Other datasets: 
+\code{\link{data_frank2013_et_rt}},
+\code{\link{data_frank2013_spr_complete}},
+\code{\link{data_frank2013_stimuli}},
+\code{\link{data_provo_cloze}}
+}
+\concept{datasets}
 \keyword{datasets}

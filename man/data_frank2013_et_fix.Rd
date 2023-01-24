@@ -3,9 +3,9 @@
 \docType{data}
 \name{data_frank2013_et_fix}
 \alias{data_frank2013_et_fix}
-\title{ET data  of Frank et al ...}
+\title{Fixations positions of the eye-tracking data of \insertCite{Frank2013;textual}{pangoling}}
 \format{
-A data frame with  rows and  variables:
+A data frame:
 \itemize{
 \item \code{subj}: Subject
 \item \code{sent_id}: Sentence unique id.
@@ -17,14 +17,17 @@ A data frame with  rows and  variables:
 \item \code{word}: Presented word
 \item \code{blink}: Indicates whether a blink was detected directly 'before' or 'after' the current fixation (or 'both' before and after).
 }
-
-NOTE -- Within each sentence, fixations are listed in the order in which they occurred. If any fixation during sentence presentation was registered as being outside the display bounds, this was regarded as a tracking error and no data is presented for that sentence.
-NOTE -- The letter and word position are NaN if gaze_y is outside the range (300,475) because that was considered too far above or below the presented sentence.
 }
 \usage{
 data_frank2013_et_fix
 }
 \description{
-ET data  of Frank et al ...
+Fixations positions of the eye-tracking  data of \insertCite{Frank2013;textual}{pangoling}.
+}
+\details{
+As in the original dataset: "Within each sentence, fixations are listed in the order in which they occurred. If any fixation during sentence presentation was registered as being outside the display bounds, this was regarded as a tracking error and no data is presented for that sentence. The letter and word position are NaN if gaze_y is outside the range (300,475) because that was considered too far above or below the presented sentence."
+}
+\seealso{
+\link{data_frank2013_stimuli} for the enriched stimuli, \link{data_frank2013_spr_complete} for the associated self-paced reading data, \link{data_frank2013_spr} for a cleaned version of that dataaset,  and \link{data_frank2013_et_rt} for a preprocessed this dataset.
 }
 \keyword{datasets}

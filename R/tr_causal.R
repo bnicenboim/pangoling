@@ -7,16 +7,15 @@
 #' @return Nothing
 #' @export
 #'
-#' @examples
 preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = list(), config_tokenizer =list()) {
   lang_model(model, task = "causal", config_model)
   tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
   invisible()
 }
 
-#' Get the log probability of each word phrase of a vector given its previous context.
+#' Get the possible next tokens and their log probabilities its previous context using a causal transformer.
 #'
-#' Get the log probability of each word phrase of a vector given its previous context using a causal transformer model from huggingface.com.
+#' Get the possible next tokens and their log probabilities its previous context using a causal transformer model from huggingface.com.  Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 #'
 #' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using `...` it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details.
 #'
@@ -26,8 +25,7 @@ preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = 
 #' @param config_model list with other arguments that control how the model from hugging face is accessed.
 #' @param config_tokenizer list with arguments that control how the model from hugging face is accessed.
 #'
-#' @return
-#'
+#' @return a table with possible next tokes and their log-probabilities
 #' @export
 get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = NULL, config_model = list(), config_tokenizer = list()) {
 
@@ -48,22 +46,27 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
 
 #' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
 #'
-#' In case of errors check the status of https://status.huggingface.co/
+#' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+#'
+#' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using `...` it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
 #'
 #' @param x Vector of words, phrases or texts.
-#' @param by Vector that indicates how the text should be split.
+#' @param .by Vector that indicates how the text should be split.
 #' @inheritParams get_causal_next_tokens_tbl
 #'
-#' @ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
+#' @param ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
 #'
-#' @return a vector of log probabilities.
+#' @return A vector of log probabilities.
 #'
 #' @export
-get_causal_log_prob <- function(x, by = rep(1, length(x)), ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
-  if (length(x) != length(by)) stop2("The argument `by` has an incorrect length.")
+get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+  if(is.null(.by)) {
+    .by = rep(1, length(x))
+  }
+  if (length(x) != length(.by)) stop2("The argument `.by` has an incorrect length.")
   if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
   x <- trimws(x, whitespace = "[ \t]")
-  texts <- split(x, by)
+  texts <- split(x, .by)
   N <- length(texts)
   out <- tidytable::map2.(texts, names(texts), function(words, item) {
     # words <- texts[[1]]

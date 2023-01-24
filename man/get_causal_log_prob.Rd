@@ -6,7 +6,7 @@
 \usage{
 get_causal_log_prob(
   x,
-  by = rep(1, length(x)),
+  .by = NULL,
   ignore_regex = "",
   model = "gpt2",
   add_bos_token = NULL,
@@ -18,7 +18,9 @@ get_causal_log_prob(
 \arguments{
 \item{x}{Vector of words, phrases or texts.}
 
-\item{by}{Vector that indicates how the text should be split.}
+\item{.by}{Vector that indicates how the text should be split.}
+
+\item{ignore_regex}{Can ignore certain characters when calculates the log probabilities. For example \verb{^[[:punct:]]$} will ignore all punctuation  that stands alone in a token.}
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 
@@ -29,7 +31,7 @@ get_causal_log_prob(
 \item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
 }
 \value{
-a vector of log probabilities.
+A vector of log probabilities.
 }
 \description{
 In case of errors check the status of https://status.huggingface.co/

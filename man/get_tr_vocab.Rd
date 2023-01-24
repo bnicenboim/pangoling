@@ -2,13 +2,18 @@
 % Please edit documentation in R/tr_utils.R
 \name{get_tr_vocab}
 \alias{get_tr_vocab}
-\title{Title}
+\title{Returns the vocabulary of a model}
 \usage{
 get_tr_vocab(model = "gpt2", add_bos_token = NULL, config = list())
 }
 \arguments{
-\item{model}{}
+\item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
+
+\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+}
+\value{
+A vector with the vocabulary of a model
 }
 \description{
-Title
+Returns the vocabulary of a model
 }

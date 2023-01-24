@@ -1,6 +1,7 @@
 ---
 title: "Using a GPT2 transformer model to get word predictability."
 output: rmarkdown::html_vignette
+bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
 vignette: >
   %\VignetteIndexEntry{transformer-gpt2}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +15,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+<!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
+
 Transformer models are a type of neural network architecture used for natural language processing tasks such as language translation and text generation. They were introduced in the 2017 paper "Attention Is All You Need" by researchers at Google. 
 
 Large Language Models (LLMs) are pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
@@ -26,8 +29,8 @@ One interesting side-effect of the these models is that the probability of a wor
 
 ```{r setup, message = FALSE}
 library(pangoling)
-library(tidytable)
-library(tictoc)
+library(tidytable) #fast alternative to dplyr
+library(tictoc) #measure time
 ```
 
 First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
@@ -82,15 +85,55 @@ df_sent <- strsplit(x = sentences, split = " ") |>
 df_sent
 ```
 
-It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2.
+It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2. (It' also possible to use `group_by()` rather than the argument `.by`, but it will be slower.)
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, by = sent_n))
+  mutate(lp = get_causal_log_prob(word, .by = sent_n))
 df_sent
 ```
 
+The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens:
+
+```{r}
+get_tokens("tree.")
+```
+
+The log-probability of "tree." is the sum of the log-probability of "tree" given its context and `.` given its context.
+
+We can verify it in the following way.
+
+```{r}
+(tree_lp <- df_pred
+  # requires a Ġ because there is a space before
+  |> filter(token =="Ġtree")
+  |> pull())
+
+(dot_lp <- get_causal_next_tokens_tbl("The apple doesn't fall far from the tree") |>
+  # doesn't require a Ġ because there is no space before
+   filter(token ==".") |>
+   pull())
+
+tree_lp + dot_lp
+df_sent |> filter(word == "tree.") |>
+  pull()
+```
+
+In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.
 
 
+We'll look at a more realistic scenario with the data of @Franket2013a. We calculate the log-probability for each word in the stimuli. We make the output less verbose to not clutter the output here.
 
+```{r, cache = TRUE}
+options(pangoling.verbose = 0)
+tic()
+data_frank2013_stimuli <- data_frank2013_stimuli |>
+  mutate(lp = get_causal_log_prob(word, .by = sent_id))
+toc()
+```
 
+@Franke2013a calculates the surprisal with a neural network. We should expect that our log-probability and the surprisal will have a correlation close to $-1$.
+
+```{r}
+cor(data_frank2013_stimuli$lp, data_frank2013_stimuli$surprisal_10,use = "complete" )
+```

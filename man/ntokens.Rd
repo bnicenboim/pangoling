@@ -13,6 +13,9 @@ ntokens(x, model = "gpt2", add_bos_token = NULL, config = NULL)
 
 \item{add_bos_token}{Whether to include beginning of text special tokens. See details}
 }
+\value{
+The number of tokens in a string or vector of words.
+}
 \description{
 The number of tokens in a string or vector of strings
 }

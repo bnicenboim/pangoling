@@ -1,0 +1,56 @@
+---
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# pangoling
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of pangoling is to use transformer models to get log-probabilities of words. It's a wrapper of the python package [`transformer`](https://pypi.org/project/transformers/).
+
+## Installation
+
+There is still no released version of `pangoling`. The package is in the early stages of development, and it will be subject to a lot of changes. To install the latest version from github use:
+
+```{r, eval = FALSE}
+# install.packages("remotes") # if needed
+remotes::install_github("bnicenboim/pangoling")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r}
+library(pangoling)
+```
+
+```{r, message = FALSE}
+library(tidytable) #fast alternative to dplyr
+```
+
+The intended use of this package is the following. Given a (toy) dataset like this.
+
+```{r, cache = TRUE}
+sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book by its cover.")
+(df_sent <- strsplit(x = sentences, split = " ") |> 
+  map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n"))
+```
+
+It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2.
+
+```{r, cache = TRUE}
+(df_sent <- df_sent |>
+  mutate(lp = get_causal_log_prob(word, .by = sent_n)))
+```
+
