@@ -6,7 +6,7 @@
 
 The goal of pangoling is to use transformer models to get
 log-probabilities of words. It’s a wrapper of the python package
-[`transformer`](https://pypi.org/project/transformers/).
+[`transformers`](https://pypi.org/project/transformers/).
 
 ## Installation
 
@@ -62,8 +62,8 @@ It’s straight-forward to get the log-probability (`-suprisal`) of each
 word based on GPT-2.
 
 ``` r
-(df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n)))
+df_sent <- df_sent |>
+  mutate(lp = get_causal_log_prob(word, .by = sent_n))
 #> Processing 1 batch(es) of 10 tokens.
 #> Processing using causal model 'gpt2'...
 #> Text id: 1
@@ -72,6 +72,7 @@ word based on GPT-2.
 #> Processing using causal model 'gpt2'...
 #> Text id: 2
 #> `Don't judge a book by its cover.`
+df_sent
 #> # A tidytable: 15 × 3
 #>    sent_n word         lp
 #>     <int> <chr>     <dbl>

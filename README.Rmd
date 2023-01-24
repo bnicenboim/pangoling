@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of pangoling is to use transformer models to get log-probabilities of words. It's a wrapper of the python package [`transformer`](https://pypi.org/project/transformers/).
+The goal of pangoling is to use transformer models to get log-probabilities of words. It's a wrapper of the python package [`transformers`](https://pypi.org/project/transformers/).
 
 ## Installation
 
@@ -50,7 +50,8 @@ sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book 
 It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2.
 
 ```{r, cache = TRUE}
-(df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n)))
+df_sent <- df_sent |>
+  mutate(lp = get_causal_log_prob(word, .by = sent_n))
+df_sent
 ```
 
