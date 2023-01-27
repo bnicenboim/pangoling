@@ -8,8 +8,8 @@ get_causal_next_tokens_tbl(
   context,
   model = "gpt2",
   add_bos_token = NULL,
-  config_model = list(),
-  config_tokenizer = list()
+  config_model = NULL,
+  config_tokenizer = NULL
 )
 }
 \arguments{

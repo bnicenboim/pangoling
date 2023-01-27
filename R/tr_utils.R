@@ -99,11 +99,10 @@ lang_model <- memoise::memoise(lm_init)
 
 
 #' @noRd
-get_vocab_init <- function(model = "gpt2", add_bos_token = NULL, config = list()) {
+get_vocab_init <- function(model = "gpt2", add_bos_token = NULL, config = NULL) {
   tkzr <- tokenizer(model, add_bos_token = add_bos_token, config = config)
   size <- tkzr$vocab_size
-  tkzr$convert_ids_to_tokens(0L:(size -
-                                                                 1L))
+  sort(unlist(tkzr$get_vocab())) |> names()
 }
 
 #' Returns the vocabulary of a model
@@ -117,10 +116,13 @@ get_vocab_init <- function(model = "gpt2", add_bos_token = NULL, config = list()
 get_tr_vocab <- memoise::memoise(get_vocab_init)
 
 #' Get ids (without adding special characters at beginning or end?)
+#' @noRd
 get_id <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL){
+  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config = config)
+  if(!is.null(add_bos_token) && add_bos_token) x[1] <- paste0(tkzr$eos_token, x[1])
   lapply(x, function(i){
-    t <- tokenizer(model, add_bos_token = add_bos_token, config = config)$tokenize(i)
-    tokenizer(model, add_bos_token = add_bos_token, config = config)$convert_tokens_to_ids(t)
+    t <- tkzr$tokenize(i)
+    tkzr$convert_tokens_to_ids(t)
   } )
 }
 

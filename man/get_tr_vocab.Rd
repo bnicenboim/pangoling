@@ -4,7 +4,7 @@
 \alias{get_tr_vocab}
 \title{Returns the vocabulary of a model}
 \usage{
-get_tr_vocab(model = "gpt2", add_bos_token = NULL, config = list())
+get_tr_vocab(model = "gpt2", add_bos_token = NULL, config = NULL)
 }
 \arguments{
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}

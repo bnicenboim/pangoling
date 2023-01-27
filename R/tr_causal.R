@@ -27,7 +27,7 @@ preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = 
 #'
 #' @return a table with possible next tokes and their log-probabilities
 #' @export
-get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = NULL, config_model = list(), config_tokenizer = list()) {
+get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = NULL, config_model = NULL, config_tokenizer = NULL) {
 
   tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
   context_tensor <- tkzr$encode(context, return_tensors = "pt")
@@ -37,7 +37,7 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
   lp <- reticulate::py_to_r(torch$log_softmax(logits_next_word, dim = -1L)$tolist()) |>
     unlist()
 
-  vocab <- get_tr_vocab(model, add_bos_token = add_bos_token, config_tokenizer)
+  vocab<- get_tr_vocab(model, add_bos_token = add_bos_token, config_tokenizer)
 
   tidytable::tidytable(token = vocab, log_prob = lp) |>
     tidytable::arrange.(-log_prob)
@@ -79,7 +79,7 @@ get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2"
     } else {
       words_lm <- words
     }
-    tokens <- lapply(get_id(words_lm, model, add_bos_token, config = config_tokenizer),
+    tokens <- lapply(get_id(words_lm, model, add_bos_token = add_bos_token, config = config_tokenizer),
                      get_tokens.numeric, model = model, add_bos_token = add_bos_token, config = config_tokenizer)
     token_n <- tidytable::map_dbl.(tokens, length)
     index_vocab <- data.table::chmatch(unlist(tokens), rownames(ls_mat[[1]]))
@@ -113,28 +113,31 @@ get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2"
       n <- n + t
       # i <- i + 1
     }
+    names(word_lp) <- words
     word_lp
   })
   unlist(out, recursive = FALSE)
+
 }
 
 
-
-
-
+#' @noRd
 causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
   tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
   tkzr$pad_token <- tkzr$eos_token
-  max_length <- tkzr$max_model_input_sizes[model]
-
+  max_length <- tkzr$max_len_single_sentence
+  if(is.null(max_length) || is.na(max_length) || max_length < 1) {
+    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+    max_length <- Inf
+  }
   text <- paste0(words, collapse = " ")
-  tensor <- tkzr$encode(text, return_tensors = "pt", stride = as.integer(stride), truncation = TRUE, return_overflowing_tokens = TRUE, padding = TRUE)
+  tensor <- tkzr$encode(text, return_tensors = "pt", stride = as.integer(stride), truncation = is.finite(max_length), return_overflowing_tokens = is.finite(max_length), padding = is.finite(max_length))
+
   # for test
   # tensor <- tkzr$encode(text, return_tensors = "pt", stride = 2L, truncation =TRUE, return_overflowing_tokens=TRUE, padding = TRUE, max_length = 3L)
 
   ids <- unlist(tensor$tolist())
   tensor_size <- length(ids)
-
 
   message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
   message_verbose("Processing using causal model '", model, "'...")
@@ -149,13 +152,14 @@ causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, str
     final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
     logits <- torch$row_stack(c(logits_b[0], final_words))
 
-    first_tokens <- reticulate::py_to_r(tkzr$convert_ids_to_tokens(tensor[0]))
-    final_tokens <- tidytable::map_chr(1:(logits_b$shape[0] - 1), function(n) {
+    first_tokens <- tkzr$convert_ids_to_tokens(tensor[0])
+    final_tokens <- tidytable::map(0:(logits_b$shape[0] - 1), function(n) {
       t <- tensor[n][seq(stride, max_length - 1)]
       # in case the tensor is of size 1 and lost a dimension:
       if (t$shape$numel() == 1L) t <- t$reshape(1L)
-      reticulate::py_to_r(tkzr$convert_ids_to_tokens(t))
-    })
+      tkzr$convert_ids_to_tokens(t)
+    }) |>
+      unlist()
 
     tokens <- c(first_tokens, final_tokens)
   } else {
@@ -170,28 +174,28 @@ causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, str
   mat <- do.call("cbind", lp)
   # remove the last prediction, and the first is NA
   mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
-  rownames(mat) <- get_tr_vocab(model)
+  rownames(mat) <- get_tr_vocab(model, add_bos_token = add_bos_token, config = config_tokenizer)
   colnames(mat) <- unlist(tokens)
   list(mat)
 }
 
 
 
-## #'
-## #' Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com
-## #'
-## #' @inheritParams get_causal_log_prob
-## #'
-## #' @return matrix
-## #' @export
-## #'
-## #' @examples
-## get_causal_log_prob_mat <- function(x, by = rep(1, length(x)), model = "gpt2", add_bos_token = NULL, stride = 1, ...) {
-##   x <- trimws(x, whitespace = "[ \t]")
-##   texts <- split(x, by)
-##   N <- length(texts)
-##   tidytable::map2.(texts, names(texts), function(words, item) {
-##     causal_log_prob_mat(words, model = model, add_bos_token = add_bos_token, stride = stride, ...)
-##   })
-## }
+
+#' Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com
+#'
+#' @inheritParams get_causal_log_prob
+#'
+#' @return matrix
+#' @export
+#'
+#' @examples
+get_causal_log_prob_mat <- function(x, by = rep(1, length(x)), model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
+  x <- trimws(x, whitespace = "[ \t]")
+  texts <- split(x, by)
+  N <- length(texts)
+  tidytable::map2.(texts, names(texts), function(words, item) {
+    causal_log_prob_mat(words, model = model, add_bos_token = add_bos_token, stride = stride,config_model = config_model,config_tokenizer = config_tokenizer)
+  })
+}
 
