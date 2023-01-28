@@ -7,14 +7,14 @@
 \format{
 A data frame:
 \itemize{
-\item \code{subj}: Subject
+\item \code{subj}: Subject id.
 \item \code{sent_id}: Sentence unique id.
-\item \code{gaze_x}: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge) Each letter (including space and punctuation) was 14 pixels wide.
-\item \code{gaze_y}: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display)
-\item \code{fix_duration}: Duration of fixation in msec
+\item \code{gaze_x}: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge). Each letter (including space and punctuation) was 14 pixels wide.
+\item \code{gaze_y}: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display).
+\item \code{fix_duration}: Duration of the fixation in ms.
 \item \code{letter_n}: Fixated letter position in sentence (including spaces), even if the fixation was to the left of the left margin or to the right of the last letter. Position 0 is directly to the left of the first letter.
-\item \code{word_n}: Position of the word in the sentence
-\item \code{word}: Presented word
+\item \code{word_n}: Position of the word in the sentence.
+\item \code{word}: Presented word.
 \item \code{blink}: Indicates whether a blink was detected directly 'before' or 'after' the current fixation (or 'both' before and after).
 }
 }

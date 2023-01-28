@@ -1,25 +1,25 @@
-#' Cloze probabilities from the Provo Corpus.
+#' Cloze probabilities from the Provo Corpus `r RefManageR::Citep(mybib,"provo")`.
 #'
-#' A dataset containing the .. reference
+#' A dataset adapted  from the Provo Corpus `r RefManageR::Citep(mybib,"provo")` with the word probability of the stimuli of the eye-tracking experiment.
 #'
-#' @format A data frame with 2730 rows and 16 variables:
+#' @format A data frame with `r nrow(data_provo_cloze)` rows and `r nrow(data_provo_cloze)` columns:
 #'
-#' * `word_unique_id`: DESCRIPTION
-#' * `text_id`: DESCRIPTION
-#' * `word_n`: DESCRIPTION
-#' * `word`: DESCRIPTION
-#' * `word_cleaned`: DESCRIPTION
-#' * `word_length`: DESCRIPTION
-#' * `total_response_count`: DESCRIPTION
-#' * `cp`: DESCRIPTION
-#' * `modal_response`: DESCRIPTION
-#' * `pos_claws`: DESCRIPTION
-#' * `word_content_or_function`: DESCRIPTION
-#' * `word_pos`: DESCRIPTION
-#' * `pos_cp`: DESCRIPTION
-#' * `lsa_context_score`: DESCRIPTION
-#' * `lsa_response_match_score`: DESCRIPTION
-#' * `text`: DESCRIPTION
+#' * `word_unique_id`:  A unique ID number for each word (each token) in the data set.
+#' * `text_id`:  The text number (paragraph 1–55).
+#' * `word_n`:  The ordinal position of the word in the text.
+#' * `word`:   The target word as it appeared on the screen on the eye-tracking experiment.
+#' * `word_cleaned`: The target word, with punctuation, capitalization and contractions removed.
+#' * `word_length`: Word length.
+#' * `total_response_count`:  The total number of responses provided on the cloze task for this word.
+#' * `cp`:  How often a given response was provided, as a proportion of all responses. Can be used as a measure of predictability. `cp = response_count/total_response_count`
+#' * `modal_response`: The modal response.
+#' * `pos_claws`: The part of speech tag of the target word. (See http://ucrel.lancs.ac.uk/claws/ for more information on the meaning of the specific tags.)
+#' * `word_content_or_function`:  Whether the word is a content word or a function word, based on `pos_claws`.
+#' * `word_pos`:  A more general grouping of parts of speech, based on POS_CLAWS, which includes the following categories: adjective, adverb, article, conjunction, determiner, existential, infinitive marker, negative, noun, number, preposition, pronoun, verb.
+#' * `pos_cp`:  The proportion of responses with the same POS as the target, using `word_pos` (e.g., Target and response are both nouns).
+#' * `lsa_context_score`:  A measure of the semantic association between the target word and the entire preceding passage context, obtained using latent semantic analysis (Landauer & Dumais, 1997; http://lsa.colorado.edu/). For example, the LSA score for the word "rumblings" was obtained by comparing “rumblings” to the preceding context "There are now." This score is a measure of the contextual fit of a given target word.
+#' * `lsa_response_match_score`:  The mean LSA match score between the target and all provided responses. For example, pairwise LSA was used to compare the target “carts” with the responses provided in the cloze procedure (e.g., “horses,” “slower,” and “the”), and the LSA scores for all responses were averaged. This measure is an estimate of the semantic predictability of a given target word (i.e., could participants have a good sense for the general meaning of the upcoming word, even if they cannot predict exactly what that word will be).
+#' * `text`:  The entire text from which the target word is taken.
 #'
 #' @family datasets
 #' @references
@@ -70,18 +70,18 @@
 #'
 #' @format A data frame with  rows and  variables:
 #'
-#' * `subj`: Subject
+#' * `subj`: Subject id.
 #' * `sent_id`: Sentence unique id.
-#' * `sent_n`: Position of sentence in presentation sequence
-#' * `answer_time`: Time in msec between question presentation and response, or NaN if there was no question
-#' * `word_n`: Position of the word in the sentence
-#' * `word`: Presented word
-#' * `RT`: Time in msec between word presentation and key press
-#' * `acc_comprehension`: Correctness of response to comprehension question
-#' * `age`: Subject's age in years
-#' * `age_en`: Age at which subject began learning English (0 for native speakers)
-#' * `sex`: Subject's sex (f/m)
-#' * `hand`: Subject's handedness (r/l)
+#' * `sent_n`: Position of sentence in the presentation sequence.
+#' * `answer_time`: Time in ms between question presentation and response, or NaN if there was no question.
+#' * `word_n`: Position of the word in the sentence.
+#' * `word`: Presented word.
+#' * `RT`: Time in ms between word presentation and key press.
+#' * `acc_comprehension`: Correctness of response to comprehension question.
+#' * `age`: Subject's age in years.
+#' * `age_en`: Age at which subject began learning English (0 for native speakers).
+#' * `sex`: Subject's sex (f/m).
+#' * `hand`: Subject's handedness (r/l).
 #' * `correct_perc`: Fraction of correct responses to comprehension questions.
 #' * `typo`: Whether there is a typo in the word.
 #' @references
@@ -117,17 +117,17 @@
 #'
 #' @format A data frame with `r nrow(data_frank2013_et_rt)` rows and `r ncol(data_frank2013_et_rt)` columns:
 #'
-#' * `subj`: Subject
+#' * `subj`: Subject id.
 #' * `sent_id`: Sentence unique id.
-#' * `sent_n`: Position of sentence in presentation sequence
-#' * `answer_time`: Time in msec between question presentation and response, or NaN if there was no question
-#' * `acc_comprehension`: Whether the answer is correct or not
-#' * `word_n`: Position of the word in the sentence
-#' * `word`: Presented word
-#' * `RTfirstfix`: First fixation time on current word (or 0 if word not fixated)
-#' * `RTfirstpass`: First-pass reading time (total fixation time on current word before first fixation on any other word)
-#' * `RTrightbound`: Right-bounded reading time (total fixation time on current word before first fixation on any word to the right)
-#' * `RTgopast`: Go-past reading time (total fixation time from first fixation on current word up to first fixation on any word to the right)
+#' * `sent_n`: Position of sentence in the presentation sequence.
+#' * `answer_time`: Time in ms between question presentation and response, or NaN if there was no question.
+#' * `acc_comprehension`: Whether the answer is correct or not.
+#' * `word_n`: Position of the word in the sentence.
+#' * `word`: Presented word.
+#' * `RTfirstfix`: First fixation time on current word (or 0 if word not fixated).
+#' * `RTfirstpass`: First-pass reading time (total fixation time on current word before first fixation on any other word).
+#' * `RTrightbound`: Right-bounded reading time (total fixation time on current word before first fixation on any word to the right).
+#' * `RTgopast`: Go-past reading time (total fixation time from first fixation on current word up to first fixation on any word to the right).
 #'
 #' @references
 #'
@@ -147,14 +147,14 @@
 #'
 #' @format A data frame:
 #'
-#' * `subj`: Subject
+#' * `subj`: Subject id.
 #' * `sent_id`: Sentence unique id.
-#' * `gaze_x`: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge) Each letter (including space and punctuation) was 14 pixels wide.
-#' * `gaze_y`: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display)
-#' * `fix_duration`: Duration of fixation in msec
+#' * `gaze_x`: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge). Each letter (including space and punctuation) was 14 pixels wide.
+#' * `gaze_y`: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display).
+#' * `fix_duration`: Duration of the fixation in ms.
 #' * `letter_n`: Fixated letter position in sentence (including spaces), even if the fixation was to the left of the left margin or to the right of the last letter. Position 0 is directly to the left of the first letter.
-#' * `word_n`: Position of the word in the sentence
-#' * `word`: Presented word
+#' * `word_n`: Position of the word in the sentence.
+#' * `word`: Presented word.
 #' * `blink`: Indicates whether a blink was detected directly 'before' or 'after' the current fixation (or 'both' before and after).
 #'
 #' @references

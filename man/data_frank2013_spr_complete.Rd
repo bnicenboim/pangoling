@@ -7,18 +7,18 @@
 \format{
 A data frame with  rows and  variables:
 \itemize{
-\item \code{subj}: Subject
+\item \code{subj}: Subject id.
 \item \code{sent_id}: Sentence unique id.
-\item \code{sent_n}: Position of sentence in presentation sequence
-\item \code{answer_time}: Time in msec between question presentation and response, or NaN if there was no question
-\item \code{word_n}: Position of the word in the sentence
-\item \code{word}: Presented word
-\item \code{RT}: Time in msec between word presentation and key press
-\item \code{acc_comprehension}: Correctness of response to comprehension question
-\item \code{age}: Subject's age in years
-\item \code{age_en}: Age at which subject began learning English (0 for native speakers)
-\item \code{sex}: Subject's sex (f/m)
-\item \code{hand}: Subject's handedness (r/l)
+\item \code{sent_n}: Position of sentence in the presentation sequence.
+\item \code{answer_time}: Time in ms between question presentation and response, or NaN if there was no question.
+\item \code{word_n}: Position of the word in the sentence.
+\item \code{word}: Presented word.
+\item \code{RT}: Time in ms between word presentation and key press.
+\item \code{acc_comprehension}: Correctness of response to comprehension question.
+\item \code{age}: Subject's age in years.
+\item \code{age_en}: Age at which subject began learning English (0 for native speakers).
+\item \code{sex}: Subject's sex (f/m).
+\item \code{hand}: Subject's handedness (r/l).
 \item \code{correct_perc}: Fraction of correct responses to comprehension questions.
 \item \code{typo}: Whether there is a typo in the word.
 }

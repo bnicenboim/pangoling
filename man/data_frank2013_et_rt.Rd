@@ -7,17 +7,17 @@
 \format{
 A data frame with 81109 rows and 11 columns:
 \itemize{
-\item \code{subj}: Subject
+\item \code{subj}: Subject id.
 \item \code{sent_id}: Sentence unique id.
-\item \code{sent_n}: Position of sentence in presentation sequence
-\item \code{answer_time}: Time in msec between question presentation and response, or NaN if there was no question
-\item \code{acc_comprehension}: Whether the answer is correct or not
-\item \code{word_n}: Position of the word in the sentence
-\item \code{word}: Presented word
-\item \code{RTfirstfix}: First fixation time on current word (or 0 if word not fixated)
-\item \code{RTfirstpass}: First-pass reading time (total fixation time on current word before first fixation on any other word)
-\item \code{RTrightbound}: Right-bounded reading time (total fixation time on current word before first fixation on any word to the right)
-\item \code{RTgopast}: Go-past reading time (total fixation time from first fixation on current word up to first fixation on any word to the right)
+\item \code{sent_n}: Position of sentence in the presentation sequence.
+\item \code{answer_time}: Time in ms between question presentation and response, or NaN if there was no question.
+\item \code{acc_comprehension}: Whether the answer is correct or not.
+\item \code{word_n}: Position of the word in the sentence.
+\item \code{word}: Presented word.
+\item \code{RTfirstfix}: First fixation time on current word (or 0 if word not fixated).
+\item \code{RTfirstpass}: First-pass reading time (total fixation time on current word before first fixation on any other word).
+\item \code{RTrightbound}: Right-bounded reading time (total fixation time on current word before first fixation on any word to the right).
+\item \code{RTgopast}: Go-past reading time (total fixation time from first fixation on current word up to first fixation on any word to the right).
 }
 }
 \usage{

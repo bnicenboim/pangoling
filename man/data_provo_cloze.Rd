@@ -3,26 +3,26 @@
 \docType{data}
 \name{data_provo_cloze}
 \alias{data_provo_cloze}
-\title{Cloze probabilities from the Provo Corpus.}
+\title{Cloze probabilities from the Provo Corpus (Luke and Christianson, 2018).}
 \format{
-A data frame with 2730 rows and 16 variables:
+A data frame with 2730 rows and 2730 columns:
 \itemize{
-\item \code{word_unique_id}: DESCRIPTION
-\item \code{text_id}: DESCRIPTION
-\item \code{word_n}: DESCRIPTION
-\item \code{word}: DESCRIPTION
-\item \code{word_cleaned}: DESCRIPTION
-\item \code{word_length}: DESCRIPTION
-\item \code{total_response_count}: DESCRIPTION
-\item \code{cp}: DESCRIPTION
-\item \code{modal_response}: DESCRIPTION
-\item \code{pos_claws}: DESCRIPTION
-\item \code{word_content_or_function}: DESCRIPTION
-\item \code{word_pos}: DESCRIPTION
-\item \code{pos_cp}: DESCRIPTION
-\item \code{lsa_context_score}: DESCRIPTION
-\item \code{lsa_response_match_score}: DESCRIPTION
-\item \code{text}: DESCRIPTION
+\item \code{word_unique_id}:  A unique ID number for each word (each token) in the data set.
+\item \code{text_id}:  The text number (paragraph 1–55).
+\item \code{word_n}:  The ordinal position of the word in the text.
+\item \code{word}:   The target word as it appeared on the screen on the eye-tracking experiment.
+\item \code{word_cleaned}: The target word, with punctuation, capitalization and contractions removed.
+\item \code{word_length}: Word length.
+\item \code{total_response_count}:  The total number of responses provided on the cloze task for this word.
+\item \code{cp}:  How often a given response was provided, as a proportion of all responses. Can be used as a measure of predictability. \code{cp = response_count/total_response_count}
+\item \code{modal_response}: The modal response.
+\item \code{pos_claws}: The part of speech tag of the target word. (See http://ucrel.lancs.ac.uk/claws/ for more information on the meaning of the specific tags.)
+\item \code{word_content_or_function}:  Whether the word is a content word or a function word, based on \code{pos_claws}.
+\item \code{word_pos}:  A more general grouping of parts of speech, based on POS_CLAWS, which includes the following categories: adjective, adverb, article, conjunction, determiner, existential, infinitive marker, negative, noun, number, preposition, pronoun, verb.
+\item \code{pos_cp}:  The proportion of responses with the same POS as the target, using \code{word_pos} (e.g., Target and response are both nouns).
+\item \code{lsa_context_score}:  A measure of the semantic association between the target word and the entire preceding passage context, obtained using latent semantic analysis (Landauer & Dumais, 1997; http://lsa.colorado.edu/). For example, the LSA score for the word "rumblings" was obtained by comparing “rumblings” to the preceding context "There are now." This score is a measure of the contextual fit of a given target word.
+\item \code{lsa_response_match_score}:  The mean LSA match score between the target and all provided responses. For example, pairwise LSA was used to compare the target “carts” with the responses provided in the cloze procedure (e.g., “horses,” “slower,” and “the”), and the LSA scores for all responses were averaged. This measure is an estimate of the semantic predictability of a given target word (i.e., could participants have a good sense for the general meaning of the upcoming word, even if they cannot predict exactly what that word will be).
+\item \code{text}:  The entire text from which the target word is taken.
 }
 }
 \source{
@@ -32,13 +32,13 @@ A data frame with 2730 rows and 16 variables:
 data_provo_cloze
 }
 \description{
-A dataset containing the .. reference
+A dataset adapted  from the Provo Corpus (Luke and Christianson, 2018) with the word probability of the stimuli of the eye-tracking experiment.
 }
 \references{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{#> No results.
-}\if{html}{\out{</div>}}
-
-list()
+\link{1}
+S. G. Luke and K. Christianson.
+``The Provo Corpus: A large eye-tracking corpus with predictability norms''.
+In: \emph{Behavior research methods} 50 (2018), pp. 826--833.
 }
 \seealso{
 Other datasets: 
