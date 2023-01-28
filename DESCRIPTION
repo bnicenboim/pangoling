@@ -8,8 +8,7 @@ Authors@R: c(
     role = c( "aut","cre"),
     comment = c(ORCID = "0000-0002-5176-3943")),
     person("Chris", "Emmerly", role = "ctb"))
-Description: Access to language model predictions in R.
-    That's it for now.
+Description: Access to large language model word predictability in R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,13 +25,12 @@ Imports:
     memoise,
     reticulate,
     tidyselect,
-    tidytable (>= 0.7.2),
-    Rdpack
+    tidytable (>= 0.7.2)
 Suggests: 
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0)
-RdMacros: Rdpack
+    testthat (>= 3.0.0),
+    RefManageR
 Config/testthat/edition: 3
 RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)

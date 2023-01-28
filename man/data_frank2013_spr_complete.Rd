@@ -3,7 +3,7 @@
 \docType{data}
 \name{data_frank2013_spr_complete}
 \alias{data_frank2013_spr_complete}
-\title{Self-paced reading data of \insertCite{Frank2013;textual}{pangoling}}
+\title{Self-paced reading data of Frank, Fernandez Monsalve, Thompson et al. (2013)}
 \format{
 A data frame with  rows and  variables:
 \itemize{
@@ -27,10 +27,20 @@ A data frame with  rows and  variables:
 data_frank2013_spr_complete
 }
 \description{
-A dataset containing the self-paced reading data of \insertCite{Frank2013;textual}{pangoling}. Notice that after collecting the self-paced-reading data, three typos were found:
-sentence 43  : "Scott" was "Sott"
-sentence 269 : "at" was "that"
-sentence 337 : "Margaret" was "Margeret"
+A dataset containing the self-paced reading data of Frank, Fernandez Monsalve, Thompson et al. (2013). Notice that after collecting the self-paced-reading data, three typos were found:
+\itemize{
+\item sentence 43  : "Scott" was "Sott"
+\item sentence 269 : "at" was "that"
+\item sentence 337 : "Margaret" was "Margeret"
+}
+}
+\references{
+\link{1}
+S. L. Frank, I. Fernandez Monsalve, R. L. Thompson, et al.
+``Reading Time Data for Evaluating Broad-Coverage Models of English Sentence Processing''.
+In: \emph{Behavior Research Methods} 45.4 (dec. 01, 2013), pp. 1182--1190.
+ISSN: 1554-3528.
+DOI: 10.3758/s13428-012-0313-y.
 }
 \seealso{
 \link{data_frank2013_stimuli} for the enriched stimuli,  \link{data_frank2013_spr} for a cleaned version of this dataset,  \link{data_frank2013_et_fix} for the eye-tracking version of this dataset with the fixation information, and \link{data_frank2013_et} for a preprocessed eye-tracking dataset.

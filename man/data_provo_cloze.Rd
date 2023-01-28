@@ -34,6 +34,12 @@ data_provo_cloze
 \description{
 A dataset containing the .. reference
 }
+\references{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{#> No results.
+}\if{html}{\out{</div>}}
+
+list()
+}
 \seealso{
 Other datasets: 
 \code{\link{data_frank2013_et_rt}},

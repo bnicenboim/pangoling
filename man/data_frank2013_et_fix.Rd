@@ -3,7 +3,7 @@
 \docType{data}
 \name{data_frank2013_et_fix}
 \alias{data_frank2013_et_fix}
-\title{Fixations positions of the eye-tracking data of \insertCite{Frank2013;textual}{pangoling}}
+\title{Fixations positions of the eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)}
 \format{
 A data frame:
 \itemize{
@@ -22,10 +22,18 @@ A data frame:
 data_frank2013_et_fix
 }
 \description{
-Fixations positions of the eye-tracking  data of \insertCite{Frank2013;textual}{pangoling}.
+Fixations positions of the eye-tracking  data of Frank, Fernandez Monsalve, Thompson et al. (2013).
 }
 \details{
 As in the original dataset: "Within each sentence, fixations are listed in the order in which they occurred. If any fixation during sentence presentation was registered as being outside the display bounds, this was regarded as a tracking error and no data is presented for that sentence. The letter and word position are NaN if gaze_y is outside the range (300,475) because that was considered too far above or below the presented sentence."
+}
+\references{
+\link{1}
+S. L. Frank, I. Fernandez Monsalve, R. L. Thompson, et al.
+``Reading Time Data for Evaluating Broad-Coverage Models of English Sentence Processing''.
+In: \emph{Behavior Research Methods} 45.4 (dec. 01, 2013), pp. 1182--1190.
+ISSN: 1554-3528.
+DOI: 10.3758/s13428-012-0313-y.
 }
 \seealso{
 \link{data_frank2013_stimuli} for the enriched stimuli, \link{data_frank2013_spr_complete} for the associated self-paced reading data, \link{data_frank2013_spr} for a cleaned version of that dataaset,  and \link{data_frank2013_et_rt} for a preprocessed this dataset.

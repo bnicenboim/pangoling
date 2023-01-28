@@ -17,14 +17,13 @@ knitr::opts_chunk$set(
 
 <!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
 
-Transformer models are a type of neural network architecture used for natural language processing tasks such as language translation and text generation. They were introduced in the 2017 paper "Attention Is All You Need" by researchers at Google. 
+Transformer models are a type of neural network architecture used for natural language processing tasks such as language translation and text generation. They were introduced in the @vaswani2017attention paper "Attention Is All You Need". 
 
-Large Language Models (LLMs) are pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
+Large Language Models (LLMs) are a specific type of pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
 
 There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
 
-One interesting side-effect of the these models is that the probability of a word given a certain context can be extracted. Here we take advantage that GPT-2 can give us the probability of a word given its left context which can be used to approximate the psycholinguistic measure of *surprisal* (citation).
-
+One interesting side-effect of the these models is that the (log) probability of a word given a certain context can be extracted. 
 
 
 ```{r setup, message = FALSE}
@@ -85,7 +84,7 @@ df_sent <- strsplit(x = sentences, split = " ") |>
 df_sent
 ```
 
-It's straight-forward to get the log-probability (`-suprisal`) of each word based on GPT-2. (It' also possible to use `group_by()` rather than the argument `.by`, but it will be slower.)
+It's straight-forward to get the log-probability of each word based on GPT-2. (It' also possible to use `group_by()` rather than the argument `.by`, but it will be slower.)
 
 ```{r}
 df_sent <- df_sent |>
@@ -122,18 +121,4 @@ df_sent |> filter(word == "tree.") |>
 In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.
 
 
-We'll look at a more realistic scenario with the data of @Franket2013a. We calculate the log-probability for each word in the stimuli. We make the output less verbose to not clutter the output here.
 
-```{r, cache = TRUE}
-options(pangoling.verbose = 0)
-tic()
-data_frank2013_stimuli <- data_frank2013_stimuli |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_id))
-toc()
-```
-
-@Franke2013a calculates the surprisal with a neural network. We should expect that our log-probability and the surprisal will have a correlation close to $-1$.
-
-```{r}
-cor(data_frank2013_stimuli$lp, data_frank2013_stimuli$surprisal_10,use = "complete" )
-```

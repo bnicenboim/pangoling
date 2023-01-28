@@ -44,19 +44,18 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
 }
 
 
-#' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
+#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model
 #'
-#' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 #'
-#' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using `...` it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
+#' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using the `config` arguments it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param .by Vector that indicates how the text should be split.
 #' @inheritParams get_causal_next_tokens_tbl
-#'
 #' @param ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
 #'
-#' @return A vector of log probabilities.
+#' @return A named vector of log probabilities.
 #'
 #' @export
 get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
@@ -120,6 +119,25 @@ get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2"
 
 }
 
+get_causal_tokens_log_prob <- function(texts, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL, .id = NULL ){
+  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
+  tkzr$pad_token <- tkzr$eos_token
+  max_length <- tkzr$max_len_single_sentence
+  if(is.null(max_length) || is.na(max_length) || max_length < 1) {
+    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+    max_length <- Inf
+  }
+  out <- tidytable::map_dfr.(texts, function(text){
+    tensor <- tkzr$encode(text,
+                          return_tensors = "pt",
+                          stride = as.integer(stride),
+                          truncation = is.finite(max_length),
+                          return_overflowing_tokens = is.finite(max_length),
+                          padding = is.finite(max_length))
+
+  },.id = .id)
+
+}
 
 #' @noRd
 causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
