@@ -3,14 +3,14 @@
 \docType{data}
 \name{data_frank2013_et_fix}
 \alias{data_frank2013_et_fix}
-\title{Fixations positions of the eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)}
+\title{Fixation positions of the eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)}
 \format{
 A data frame:
 \itemize{
 \item \code{subj}: Subject
 \item \code{sent_id}: Sentence unique id.
 \item \code{gaze_x}: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge) Each letter (including space and punctuation) was 14 pixels wide.
-\item \code{gaze_y}: Vertical pixal coordinate of fixation location (0 = top of display; 768 = bottom of display)
+\item \code{gaze_y}: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display)
 \item \code{fix_duration}: Duration of fixation in msec
 \item \code{letter_n}: Fixated letter position in sentence (including spaces), even if the fixation was to the left of the left margin or to the right of the last letter. Position 0 is directly to the left of the first letter.
 \item \code{word_n}: Position of the word in the sentence
@@ -22,7 +22,7 @@ A data frame:
 data_frank2013_et_fix
 }
 \description{
-Fixations positions of the eye-tracking  data of Frank, Fernandez Monsalve, Thompson et al. (2013).
+Fixation positions of the eye-tracking  data of Frank, Fernandez Monsalve, Thompson et al. (2013).
 }
 \details{
 As in the original dataset: "Within each sentence, fixations are listed in the order in which they occurred. If any fixation during sentence presentation was registered as being outside the display bounds, this was regarded as a tracking error and no data is presented for that sentence. The letter and word position are NaN if gaze_y is outside the range (300,475) because that was considered too far above or below the presented sentence."

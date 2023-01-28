@@ -139,9 +139,9 @@
 "data_frank2013_et_rt"
 
 
-#' Fixations positions of the eye-tracking data of `r RefManageR::Citet(mybib,"Frank2013")`
+#' Fixation positions of the eye-tracking data of `r RefManageR::Citet(mybib,"Frank2013")`
 #'
-#' Fixations positions of the eye-tracking  data of `r RefManageR::Citet(mybib,"Frank2013")`.
+#' Fixation positions of the eye-tracking  data of `r RefManageR::Citet(mybib,"Frank2013")`.
 #'
 #' As in the original dataset: "Within each sentence, fixations are listed in the order in which they occurred. If any fixation during sentence presentation was registered as being outside the display bounds, this was regarded as a tracking error and no data is presented for that sentence. The letter and word position are NaN if gaze_y is outside the range (300,475) because that was considered too far above or below the presented sentence."
 #'
@@ -150,7 +150,7 @@
 #' * `subj`: Subject
 #' * `sent_id`: Sentence unique id.
 #' * `gaze_x`: Horizontal pixel coordinate of fixation location (0 = left edge; 39 = left margin; 1024 = right edge) Each letter (including space and punctuation) was 14 pixels wide.
-#' * `gaze_y`: Vertical pixal coordinate of fixation location (0 = top of display; 768 = bottom of display)
+#' * `gaze_y`: Vertical pixel coordinate of fixation location (0 = top of display; 768 = bottom of display)
 #' * `fix_duration`: Duration of fixation in msec
 #' * `letter_n`: Fixated letter position in sentence (including spaces), even if the fixation was to the left of the left margin or to the right of the last letter. Position 0 is directly to the left of the first letter.
 #' * `word_n`: Position of the word in the sentence

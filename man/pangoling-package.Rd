@@ -6,7 +6,7 @@
 \alias{pangoling-package}
 \title{pangoling: Access to language model predictions in R}
 \description{
-Access to language model predictions in R. That's it for now.
+Access to large language model word predictability in R.
 }
 \author{
 \strong{Maintainer}: Bruno Nicenboim \email{bruno.nicenboim@gmail.com} (\href{https://orcid.org/0000-0002-5176-3943}{ORCID})

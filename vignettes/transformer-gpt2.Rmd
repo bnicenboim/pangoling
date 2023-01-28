@@ -3,7 +3,7 @@ title: "Using a GPT2 transformer model to get word predictability."
 output: rmarkdown::html_vignette
 bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
 vignette: >
-  %\VignetteIndexEntry{transformer-gpt2}
+  %\VignetteIndexEntry{Using a GPT2 transformer model to get word predictability.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -120,5 +120,5 @@ df_sent |> filter(word == "tree.") |>
 
 In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.
 
-
+# References
 

@@ -58,20 +58,19 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
 #' @return A named vector of log probabilities.
 #'
 #' @export
-get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
-  if(is.null(.by)) {
-    .by = rep(1, length(x))
-  }
+get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
   if (length(x) != length(.by)) stop2("The argument `.by` has an incorrect length.")
   if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
   x <- trimws(x, whitespace = "[ \t]")
-  texts <- split(x, .by)
-  N <- length(texts)
-  out <- tidytable::map2.(texts, names(texts), function(words, item) {
-    # words <- texts[[1]]
+  word_by_word_texts <- split(x, .by)
+  N <- length(word_by_word_texts)
+  pasted_texts <- lapply(word_by_word_texts, function(word) paste0(word, collapse = " "))
+  tensors <- create_causal_tensor_lst(pasted_texts, model= model, add_bos_token = add_bos_token,stride = stride, config = config_tokenizer)
+  out <- tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts),tensors), function(words, item, tensor) {
+    # words <- word_by_word_texts[[1]]
     # item <- names(texts[1])
-
-    ls_mat <- causal_log_prob_mat(words, model = model, add_bos_token = add_bos_token, stride = stride,  config_model = config_model, config_tokenizer = config_tokenizer)
+    # tensor <- tensors[[1]]
+    ls_mat <- causal_log_prob_mat(tensor, model = model, add_bos_token = add_bos_token, stride = stride,  config_model = config_model, config_tokenizer = config_tokenizer)
 
     if(length(words) >1){
       words_lm <- c(words[1], paste0(" ", words[-1]))
@@ -119,37 +118,42 @@ get_causal_log_prob <- function(x, .by = NULL, ignore_regex = "", model = "gpt2"
 
 }
 
+#' @export
 get_causal_tokens_log_prob <- function(texts, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL, .id = NULL ){
-  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
-  tkzr$pad_token <- tkzr$eos_token
-  max_length <- tkzr$max_len_single_sentence
-  if(is.null(max_length) || is.na(max_length) || max_length < 1) {
-    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
-    max_length <- Inf
-  }
-  out <- tidytable::map_dfr.(texts, function(text){
-    tensor <- tkzr$encode(text,
-                          return_tensors = "pt",
-                          stride = as.integer(stride),
-                          truncation = is.finite(max_length),
-                          return_overflowing_tokens = is.finite(max_length),
-                          padding = is.finite(max_length))
 
-  },.id = .id)
+
+  tensors <- create_causal_tensor_lst(list(texts),
+                                      model= model,
+                                      add_bos_token = add_bos_token,
+                                      stride = stride, config = config_tokenizer)
+  ls_mat <-  tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts),tensors), function(words, item, tensor) {
+    causal_log_prob_mat(tensor, model = model, add_bos_token = add_bos_token, stride = stride,config_model = config_model,config_tokenizer = config_tokenizer)
+  })
+
+  token_lp <- tidytable::map2_dbl.(index_vocab, 1:ncol(ls_mat[[1]]), ~ ls_mat[[1]][.x, .y])
 
 }
 
 #' @noRd
-causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
-  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
-  tkzr$pad_token <- tkzr$eos_token
-  max_length <- tkzr$max_len_single_sentence
-  if(is.null(max_length) || is.na(max_length) || max_length < 1) {
-    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
-    max_length <- Inf
-  }
-  text <- paste0(words, collapse = " ")
+create_causal_tensor_lst <- function(texts, model = "gpt2", add_bos_token = NULL, stride = 1, config= NULL) {
+
+tkzr <- tokenizer(model, add_bos_token = add_bos_token, config)
+tkzr$pad_token <- tkzr$eos_token
+max_length <- tkzr$max_len_single_sentence
+if(is.null(max_length) || is.na(max_length) || max_length < 1) {
+  warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+  max_length <- Inf
+}
+#text <- paste0(words, collapse = " ")
+lapply(texts, function(text){
   tensor <- tkzr$encode(text, return_tensors = "pt", stride = as.integer(stride), truncation = is.finite(max_length), return_overflowing_tokens = is.finite(max_length), padding = is.finite(max_length))
+  tensor
+ })
+}
+
+#' @noRd
+causal_log_prob_mat <- function(tensor, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
+  tkzr <- tokenizer(model, add_bos_token = add_bos_token, config = config_tokenizer)
 
   # for test
   # tensor <- tkzr$encode(text, return_tensors = "pt", stride = 2L, truncation =TRUE, return_overflowing_tokens=TRUE, padding = TRUE, max_length = 3L)
@@ -208,12 +212,14 @@ causal_log_prob_mat <- function(words, model = "gpt2", add_bos_token = NULL, str
 #' @export
 #'
 #' @examples
-get_causal_log_prob_mat <- function(x, by = rep(1, length(x)), model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
+get_causal_log_prob_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
   x <- trimws(x, whitespace = "[ \t]")
-  texts <- split(x, by)
-  N <- length(texts)
-  tidytable::map2.(texts, names(texts), function(words, item) {
-    causal_log_prob_mat(words, model = model, add_bos_token = add_bos_token, stride = stride,config_model = config_model,config_tokenizer = config_tokenizer)
+  word_by_word_texts <- split(x, .by)
+  N <- length(word_by_word_texts)
+  pasted_texts <- lapply(word_by_word_texts, function(word) paste0(word, collapse = " "))
+  tensors <- create_causal_tensor_lst(pasted_texts, model= model, add_bos_token = add_bos_token,stride = stride, config = config_tokenizer)
+ tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts),tensors), function(words, item, tensor) {
+     causal_log_prob_mat(tensor, model = model, add_bos_token = add_bos_token, stride = stride,config_model = config_model,config_tokenizer = config_tokenizer)
   })
 }
 

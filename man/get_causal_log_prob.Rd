@@ -2,11 +2,11 @@
 % Please edit documentation in R/tr_causal.R
 \name{get_causal_log_prob}
 \alias{get_causal_log_prob}
-\title{Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.}
+\title{Get the log probability of each element of a vector of words (or phrases) using a causal transformer model}
 \usage{
 get_causal_log_prob(
   x,
-  .by = NULL,
+  .by = rep(1, length(x)),
   ignore_regex = "",
   model = "gpt2",
   add_bos_token = NULL,
@@ -31,11 +31,11 @@ get_causal_log_prob(
 \item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
 }
 \value{
-A vector of log probabilities.
+A named vector of log probabilities.
 }
 \description{
-Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 }
 \details{
-\code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using \code{...} it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
+\code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using the \code{config} arguments it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
 }
