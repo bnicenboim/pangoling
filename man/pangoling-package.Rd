@@ -8,6 +8,13 @@
 \description{
 Access to large language model word predictability in R.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://bruno.nicenboim.me/pangoling/}
+}
+
+}
 \author{
 \strong{Maintainer}: Bruno Nicenboim \email{bruno.nicenboim@gmail.com} (\href{https://orcid.org/0000-0002-5176-3943}{ORCID})
 
