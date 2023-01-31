@@ -1,5 +1,6 @@
 #' Sends a var to python
 #' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r
+#' @noRd
 var_to_py <- function(var_name, x ) {
 e <- new.env()
 options("reticulate.engine.environment" = e)
@@ -129,9 +130,9 @@ get_id <- function(x, model = "gpt2", add_bos_token = NULL, config = NULL){
 
 #' Tokenize the input
 #'
-#' @param x input
+#' @param x Strings or token ids.
 #' @inheritParams get_causal_log_prob
-#'
+#' @param config List with arguments that control how the tokenizer from hugging face is accessed.
 #' @return
 #' @export
 #'
@@ -155,7 +156,7 @@ get_tokens.numeric <- function(x, model = "gpt2", add_bos_token = NULL, config =
 #' The number of tokens in a string or vector of strings
 #'
 #' @param x character input
-#' @inheritParams get_causal_log_prob
+#' @inheritParams get_tokens
 #'
 #' @return The number of tokens in a string or vector of words.
 #'

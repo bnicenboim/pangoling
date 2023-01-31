@@ -7,11 +7,13 @@
 get_tokens(x, model = "gpt2", add_bos_token = NULL, config = NULL)
 }
 \arguments{
-\item{x}{input}
+\item{x}{Strings or token ids.}
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 
-\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+\item{add_bos_token}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
+
+\item{config}{List with arguments that control how the tokenizer from hugging face is accessed.}
 }
 \description{
 Tokenize the input

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{get_causal_log_prob_mat}
 \alias{get_causal_log_prob_mat}
-\title{Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com}
+\title{Get a matrix with the log probabilities of possible word given its previous context using a causal transformer}
 \usage{
 get_causal_log_prob_mat(
   x,
@@ -21,15 +21,18 @@ get_causal_log_prob_mat(
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 
-\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+\item{add_bos_token}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config_model}{list with other arguments that control how the model from hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from hugging face is accessed.}
 
-\item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
+\item{config_tokenizer}{List with arguments that control how the tokenizer from hugging face is accessed.}
 }
 \value{
-matrix
+A matrix.
 }
 \description{
-Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com
+Get a matrix with the log probabilities of possible word given its previous context using a causal transformer model from \href{https://huggingface.co}{Hugging Face}.
+}
+\details{
+For more about causal models, see (https://huggingface.co/course/chapter7/6). Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
 }

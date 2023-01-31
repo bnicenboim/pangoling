@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{get_causal_log_prob}
 \alias{get_causal_log_prob}
-\title{Get the log probability of each element of a vector of words (or phrases) using a causal transformer model}
+\title{Get the log probability of each element of a vector of words (or phrases) using a causal transformer}
 \usage{
 get_causal_log_prob(
   x,
@@ -24,11 +24,11 @@ get_causal_log_prob(
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 
-\item{add_bos_token}{Whether to include beginning of text special tokens. See details}
+\item{add_bos_token}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config_model}{list with other arguments that control how the model from hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from hugging face is accessed.}
 
-\item{config_tokenizer}{list with arguments that control how the model from hugging face is accessed.}
+\item{config_tokenizer}{List with arguments that control how the tokenizer from hugging face is accessed.}
 }
 \value{
 A named vector of log probabilities.
@@ -37,5 +37,5 @@ A named vector of log probabilities.
 Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 }
 \details{
-\code{add_bos_token} by default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}. Using the \code{config} arguments it's possible to control how the model from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
+For more about causal models, see (https://huggingface.co/course/chapter7/6).  Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{from_pretrained} for details. In case of errors check the status of https://status.huggingface.co/
 }

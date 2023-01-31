@@ -4,28 +4,29 @@
 #'
 #' @inheritParams get_causal_next_tokens_tbl
 #'
-#' @return Nothing
+#' @return Nothing.
 #' @export
 #'
-preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = list(), config_tokenizer =list()) {
+preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = NULL, config_tokenizer = NULL) {
   lang_model(model, task = "causal", config_model)
   tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
   invisible()
 }
 
-#' Get the possible next tokens and their log probabilities its previous context using a causal transformer.
+#' Get the possible next tokens and their log probabilities its previous context using a causal transformer
 #'
-#' Get the possible next tokens and their log probabilities its previous context using a causal transformer model from huggingface.com.  Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+#' Get the possible next tokens and their log probabilities its previous context using a causal transformer model from [Hugging Face](https://huggingface.co).  Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 #'
-#' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using `...` it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details.
+#' For more about causal models, see (https://huggingface.co/course/chapter7/6). Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
 #'
-#' @param context Context
+#'
+#' @param context Context.
 #' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
-#' @param add_bos_token Whether to include beginning of text special tokens. See details
-#' @param config_model list with other arguments that control how the model from hugging face is accessed.
-#' @param config_tokenizer list with arguments that control how the model from hugging face is accessed.
+#' @param add_bos_token Whether to include beginning of text special tokens. By default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer).
+#' @param config_model List with other arguments that control how the model from hugging face is accessed.
+#' @param config_tokenizer List with arguments that control how the tokenizer from hugging face is accessed.
 #'
-#' @return a table with possible next tokes and their log-probabilities
+#' @return A table with possible next tokens and their log-probabilities.
 #' @export
 get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = NULL, config_model = NULL, config_tokenizer = NULL) {
 
@@ -44,11 +45,11 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
 }
 
 
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model
+#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer
 #'
 #' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 #'
-#' `add_bos_token` by default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer). Using the `config` arguments it's possible to control how the model from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
+#' For more about causal models, see (https://huggingface.co/course/chapter7/6).  Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param .by Vector that indicates how the text should be split.
@@ -202,13 +203,17 @@ causal_log_prob_mat <- function(tensor, model = "gpt2", add_bos_token = NULL, st
 }
 
 
-
-
-#' Get a matrix with log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.com
+#' Get a matrix with the log probabilities of possible word given its previous context using a causal transformer
+#'
+#' Get a matrix with the log probabilities of possible word given its previous context using a causal transformer model from [Hugging Face](https://huggingface.co).
+#'
+#' For more about causal models, see (https://huggingface.co/course/chapter7/6). Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
+#'
+#'
 #'
 #' @inheritParams get_causal_log_prob
 #'
-#' @return matrix
+#' @return A matrix.
 #' @export
 #'
 #' @examples
