@@ -7,7 +7,6 @@ torch <- NULL
 mybib <- RefManageR::ReadBib(system.file("REFERENCES.bib", package="pangoling"), check = FALSE)
 
 
-#' @importFrom Rdpack reprompt
 #' @noRd
 .onLoad <- function(libname, pkgname) {
   # This will instruct reticulate to immediately try to configure the active Python environment, installing any required Python packages as necessary.
