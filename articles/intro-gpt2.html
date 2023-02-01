@@ -112,6 +112,7 @@ this can be modified with the argument <code>model</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">df_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_causal_next_tokens_tbl.html">get_causal_next_tokens_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Processing using causal model 'gpt2'...</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 50,257 × 2</span></span></span>
 <span><span class="co">#&gt;    token   log_prob</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -127,12 +128,13 @@ this can be modified with the argument <code>model</code>.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop      -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 18.41 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 17.442 sec elapsed</span></span></code></pre></div>
 <p>The first time will take some time, and it will download some files.
 Afterwards, it will be much faster.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">df_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_causal_next_tokens_tbl.html">get_causal_next_tokens_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Processing using causal model 'gpt2'...</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 50,257 × 2</span></span></span>
 <span><span class="co">#&gt;    token   log_prob</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -148,7 +150,7 @@ Afterwards, it will be much faster.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop      -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.299 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.336 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is the way GPT2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -170,6 +172,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/get_causal_next_tokens_tbl.html">get_causal_next_tokens_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the"</span>, </span>
 <span>                           model <span class="op">=</span> <span class="st">"sshleifer/tiny-gpt2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Processing using causal model 'sshleifer/tiny-gpt2'...</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 50,257 × 2</span></span></span>
 <span><span class="co">#&gt;    token         log_prob</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -185,7 +188,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh              -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.15 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.157 sec elapsed</span></span></code></pre></div>
 <p>The intended use of this package is the following. Given a (toy)
 dataset like this.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -218,12 +221,11 @@ the argument <code>.by</code>, but it will be slower.)</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_sent</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lp <span class="op">=</span> <span class="fu"><a href="../reference/get_causal_log_prob.html">get_causal_log_prob</a></span><span class="op">(</span><span class="va">word</span>, .by <span class="op">=</span> <span class="va">sent_n</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Processing 1 batch(es) of 10 tokens.</span></span>
 <span><span class="co">#&gt; Processing using causal model 'gpt2'...</span></span>
+<span><span class="co">#&gt; Processing 1 batch(es) of 10 tokens.</span></span>
 <span><span class="co">#&gt; Text id: 1</span></span>
 <span><span class="co">#&gt; `The apple doesn't fall far from the tree.`</span></span>
 <span><span class="co">#&gt; Processing 1 batch(es) of 9 tokens.</span></span>
-<span><span class="co">#&gt; Processing using causal model 'gpt2'...</span></span>
 <span><span class="co">#&gt; Text id: 2</span></span>
 <span><span class="co">#&gt; `Don't judge a book by its cover.`</span></span>
 <span><span class="va">df_sent</span></span>
@@ -256,23 +258,44 @@ actual word is “tree.”, which contains two tokens:</p>
 “tree” given its context and <code>.</code> given its context.</p>
 <p>We can verify it in the following way.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">tree_lp</span> <span class="op">&lt;-</span> <span class="va">df_pred</span></span>
+<code class="sourceCode R"><span><span class="va">df_token_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_causal_tokens_log_prob_tbl.html">get_causal_tokens_log_prob_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the tree."</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Processing using causal model 'gpt2'...</span></span>
+<span><span class="co">#&gt; Processing 1 batch(es) of 10 tokens.</span></span>
+<span><span class="va">df_token_lp</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 10 × 2</span></span></span>
+<span><span class="co">#&gt;    token       lprob</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> The     <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Ġapple -<span style="color: #BB0000;">10.9</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Ġdoesn  -<span style="color: #BB0000;">5.50</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 't      -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">828</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Ġfall   -<span style="color: #BB0000;">3.60</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Ġfar    -<span style="color: #BB0000;">2.91</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Ġfrom   -<span style="color: #BB0000;">0.745</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Ġthe    -<span style="color: #BB0000;">0.207</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Ġtree   -<span style="color: #BB0000;">0.281</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> .       -<span style="color: #BB0000;">1.30</span></span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">tree_lp</span> <span class="op">&lt;-</span> <span class="va">df_token_lp</span></span>
 <span>  <span class="co"># requires a Ġ because there is a space before</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span><span class="st">"Ġtree"</span><span class="op">)</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.2808026</span></span>
+<span><span class="co">#&gt; [1] -0.2808047</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">dot_lp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_causal_next_tokens_tbl.html">get_causal_next_tokens_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the tree"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="op">(</span><span class="va">dot_lp</span> <span class="op">&lt;-</span> <span class="va">df_token_lp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># doesn't require a Ġ because there is no space before</span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span><span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -1.300929</span></span>
+<span><span class="co">#&gt; [1] -1.300928</span></span>
 <span></span>
-<span><span class="va">tree_lp</span> <span class="op">+</span> <span class="va">dot_lp</span></span>
-<span><span class="co">#&gt; [1] -1.581731</span></span>
-<span><span class="va">df_sent</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">word</span> <span class="op">==</span> <span class="st">"tree."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -1.581732</span></span></code></pre></div>
+<span><span class="va">tree._lp</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">word</span> <span class="op">==</span> <span class="st">"tree."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>          <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Test whether it is equal</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">tree_lp</span> <span class="op">+</span> <span class="va">dot_lp</span>,</span>
+<span>          <span class="va">tree._lp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>In a scenario as the one below, when one has a word by word text, and
 one wants to know the log-probability of each word, one doesn’t have to
 worry about the encoding or tokens, since the function

@@ -52,6 +52,9 @@
     <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_next_tokens_tbl.html</loc>
   </url>
   <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_tokens_log_prob_tbl.html</loc>
+  </url>
+  <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/get_tokens.html</loc>
   </url>
   <url>
@@ -65,6 +68,9 @@
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/pangoling-package.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/perplexity.html</loc>
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/preload_causal.html</loc>
