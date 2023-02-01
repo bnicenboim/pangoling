@@ -6,6 +6,8 @@
 \alias{pangoling-package}
 \title{pangoling: Access to language model predictions in R}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Access to large language model word predictability in R.
 }
 \seealso{
@@ -21,6 +23,7 @@ Useful links:
 Other contributors:
 \itemize{
   \item Chris Emmerly [contributor]
+  \item Giovanni Cassani [contributor]
 }
 
 }

@@ -100,19 +100,26 @@ The log-probability of "tree." is the sum of the log-probability of "tree" given
 We can verify it in the following way.
 
 ```{r}
-(tree_lp <- df_pred
+df_token_lp <- get_causal_tokens_log_prob_tbl("The apple doesn't fall far from the tree.")
+df_token_lp
+
+(tree_lp <- df_token_lp
   # requires a Ġ because there is a space before
   |> filter(token =="Ġtree")
   |> pull())
 
-(dot_lp <- get_causal_next_tokens_tbl("The apple doesn't fall far from the tree") |>
+(dot_lp <- df_token_lp |>
   # doesn't require a Ġ because there is no space before
    filter(token ==".") |>
    pull())
 
-tree_lp + dot_lp
-df_sent |> filter(word == "tree.") |>
-  pull()
+tree._lp <- df_sent |> 
+  filter(word == "tree.") |>
+          pull()
+
+# Test whether it is equal
+all.equal(tree_lp + dot_lp,
+          tree._lp)
 ```
 
 In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.

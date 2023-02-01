@@ -29,6 +29,7 @@ preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = 
 #' @return A table with possible next tokens and their log-probabilities.
 #' @export
 get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = NULL, config_model = NULL, config_tokenizer = NULL) {
+  message_verbose("Processing using causal model '", model, "'...")
 
   tkzr <- tokenizer(model, add_bos_token = add_bos_token, config_tokenizer)
   context_tensor <- tkzr$encode(context, return_tensors = "pt")
@@ -62,6 +63,7 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_bos_token = 
 get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "gpt2", add_bos_token = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
   if (length(x) != length(.by)) stop2("The argument `.by` has an incorrect length.")
   if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
+  message_verbose("Processing using causal model '", model, "'...")
   x <- trimws(x, whitespace = "[ \t]")
   word_by_word_texts <- split(x, .by)
   N <- length(word_by_word_texts)
@@ -119,20 +121,37 @@ get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", m
 
 }
 
+
+#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer
+#'
+#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+#'
+#' For more about causal models, see (https://huggingface.co/course/chapter7/6).  Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see [from_pretrained](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of https://status.huggingface.co/
+#'
+#' @param texts Vector or list of texts.
+#' @inheritParams get_causal_next_tokens_tbl
+#' @param .id Column with sentence id.
+#'
+#' @return A table with token names, log-probability and optionally sentence id.
+#'
 #' @export
-get_causal_tokens_log_prob <- function(texts, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL, .id = NULL ){
+get_causal_tokens_log_prob_tbl <- function(texts, model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL, .id = NULL ){
+  message_verbose("Processing using causal model '", model, "'...")
+  ltexts <- as.list(unlist(texts, recursive = TRUE))
 
-
-  tensors <- create_causal_tensor_lst(list(texts),
+  tensors <- create_causal_tensor_lst(ltexts,
                                       model= model,
                                       add_bos_token = add_bos_token,
                                       stride = stride, config = config_tokenizer)
-  ls_mat <-  tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts),tensors), function(words, item, tensor) {
+  lls_mat <-  tidytable::map.(tensors, function(tensor) {
     causal_log_prob_mat(tensor, model = model, add_bos_token = add_bos_token, stride = stride,config_model = config_model,config_tokenizer = config_tokenizer)
   })
+  lindex_vocab <- get_tokens(unlist(texts, recursive = TRUE), model = model,
+                            add_bos_token = add_bos_token,config = config_tokenizer)
 
-  token_lp <- tidytable::map2_dbl.(index_vocab, 1:ncol(ls_mat[[1]]), ~ ls_mat[[1]][.x, .y])
-
+  tidytable::map2_dfr.(lindex_vocab, lls_mat, function(vocab, ls_mat){
+    tidytable::tidytable(token = vocab, lprob = tidytable::map2_dbl.(vocab, 1:ncol(ls_mat[[1]]), ~ ls_mat[[1]][.x, .y]))
+  }, .id = .id)
 }
 
 #' @noRd
@@ -163,7 +182,7 @@ causal_log_prob_mat <- function(tensor, model = "gpt2", add_bos_token = NULL, st
   tensor_size <- length(ids)
 
   message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
-  message_verbose("Processing using causal model '", model, "'...")
+
 
   out_lm <- lang_model(model, task = "causal", config = config_model)(tensor)
 
@@ -216,8 +235,9 @@ causal_log_prob_mat <- function(tensor, model = "gpt2", add_bos_token = NULL, st
 #' @return A matrix.
 #' @export
 #'
-#' @examples
 get_causal_log_prob_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", add_bos_token = NULL, stride = 1,config_model = NULL, config_tokenizer= NULL) {
+  message_verbose("Processing using causal model '", model, "'...")
+
   x <- trimws(x, whitespace = "[ \t]")
   word_by_word_texts <- split(x, .by)
   N <- length(word_by_word_texts)
@@ -228,3 +248,33 @@ get_causal_log_prob_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", 
   })
 }
 
+#' Calculates perplexity
+#'
+#' Calculates perplexity of a vector of (log-)probabilities.
+#'
+#' If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
+#'
+#' \deqn{\left(\prod_n x_n \right)^\frac{1}{N}
+#'
+#' @param x	A vector of log-probabilities.
+#' @param na.rm	Should missing values (including NaN) be removed?
+#' @param log.p If TRUE (default),  x are assumed to be log-transformed probabilities with base e, if FALSE x are assumed to be raw probabilities, alternatively log.p can be the base of other logarithmic transformations.
+#' @return The perplexity
+#'
+#' @examples
+#' probs <- c(.3,.5,.6)
+#' perplexity(probs, log.p = FALSE)
+#' lprobs <- log(probs)
+#' perplexity(lprobs, log.p = TRUE)
+#' @export
+#'
+perplexity <- function(x, na.rm = FALSE, log.p
+ = TRUE) {
+  if(log.p == FALSE) {
+    prod(x, na.rm = na.rm)^(-1/length(x))
+  } else if (log.p || all.equal(log.p, exp(1))){
+    exp(-sum(x, na.rm = na.rm)/length(x))
+  } else {
+    log.p^(-sum(x, na.rm = na.rm)/length(x))
+  }
+}
