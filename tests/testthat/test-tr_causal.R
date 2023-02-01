@@ -1,6 +1,7 @@
 options(pangoling.verbose = FALSE)
 test_that("gp2 get prob work", {
-  cont <-
+  skip_if_no_python_stuff()
+    cont <-
     get_causal_next_tokens_tbl("The apple doesn't fall far from the")
   expect_snapshot(cont)
   expect_equal(cont[1]$token, "Ġtree")
@@ -50,6 +51,7 @@ test_that("gp2 get prob work", {
 
 
 test_that("can handle extra parameters",{
+  skip_if_no_python_stuff()
   probs <- get_causal_log_prob(x = c("This","is","it"),add_bos_token = TRUE)
   expect_snapshot(probs)
   expect_true(!is.na(probs[1]))
@@ -68,7 +70,7 @@ test_that("can handle longer than 1024 input",{
 }
 
 test_that("other models using get prob work", {
-
+  skip_if_no_python_stuff()
 get_tokens("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
 if(0){ #not working :()
     expect_snapshot(
