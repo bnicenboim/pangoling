@@ -1,11 +1,13 @@
 options(pangoling.verbose = FALSE)
+
+prov <- "The apple doesn't fall far from the tree"
+
 test_that("gp2 get prob work", {
   skip_if_no_python_stuff()
     cont <-
     get_causal_next_tokens_tbl("The apple doesn't fall far from the")
   expect_snapshot(cont)
   expect_equal(cont[1]$token, "Ġtree")
-  prov <- "The apple doesn't fall far from the tree"
   prov_words <- strsplit(prov, " ")[[1]]
   lp_prov <- get_causal_log_prob(x = prov_words)
   #expect_equal(names(lp_prov), paste0("1.", prov_words))

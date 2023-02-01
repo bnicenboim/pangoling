@@ -7,3 +7,5 @@ _test
 ^docs$
 ^pkgdown$
 ^\.github$
+^codecov\.yml$
+^vignettes/articles$

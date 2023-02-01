@@ -1,11 +1,6 @@
 ---
-title: "Using a GPT2 transformer model to get word predictability."
-output: rmarkdown::html_vignette
+title: "Using a GPT2 transformer model to get word predictability"
 bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
-vignette: >
-  %\VignetteIndexEntry{Using a GPT2 transformer model to get word predictability.}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -71,14 +66,16 @@ When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But not
 ```{r}
 preload_causal("sshleifer/tiny-gpt2")
 tic()
-get_causal_next_tokens_tbl("The apple doesn't fall far from the", model = "sshleifer/tiny-gpt2")
+get_causal_next_tokens_tbl("The apple doesn't fall far from the", 
+                           model = "sshleifer/tiny-gpt2")
 toc()
 ```
 
 The intended use of this package is the following. Given a (toy) dataset like this.
 
 ```{r, cache = TRUE}
-sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book by its cover.")
+sentences <- c("The apple doesn't fall far from the tree.", 
+               "Don't judge a book by its cover.")
 df_sent <- strsplit(x = sentences, split = " ") |> 
   map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n")
 df_sent

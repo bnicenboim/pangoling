@@ -11,12 +11,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-# pangoling
+# pangoling <a href="http://bruno.nicenboim.me/pangoling/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/bnicenboim/pangoling/branch/main/graph/badge.svg)](https://app.codecov.io/gh/bnicenboim/pangoling?branch=main)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of pangoling is to use transformer models to get log-probabilities of words. It's a wrapper of the python package [`transformers`](https://pypi.org/project/transformers/).
+
+`pangoling`^[The logo of the package was created with [stable diffusion ](https://huggingface.co/spaces/stabilityai/stable-diffusion) and the R package [hexSticker](https://github.com/GuangchuangYu/hexSticker).] is an R package for estimating the log-probabilities of words in a given context using transformer models. The package provides an interface for utilizing pre-trained transformer models (such as ~~BERT or~~ GPT-2) to obtain word probabilities.  These log-probabilities are often utilized as predictors in psycholinguistic studies. This package can be useful for researchers in the field of psycholinguistics who want to leverage the power of transformer models in their work.
+
+The package is mostly a wrapper of the python package [`transformers`](https://pypi.org/project/transformers/) to process data in a convenient format. At the moment only "causal" models such as GPT-2 are working.
+
+
+
+## Important! Limitations and bias
+
+The training data of the most popular models (such as GPT-2) haven't been released, so one cannot inspect it. It's clear that the data contain a lot of unfiltered content from the internet, which is far from neutral. See for example the scope in the [openAI team's model card for GPT-2](https://github.com/openai/gpt-2/blob/master/model_card.md#out-of-scope-use-cases), but it should be the same for many other models, and the [limitations and bias section of GPT-2 in hugging face website](https://huggingface.co/gpt2).
 
 ## Installation
 
@@ -31,18 +42,16 @@ remotes::install_github("bnicenboim/pangoling")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r}
-library(pangoling)
-```
-
 ```{r, message = FALSE}
+library(pangoling)
 library(tidytable) #fast alternative to dplyr
 ```
 
 The intended use of this package is the following. Given a (toy) dataset like this.
 
 ```{r, cache = TRUE}
-sentences <- c("The apple doesn't fall far from the tree.", "Don't judge a book by its cover.")
+sentences <- c("The apple doesn't fall far from the tree.", 
+               "Don't judge a book by its cover.")
 (df_sent <- strsplit(x = sentences, split = " ") |> 
   map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n"))
 ```
