@@ -30,7 +30,8 @@ Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    RefManageR
+    RefManageR,
+    tictoc
 Config/testthat/edition: 3
 RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)
