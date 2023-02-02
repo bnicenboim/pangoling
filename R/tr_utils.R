@@ -16,7 +16,7 @@ lst_to_kwargs <- function(x){
 }
 
 #' @noRd
-lm_init <- function(model = "gpt2", task = "causal", config = list()) {
+lm_init <- function(model = "gpt2", task = "causal", config = NULL) {
   reticulate::py_run_string('import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"')
 
   # to prevent memory leaks:

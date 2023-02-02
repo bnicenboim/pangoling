@@ -13,6 +13,16 @@ preload_causal <- function(model = "gpt2", add_bos_token = NULL, config_model = 
   invisible()
 }
 
+#' Returns the configuration of a causal model
+#'
+#' @inheritParams get_causal_next_tokens_tbl
+#'
+#' @return A list with the configuration of the model
+#' @export
+get_causal_model_config <- function(model = "gpt2", config = NULL){
+  lang_model(model = model, task = "causal", config = config)$config$to_dict()
+}
+
 #' Get the possible next tokens and their log probabilities its previous context using a causal transformer
 #'
 #' Get the possible next tokens and their log probabilities its previous context using a causal transformer model from [Hugging Face](https://huggingface.co).  Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.

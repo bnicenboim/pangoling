@@ -13,7 +13,8 @@ Access to large language model word predictability in R.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://bruno.nicenboim.me/pangoling/}
+  \item \url{https://github.com/bnicenboim/pangoling}
+  \item Report bugs at \url{https://github.com/bnicenboim/pangoling/issues}
 }
 
 }

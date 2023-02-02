@@ -10,6 +10,8 @@ Authors@R: c(
     person("Chris", "Emmerly", role = "ctb"),
     person("Giovanni", "Cassani", role = "ctb"))
 Description: Access to large language model word predictability in R.
+URL: https://github.com/bnicenboim/pangoling
+BugReports: https://github.com/bnicenboim/pangoling/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,12 +28,12 @@ Imports:
     memoise,
     reticulate,
     tidyselect,
-    tidytable (>= 0.7.2)
+    tidytable (>= 0.7.2),
+    RefManageR
 Suggests: 
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    RefManageR,
     tictoc,
     covr
 Config/testthat/edition: 3
@@ -41,4 +43,4 @@ Depends:
     R (>= 2.10)
 VignetteBuilder: knitr
 StagedInstall: no
-URL: http://bruno.nicenboim.me/pangoling/
+
