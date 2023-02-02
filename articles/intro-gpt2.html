@@ -60,7 +60,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/bnicenboim/pangoling/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -75,7 +82,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Using a GPT2 transformer model to get word predictability</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/bnicenboim/pangoling/blob/HEAD/vignettes/articles/intro-gpt2.Rmd" class="external-link"><code>vignettes/articles/intro-gpt2.Rmd</code></a></small>
       <div class="d-none name"><code>intro-gpt2.Rmd</code></div>
     </div>
 
@@ -99,7 +106,7 @@ model <span class="citation">(see also Radford et al. 2019)</span>.</p>
 <p>One interesting side-effect of the these models is that the (log)
 probability of a word given a certain context can be extracted.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://bruno.nicenboim.me/pangoling/">pangoling</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bnicenboim/pangoling" class="external-link">pangoling</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/markfairbanks/tidytable" class="external-link">tidytable</a></span><span class="op">)</span> <span class="co">#fast alternative to dplyr</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jabiru/tictoc" class="external-link">tictoc</a></span><span class="op">)</span> <span class="co">#measure time</span></span></code></pre></div>
 <p>First, let’s see what words GPT-2 predicts given a specific context.
@@ -128,7 +135,7 @@ this can be modified with the argument <code>model</code>.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop      -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 17.442 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 12.938 sec elapsed</span></span></code></pre></div>
 <p>The first time will take some time, and it will download some files.
 Afterwards, it will be much faster.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -150,7 +157,7 @@ Afterwards, it will be much faster.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop      -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.336 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.421 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is the way GPT2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -163,7 +170,7 @@ not the first word of a sentence.</p>
 them we should get 1:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">df_pred</span><span class="op">$</span><span class="va">log_prob</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.000017</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.000018</span></span></code></pre></div>
 <p>Because of approximation errors, this is not exactly one.</p>
 <p>When doing tests, <code>sshleifer/tiny-gpt2</code> is quite useful
 since it’s tiny. But notice that the predictions are quite bad.</p>
@@ -188,7 +195,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh              -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.157 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.114 sec elapsed</span></span></code></pre></div>
 <p>The intended use of this package is the following. Given a (toy)
 dataset like this.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -280,13 +287,13 @@ actual word is “tree.”, which contains two tokens:</p>
 <span>  <span class="co"># requires a Ġ because there is a space before</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span><span class="st">"Ġtree"</span><span class="op">)</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.2808047</span></span>
+<span><span class="co">#&gt; [1] -0.2808022</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">dot_lp</span> <span class="op">&lt;-</span> <span class="va">df_token_lp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># doesn't require a Ġ because there is no space before</span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span><span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>   <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -1.300928</span></span>
+<span><span class="co">#&gt; [1] -1.300912</span></span>
 <span></span>
 <span><span class="va">tree._lp</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">word</span> <span class="op">==</span> <span class="st">"tree."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
