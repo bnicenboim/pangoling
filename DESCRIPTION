@@ -28,12 +28,12 @@ Imports:
     memoise,
     reticulate,
     tidyselect,
-    tidytable (>= 0.7.2)
+    tidytable (>= 0.7.2),
+    RefManageR
 Suggests: 
     rmarkdown,
     knitr,
     testthat (>= 3.0.0),
-    RefManageR,
     tictoc,
     covr
 Config/testthat/edition: 3
