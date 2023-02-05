@@ -1,49 +1,29 @@
-#' #' Title
-#' #'
-#' #' @param model
-#' #'
-#' #' @return
-#' #'
-#' #' @examples
-#' #' @noRd
-#' max_tokens_masked <- function(model = "distilbert-base-uncased"){
-#'   lang_model(model, task = "masked")$config$max_position_embeddings
-#' }
 #'
+#' @param context Context
+#' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
 #'
-#' #'
-#' #' @param context Context
-#' #' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
-#' #'
-#' #' @return
-#' #'
-#' #' @examples
-#' #' @noRd
-#' get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-uncased", add_special_tokens = TRUE) {
-#'   if(add_special_tokens){
-#'     masked_tensor <-
-#'       tokenizer(model)(masked_sentence, return_tensors = "pt")$input_ids
-#'   } else {
-#'     tokens <- tokenizer(model)$tokenize(masked_sentence)
-#'     masked_tensor <- torch$tensor(tokenizer(model)$convert_tokens_to_ids(tokens))$unsqueeze(0L)
-#' }
-#'   outputs <- lang_model(model, "masked")(masked_tensor)
-#'   mask_pos <-  which(reticulate::py_to_r(masked_tensor$tolist()[0])== reticulate::py_to_r(tokenizer(model)$mask_token_id))
-#'   logits_masks <- outputs$logits[0][mask_pos-1] # python starts in 0
-#'   lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
-#'   if(length(mask_pos)==1) lp <- list(lp) #to keep it consistent
-#'   #names(lp) <- paste0("mask_",1:length(lp))
-#'     lp |> tidytable::map_dfr.(~ tidytable::tidytable(token = get_tr_vocab(model), log_prob = .x) |>
-#'                                  tidytable::arrange.(-log_prob), .id = "mask_n" )
-#'     #   as_tidytable() |>
-#'     #   tidytable::mutate.(token = get_tr_vocab(model), .before = tidyselect::everything()) |>
-#'     #   tidytable
-#'     # tidytable::arrange.(-mask_1)
-#' }
+#' @return
+#'
+get_masked_tokens_tbl <- function(masked_sentence, model = "distilbert-base-uncased", add_special_tokens = TRUE, config_model = NULL, config_tokenizer = NULL) {
+  message_verbose("Processing using masked model '", model, "'...")
+  tkzr <- tokenizer(model, config = config_tokenizer)
+  masked_tensor <- tkzr$encode(masked_sentence, return_tensors = "pt", add_special_tokens = add_special_tokens)
+  outputs <- lang_model(model, task = "masked", config = config_model)(masked_tensor)
+  mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
+  logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
+  lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
+  if (length(mask_pos) == 1) lp <- list(lp) # to keep it consistent
+  names(lp) <- paste0("mask_", 1:length(lp))
+  vocab <- sort(unlist(tkzr$get_vocab())) |> names()
+  lp |> tidytable::map_dfr.(~
+    tidytable::tidytable(token = vocab, log_prob = .x) |>
+      tidytable::arrange.(-log_prob), .id = "mask_n")
+}
+
 #'
 #'
 #'
-#' #' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co/.
+#' #' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co.
 #' #'
 #' #' In case of errors check the status of https://status.huggingface.co/
 #' #'
@@ -340,4 +320,17 @@
 #' #'   cor(df2$lprior,df2$lp, "complete")
 #' #' }
 #' #' #
+#'
+#' #' Title
+#' #'
+#' #' @param model
+#' #'
+#' #' @return
+#' #'
+#' #' @examples
+#' #' @noRd
+#' max_tokens_masked <- function(model = "distilbert-base-uncased"){
+#'   lang_model(model, task = "masked")$config$max_position_embeddings
+#' }
+#'
 #'

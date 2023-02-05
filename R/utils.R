@@ -25,7 +25,7 @@ fastDoCall <- function(what, args, quote = FALSE, envir = parent.frame()) {
   }
 
   if (is.null(names(args)) ||
-      is.data.frame(args)) {
+    is.data.frame(args)) {
     argn <- args
     args <- list()
   } else {
@@ -56,8 +56,8 @@ fastDoCall <- function(what, args, quote = FALSE, envir = parent.frame()) {
   }
 
   eval(call,
-       envir = args,
-       enclos = envir
+    envir = args,
+    enclos = envir
   )
 }
 
@@ -72,32 +72,32 @@ fastDoCall <- function(what, args, quote = FALSE, envir = parent.frame()) {
 #' versions()
 #'
 #' @noRd
-versions <- function(){
+versions <- function() {
   df_packages <- reticulate::py_list_packages()
   ver <- reticulate::py_version()
   print(paste0("Python version ", ver))
   print("Following version packages. (For the entire list use `reticulate::py_list_packages()`).")
-  rel_packages <- df_packages |> filter.(package %in% c("transformers","torch"))
+  rel_packages <- df_packages |> filter.(package %in% c("transformers", "torch"))
   print(rel_packages)
-  invisible(list(python= ver, rel_packages = rel_packages))
+  invisible(list(python = ver, rel_packages = rel_packages))
 }
 
-stop2 <- function (...){
+stop2 <- function(...) {
   stop(..., call. = FALSE)
 }
 
 #' @noRd
-collapse_comma <- function (...){
+collapse_comma <- function(...) {
   paste0("'", ..., "'", collapse = ", ")
 }
 
 #' @noRd
-list_fields <- function(data) cat(paste0("#' * `",colnames(data), "`: DESCRIPTION\n"))
+list_fields <- function(data) cat(paste0("#' * `", colnames(data), "`: DESCRIPTION\n"))
 
 
 #' From https://github.com/dapperstats/gendrendr
 #' @noRd
-get_lang_locale <- function(){
+get_lang_locale <- function() {
   ismac <- Sys.info()["sysname"] == "Darwin"
   issolaris <- Sys.info()["sysname"] == "SunOS"
   splitchar <- ifelse(ismac | issolaris, "/", ";")
@@ -111,70 +111,79 @@ get_lang_locale <- function(){
 }
 
 #' @noRd
-writeRDS <- function(object, filename, choice = NULL, ...){
+writeRDS <- function(object, filename, choice = NULL, ...) {
   writable <- file.access(rappdirs::user_data_dir(),
-                          mode = 2) == 0
+    mode = 2
+  ) == 0
   data_dir <- rappdirs::user_data_dir("pangoling")
 
-  choices <- c(if (writable)
-    paste0("Store in ",data_dir," directory."),
+  choices <- c(
+    if (writable) {
+      paste0("Store in ", data_dir, " directory.")
+    },
     "Store in the temporary directory.",
-    "Do not store.")
+    "Do not store."
+  )
 
-  if (interactive()){
+  if (interactive()) {
     choice <- menu(choices, title = paste0("Do you want to store the data set?"))
   } else {
-    choice <- if(writable & choice ==1) 1L else 2L
+    choice <- if (writable & choice == 1) 1L else 2L
   }
-  if (choice == 0 | choice == length(choices))
+  if (choice == 0 | choice == length(choices)) {
     return()
-  if(choice ==1){
-    if(!dir.exists(data_dir)) dir.create(data_dir)
-    saveRDS(object,  file.path(data_dir,filename), ...)
-  } else {
-    saveRDS(object,  file.path(tempdir,filename), ...)
   }
-
+  if (choice == 1) {
+    if (!dir.exists(data_dir)) dir.create(data_dir)
+    saveRDS(object, file.path(data_dir, filename), ...)
+  } else {
+    saveRDS(object, file.path(tempdir, filename), ...)
+  }
 }
 
 
-download_dataset <- function(url, filename = basename(url), name =""){
-
+download_dataset <- function(url, filename = basename(url), name = "") {
   writable <- file.access(rappdirs::user_data_dir(),
-              mode = 2) == 0
-   DATA_DIR <- rappdirs::user_data_dir("pangoling")
+    mode = 2
+  ) == 0
+  DATA_DIR <- rappdirs::user_data_dir("pangoling")
 
-    choices <- c(if (writable)
-      paste0("Download to ",DATA_DIR," directory"),
-      "Download to the temporary directory",
-      "Do not download")
+  choices <- c(
+    if (writable) {
+      paste0("Download to ", DATA_DIR, " directory")
+    },
+    "Download to the temporary directory",
+    "Do not download"
+  )
 
-    if (interactive()){
-      choice <- menu(choices, title = paste0("Do you want to download the data set, ",name,"from [",url,"]?"))
-    } else {
-      choice <- if (writable) 1L else 2L
-    }
-      if (choice == 0 | choice == length(choices))
-        stop("Cannot proceed without the dataset")
-    if(choice ==1){
-      if(!dir.exists(DATA_DIR)) dir.create(DATA_DIR)
-      FILE <- file.path(DATA_DIR,filename)
-    } else {
-      FILE <- file.path(tempdir(),filename)
-    }
+  if (interactive()) {
+    choice <- menu(choices, title = paste0("Do you want to download the data set, ", name, "from [", url, "]?"))
+  } else {
+    choice <- if (writable) 1L else 2L
+  }
+  if (choice == 0 | choice == length(choices)) {
+    stop("Cannot proceed without the dataset")
+  }
+  if (choice == 1) {
+    if (!dir.exists(DATA_DIR)) dir.create(DATA_DIR)
+    FILE <- file.path(DATA_DIR, filename)
+  } else {
+    FILE <- file.path(tempdir(), filename)
+  }
 
 
-    httr::GET(url,
-        httr::write_disk(FILE, overwrite = TRUE),
-        httr::progress()
-    )
+  httr::GET(
+    url,
+    httr::write_disk(FILE, overwrite = TRUE),
+    httr::progress()
+  )
 }
 
 #' @noRd
 require_pkg <- function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop(paste0("Package '", pkg, "'  needed for this function to work. Please install it."),
-         call. = FALSE
+      call. = FALSE
     )
   }
 }
@@ -201,7 +210,7 @@ message_debug <- function(...) {
 log_softmax <- function(x) {
   # 1.4 from https://academic.oup.com/imajna/article/41/4/2311/5893596
   a <- max(x)
-  log(exp(x - a)/sum(exp(x-a)))
+  log(exp(x - a) / sum(exp(x - a)))
 }
 
 log_softmax2 <- function(x) {
@@ -209,9 +218,25 @@ log_softmax2 <- function(x) {
   x - matrixStats::logSumExp(x)
 }
 
-split_in_sentences <- function(x){
+split_in_sentences <- function(x) {
   pot_end <- which(chr_detect(x, "(\\.|\\?|\\!)$"))
-  pot_end <- pot_end[chr_detect(x[pot_end+1], "^([A-Z])")]
-  tidytable::map2.(c(1, pot_end+1), c(pot_end, length(x)), ~ x[.x:.y])
+  pot_end <- pot_end[chr_detect(x[pot_end + 1], "^([A-Z])")]
+  tidytable::map2.(c(1, pot_end + 1), c(pot_end, length(x)), ~ x[.x:.y])
 }
 
+#' Replacement of str_match
+#' @noRd
+chr_match <- function(string, pattern) {
+  matches <- regexec(pattern = pattern, text = string)
+  list_matches <- lapply(
+    regmatches(x = string, m = matches),
+    function(x) if (length(x) == 0) NA else x
+  )
+  do.call("rbind", list_matches)
+}
+
+#' Replacement of str_detect
+#' @noRd
+chr_detect <- function(string, pattern, ignore.case = FALSE) {
+  grepl(pattern = pattern, x = string, ignore.case = ignore.case)
+}
