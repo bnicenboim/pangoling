@@ -18,8 +18,19 @@ transformer_vocab(
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
 }
 \value{
-A vector with the vocabulary of a model
+A vector with the vocabulary of a model.
 }
 \description{
 Returns the vocabulary of a model
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+transformer_vocab(model = "gpt2")
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+Other tokens: 
+\code{\link{ntokens}()},
+\code{\link{tokenize}()}
+}
+\concept{tokens}

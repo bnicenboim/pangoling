@@ -21,3 +21,14 @@ The number of tokens in a string or vector of words.
 \description{
 The number of tokens in a string or vector of strings
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+Other tokens: 
+\code{\link{tokenize}()},
+\code{\link{transformer_vocab}()}
+}
+\concept{tokens}

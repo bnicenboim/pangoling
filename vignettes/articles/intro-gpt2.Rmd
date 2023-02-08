@@ -64,7 +64,7 @@ Because of approximation errors, this is not exactly one.
 When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But notice that the predictions are quite bad.
 
 ```{r}
-preload_causal("sshleifer/tiny-gpt2")
+causal_preload("sshleifer/tiny-gpt2")
 tic()
 causal_next_tokens_tbl("The apple doesn't fall far from the", 
                            model = "sshleifer/tiny-gpt2")
@@ -92,7 +92,7 @@ df_sent
 The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens:
 
 ```{r}
-get_tokens("tree.")
+tokenize("tree.")
 ```
 
 The log-probability of "tree." is the sum of the log-probability of "tree" given its context and `.` given its context.

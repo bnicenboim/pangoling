@@ -14,9 +14,21 @@ tokenize(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL)
 \item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
-
-\item{config}{List with arguments that control how the tokenizer from hugging face is accessed.}
+}
+\value{
+A list with tokens
 }
 \description{
 Tokenize the input
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+tokenize(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
+\dontshow{\}) # examplesIf}
+}
+\seealso{
+Other tokens: 
+\code{\link{ntokens}()},
+\code{\link{transformer_vocab}()}
+}
+\concept{tokens}

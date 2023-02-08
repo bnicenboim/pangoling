@@ -4,7 +4,7 @@
 #'
 #' If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
 #'
-#' \deqn{\left(\prod_n x_n \right)^\frac{1}{N}
+#' \deqn{\left(\prod_{n} x_n \right)^\frac{1}{N}}
 #'
 #' @param x	A vector of log-probabilities.
 #' @param na.rm	Should missing values (including NaN) be removed?

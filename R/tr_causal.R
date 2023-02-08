@@ -201,7 +201,7 @@ causal_tokens_lp_tbl <- function(texts,
                add_special_tokens = add_special_tokens,
                stride = stride)
   })
-  lindex_vocab <- get_tokens(unlist(texts, recursive = TRUE),
+  lindex_vocab <- tokenize(unlist(texts, recursive = TRUE),
     model = model,
     add_special_tokens = add_special_tokens,
     config = config_tokenizer

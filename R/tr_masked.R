@@ -1,7 +1,7 @@
 #' get_masked_tokens_tbl
 #'
 #' @param context Context
-#' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
+#' @param model Name of a pretrained model stored on the huggingface.co.
 #'
 #' @return A table
 #' @export

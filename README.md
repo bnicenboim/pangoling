@@ -91,13 +91,12 @@ word based on GPT-2.
 
 ``` r
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n))
-#> Processing 1 batch(es) of 10 tokens.
+  mutate(lp = causal_lp(word, .by = sent_n))
 #> Processing using causal model 'gpt2'...
+#> Processing 1 batch(es) of 10 tokens.
 #> Text id: 1
 #> `The apple doesn't fall far from the tree.`
 #> Processing 1 batch(es) of 9 tokens.
-#> Processing using causal model 'gpt2'...
 #> Text id: 2
 #> `Don't judge a book by its cover.`
 df_sent
@@ -120,6 +119,18 @@ df_sent
 #> 14      2 its      -0.257
 #> 15      2 cover.   -1.38
 ```
+
+## How to cite
+
+> Nicenboim B (2023). *pangoling: Access to language model predictions
+> in R*. R package version 0.0.0.9000,
+> <https://github.com/bnicenboim/pangoling>.
+
+## Code of conduct
+
+Please note that this package is released with a [Contributor Code of
+Conduct](https://ropensci.org/code-of-conduct/). By contributing to this
+project, you agree to abide by its terms.
 
 [^1]: The logo of the package was created with [stable
     diffusion](https://huggingface.co/spaces/stabilityai/stable-diffusion)
