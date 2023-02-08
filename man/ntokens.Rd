@@ -4,16 +4,16 @@
 \alias{ntokens}
 \title{The number of tokens in a string or vector of strings}
 \usage{
-ntokens(x, model = "gpt2", add_special_tokens = NULL, config = NULL)
+ntokens(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL)
 }
 \arguments{
 \item{x}{character input}
 
-\item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
+\item{model}{Name of a pretrained model stored locally on the (huggingface.co).}
 
 \item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config}{List with arguments that control how the tokenizer from hugging face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
 }
 \value{
 The number of tokens in a string or vector of words.

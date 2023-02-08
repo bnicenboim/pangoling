@@ -37,7 +37,7 @@ skip_if_no_python_stuff <- function() {
   #caching:
   tokenizer <<- memoise::memoise(tokenizer)
   lang_model <<- memoise::memoise(lang_model)
-
+  transformer_vocab <<- memoise::memoise(transformer_vocab)
 
   invisible()
 }

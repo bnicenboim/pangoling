@@ -14,7 +14,7 @@ perplexity(x, na.rm = FALSE, log.p = TRUE)
 \item{log.p}{If TRUE (default),  x are assumed to be log-transformed probabilities with base e, if FALSE x are assumed to be raw probabilities, alternatively log.p can be the base of other logarithmic transformations.}
 }
 \value{
-The perplexity
+The perplexity.
 }
 \description{
 Calculates perplexity of a vector of (log-)probabilities.

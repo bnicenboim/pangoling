@@ -32,7 +32,7 @@ First, let's see what words GPT-2 predicts given a specific context. [Hugging Fa
 
 ```{r}
 tic()
-(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
+(df_pred <- causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
 ```
 
@@ -40,7 +40,7 @@ The first time will take some time, and it will download some files. Afterwards,
 
 ```{r}
 tic()
-(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
+(df_pred <- causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
 ```
 
@@ -49,13 +49,13 @@ Notice that the tokens--that is the way GPT2 interprets words-- that are predict
 In fact this is the way GPT2 interprets the sentence:
 
 ```{r}
-get_tokens("The apple doesn't fall far from the")
+tokenize("The apple doesn't fall far from the")
 ```
 
 Because they are log probabilities if we exponentiate them and we sum them we should get 1:
 
 ```{r}
-sum(exp(df_pred$log_prob))
+sum(exp(df_pred$lp))
 ```
 
 Because of approximation errors, this is not exactly one.
@@ -66,7 +66,7 @@ When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But not
 ```{r}
 preload_causal("sshleifer/tiny-gpt2")
 tic()
-get_causal_next_tokens_tbl("The apple doesn't fall far from the", 
+causal_next_tokens_tbl("The apple doesn't fall far from the", 
                            model = "sshleifer/tiny-gpt2")
 toc()
 ```
@@ -85,7 +85,7 @@ It's straight-forward to get the log-probability of each word based on GPT-2. (I
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n))
+  mutate(lp = causal_lp(word, .by = sent_n))
 df_sent
 ```
 
@@ -100,7 +100,7 @@ The log-probability of "tree." is the sum of the log-probability of "tree" given
 We can verify it in the following way.
 
 ```{r}
-df_token_lp <- get_causal_tokens_log_prob_tbl("The apple doesn't fall far from the tree.")
+df_token_lp <- causal_tokens_lp_tbl("The apple doesn't fall far from the tree.")
 df_token_lp
 
 (tree_lp <- df_token_lp
@@ -122,7 +122,7 @@ all.equal(tree_lp + dot_lp,
           tree._lp)
 ```
 
-In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.
+In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `causal_lp()` takes care of it.
 
 # References
 

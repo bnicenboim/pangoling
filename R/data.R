@@ -61,7 +61,7 @@
 "data_frank2013_stimuli"
 
 
-##' Self-paced reading data of `r RefManageR::Citet(mybib,"Frank2013")`
+#' Self-paced reading data of `r RefManageR::Citet(mybib,"Frank2013")`
 #'
 #' A dataset containing the self-paced reading data of `r RefManageR::Citet(mybib,"Frank2013")`. Notice that after collecting the self-paced-reading data, three typos were found:
 #' - sentence 43  : "Scott" was "Sott"
@@ -95,7 +95,7 @@
 "data_frank2013_spr_complete"
 
 
-##' Cleaned self-paced reading data of `r RefManageR::Citet(mybib,"Frank2013")`
+#' Cleaned self-paced reading data of `r RefManageR::Citet(mybib,"Frank2013")`
 #'
 #' A cleaned version of dataset ["data_frank2013_spr_complete"]: No sentences with typos, only native speakers, and subjects with accuracy over 0.8 from `r RefManageR::Citet(mybib,"Frank2013")`
 #'

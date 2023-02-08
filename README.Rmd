@@ -62,7 +62,20 @@ It's straight-forward to get the log-probability (`-suprisal`) of each word base
 
 ```{r, cache = TRUE}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_lp(word, .by = sent_n))
+  mutate(lp = causal_lp(word, .by = sent_n))
 df_sent
 ```
 
+
+## How to cite
+
+> Nicenboim B (2023). _pangoling: Access to
+>  language model predictions in R_. R package
+>  version 0.0.0.9000,
+>  <https://github.com/bnicenboim/pangoling>.
+
+## Code of conduct
+
+Please note that this package is released with a [Contributor
+Code of Conduct](https://ropensci.org/code-of-conduct/). 
+By contributing to this project, you agree to abide by its terms.

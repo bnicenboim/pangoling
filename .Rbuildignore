@@ -9,3 +9,4 @@ _test
 ^\.github$
 ^codecov\.yml$
 ^vignettes/articles$
+^codemeta\.json$
