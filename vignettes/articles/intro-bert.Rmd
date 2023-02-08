@@ -42,7 +42,11 @@ get_masked_tokens_tbl("The apple doesn't fall far from the [MASK].")
 ```
 
 ```{r}
-df_masks <- get_masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
+(df_masks <- get_masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]"))
+```
+
+```{r}
+get_masked_tokens_tbl("[CLS] The apple doesn't fall far from the [MASK]",add_special_tokens = FALSE)
 ```
 
 
@@ -81,6 +85,10 @@ It's straight-forward to get the log-probability of each word based on GPT-2. (I
 df_sent <- df_sent |>
   mutate(lp = get_masked_log_prob(word, .by = sent_n))
 df_sent
+
+df_sent |>
+  mutate(lp = get_masked_log_prob(word, .by = sent_n, model = "bert-large-uncased-whole-word-masking"))
+
 ```
 
 The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens:

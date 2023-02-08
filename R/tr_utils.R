@@ -108,7 +108,7 @@ get_vocab_init <- function(model = "gpt2", add_special_tokens = NULL, config = N
 
 #' Returns the vocabulary of a model
 #'
-#' @inheritParams get_causal_log_prob
+#' @inheritParams get_causal_lp
 #'
 #' @return A vector with the vocabulary of a model
 #' @export
@@ -137,7 +137,7 @@ get_id <- function(x, model = "gpt2", add_special_tokens = add_special_tokens, c
 #' Tokenize the input
 #'
 #' @param x Strings or token ids.
-#' @inheritParams get_causal_log_prob
+#' @inheritParams get_causal_lp
 #' @param config List with arguments that control how the tokenizer from hugging face is accessed.
 #' @return
 #' @export
@@ -184,8 +184,8 @@ get_lm_lp <- function(x, by = rep(1, length(x)), ignore_regex = "", type = "caus
   out <- tidytable::map2.(texts, names(texts), function(words, item) {
     # words <- texts[[1]]
     # item <- names(texts[1])
-    if (type == "causal") ls_mat <- causal_log_prob_mat(words, model = model, ...)
-    if (type == "masked") ls_mat <- masked_log_prob_mat(words, model = model, n_plus = n_plus, ...)
+    if (type == "causal") ls_mat <- causal_lp_mat(words, model = model, ...)
+    if (type == "masked") ls_mat <- masked_lp_mat(words, model = model, n_plus = n_plus, ...)
 
 
     if (length(words) > 1) {

@@ -3,7 +3,7 @@
 \docType{data}
 \name{data_frank2013_stimuli}
 \alias{data_frank2013_stimuli}
-\title{Enriched  stimuli of Frank, Fernandez Monsalve, Thompson, and Vigliocco (2013) data}
+\title{Enriched  stimuli of Frank, Fernandez Monsalve, Thompson et al. (2013) data}
 \format{
 A data frame with  rows and  variables:
 \itemize{

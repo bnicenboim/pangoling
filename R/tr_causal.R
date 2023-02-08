@@ -51,8 +51,8 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_special_toke
 
   vocab <- get_tr_vocab(model, add_special_tokens = add_special_tokens, config_tokenizer)
 
-  tidytable::tidytable(token = vocab, log_prob = lp) |>
-    tidytable::arrange.(-log_prob)
+  tidytable::tidytable(token = vocab, lp = lp) |>
+    tidytable::arrange.(-lp)
 }
 
 
@@ -70,7 +70,7 @@ get_causal_next_tokens_tbl <- function(context, model = "gpt2", add_special_toke
 #' @return A named vector of log probabilities.
 #'
 #' @export
-get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+get_causal_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
 
   if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
 
@@ -85,7 +85,7 @@ get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", m
     # words <- word_by_word_texts[[1]]
     # item <- names(texts[1])
     # tensor <- tensors[[1]]
-    ls_mat <- causal_log_prob_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
+    ls_mat <- causal_lp_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
     message_verbose("Text id: ", item, "\n`", paste(words, collapse = " "), "`")
  word_lp(words, mat = ls_mat[[1]],ignore_regex = ignore_regex,model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer )
   })
@@ -106,7 +106,7 @@ get_causal_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", m
 #' @return A table with token names, log-probability and optionally sentence id.
 #'
 #' @export
-get_causal_tokens_log_prob_tbl <- function(texts, model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL, .id = NULL) {
+get_causal_tokens_lp_tbl <- function(texts, model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL, .id = NULL) {
   message_verbose("Processing using causal model '", model, "'...")
   ltexts <- as.list(unlist(texts, recursive = TRUE))
 
@@ -116,7 +116,7 @@ get_causal_tokens_log_prob_tbl <- function(texts, model = "gpt2", add_special_to
     stride = stride, config = config_tokenizer
   )
   lls_mat <- tidytable::map.(tensors, function(tensor) {
-    causal_log_prob_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
+    causal_lp_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
   })
   lindex_vocab <- get_tokens(unlist(texts, recursive = TRUE),
     model = model,
@@ -130,7 +130,7 @@ get_causal_tokens_log_prob_tbl <- function(texts, model = "gpt2", add_special_to
 
 
 #' @noRd
-causal_log_prob_mat <- function(tensor, model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+causal_lp_mat <- function(tensor, model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
 
   message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
@@ -181,12 +181,12 @@ causal_log_prob_mat <- function(tensor, model = "gpt2", add_special_tokens = NUL
 #'
 #'
 #'
-#' @inheritParams get_causal_log_prob
+#' @inheritParams get_causal_lp
 #'
 #' @return A matrix.
 #' @export
 #'
-get_causal_log_prob_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+get_causal_lp_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
   message_verbose("Processing using causal model '", model, "'...")
 
   x <- trimws(x, whitespace = "[ \t]")
@@ -195,37 +195,7 @@ get_causal_log_prob_mat <- function(x, .by = rep(1, length(x)), model = "gpt2", 
   pasted_texts <- lapply(word_by_word_texts, function(word) paste0(word, collapse = " "))
   tensors <- create_tensor_lst(pasted_texts, model = model, add_special_tokens = add_special_tokens, stride = stride, config = config_tokenizer)
   tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts), tensors), function(words, item, tensor) {
-    causal_log_prob_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
+    causal_lp_mat(tensor, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer)
   })
 }
 
-#' Calculates perplexity
-#'
-#' Calculates perplexity of a vector of (log-)probabilities.
-#'
-#' If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
-#'
-#' \deqn{\left(\prod_n x_n \right)^\frac{1}{N}
-#'
-#' @param x	A vector of log-probabilities.
-#' @param na.rm	Should missing values (including NaN) be removed?
-#' @param log.p If TRUE (default),  x are assumed to be log-transformed probabilities with base e, if FALSE x are assumed to be raw probabilities, alternatively log.p can be the base of other logarithmic transformations.
-#' @return The perplexity
-#'
-#' @examples
-#' probs <- c(.3, .5, .6)
-#' perplexity(probs, log.p = FALSE)
-#' lprobs <- log(probs)
-#' perplexity(lprobs, log.p = TRUE)
-#' @export
-#'
-perplexity <- function(x, na.rm = FALSE, log.p
-                       = TRUE) {
-  if (log.p == FALSE) {
-    prod(x, na.rm = na.rm)^(-1 / length(x))
-  } else if (log.p || all.equal(log.p, exp(1))) {
-    exp(-sum(x, na.rm = na.rm) / length(x))
-  } else {
-    log.p^(-sum(x, na.rm = na.rm) / length(x))
-  }
-}

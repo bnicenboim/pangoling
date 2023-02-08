@@ -3,26 +3,75 @@
 #' @param context Context
 #' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
 #'
-#' @return
+#' @return A table
 #' @export
-get_masked_tokens_tbl <- function(masked_sentence, model = "bert-base-uncased", add_special_tokens = TRUE, config_model = NULL, config_tokenizer = NULL) {
+get_masked_tokens_tbl <- function(masked_sentences, model = "bert-base-uncased", add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL) {
   message_verbose("Processing using masked model '", model, "'...")
-  tkzr <- tokenizer(model, config = config_tokenizer)
-  masked_tensor <- tkzr$encode(masked_sentence, return_tensors = "pt", add_special_tokens = add_special_tokens)
-  outputs <- lang_model(model, task = "masked", config = config_model)(masked_tensor)
-  mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
-  logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
-  lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
-  if (length(mask_pos) == 1) lp <- list(lp) # to keep it consistent
-  names(lp) <- paste0("mask_", 1:length(lp))
+  tkzr <- tokenizer(model,add_special_tokens = add_special_tokens, config = config_tokenizer)
   vocab <- sort(unlist(tkzr$get_vocab())) |> names()
-  lp |> tidytable::map_dfr.(~
-    tidytable::tidytable(token = vocab, log_prob = .x) |>
-      tidytable::arrange.(-log_prob), .id = "mask_n")
+  if(!is.null(add_special_tokens)){
+    encode <- function(x) tkzr$encode(x, return_tensors = "pt", add_special_tokens = add_special_tokens)
+  } else {
+    encode <- function(x) tkzr$encode(x, return_tensors = "pt")
+  }
+  #non_batched:
+  tidytable::map_dfr(masked_sentences, function(masked_sentence){
+    masked_tensor <- encode(masked_sentence)
+    outputs <- lang_model(model, task = "masked", config = config_model)(masked_tensor)
+    mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
+
+    logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
+    lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
+    if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
+    #names(lp) <-  1:length(lp)
+    if(length(mask_pos)==0) {
+      tidytable::tidytable(masked_sentence=masked_sentence, token =NA,lp = NA, mask_n =NA )
+    } else {
+    lp |> tidytable::map_dfr.(~
+                                tidytable::tidytable(masked_sentence=masked_sentence,
+                                                     token = vocab, lp = .x) |>
+                                tidytable::arrange.(-lp), .id = "mask_n")
+    }
+  }) |>
+    tidytable::relocate(mask_n, .after = tidyselect::everything())
 }
 
+#' @export
+get_masked_last_lp <- function(contexts, last_words,ignore_regex = "",final_punctuation = ".", model = "bert-base-uncased", add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL){
+  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config =  config_tokenizer)
+  message_verbose("Processing using masked model '", model, "'...")
 
+  # word_by_word_texts <- get_word_by_word_texts(x, .by)
+  last_tokens <- get_tokens(last_words, model = model,add_special_tokens = add_special_tokens, config= config_tokenizer)
+  masked_sentences <- tidytable::map2_chr(contexts,last_tokens, ~ {
+    paste0(.x," ",paste0(rep(tkzr$mask_token, length(.y)), collapse=""),final_punctuation)
+    } )
 
+  #named tensor list:
+  tensors_lst <- tidytable::map2(masked_sentences,last_words, function(t,w) {
+    l <- create_tensor_lst(t, model = model, add_special_tokens = add_special_tokens, stride = stride, config = config_tokenizer)
+    names(l) <- w
+    l
+  })
+
+  out <- tidytable::pmap.(list(last_words, contexts, tensors_lst), function(words, item, tensor_lst) {
+    # words <- word_by_word_texts[[1]]
+    # item <- names(word_by_word_texts[[1]])
+    # tensor_lst <- tensors_lst[[1]]
+    ls_mat <- masked_lp_mat(tensor_lst, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer, N_pred = 1)
+    text <- paste0(words, collapse = " ")
+    tokens <- get_tokens(text,model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
+    lapply(ls_mat, function(m) {
+      #m <- ls_mat[[1]]
+      message_verbose("Context: ", item, "\n`", paste(words, collapse = " "), "`")
+      word_lp(words, mat = m,ignore_regex = ignore_regex, model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer )
+
+    })
+    #out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
+  })
+  unlist(out, recursive = TRUE)
+
+}
 
 #' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co.
 #'
@@ -35,7 +84,7 @@ get_masked_tokens_tbl <- function(masked_sentence, model = "bert-base-uncased", 
 #'
 #' @return a vector of log probabilities.
 #' @export
-get_masked_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+get_masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
 
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config =  config_tokenizer)
   message_verbose("Processing using masked model '", model, "'...")
@@ -66,7 +115,7 @@ get_masked_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", m
     # words <- word_by_word_texts[[1]]
     # item <- names(word_by_word_texts[[1]])
     # tensor_lst <- tensors_lst[[1]]
-    ls_mat <- masked_log_prob_mat(tensor_lst, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer, N_pred = 1)
+    ls_mat <- masked_lp_mat(tensor_lst, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer, N_pred = 1)
     text <- paste0(words, collapse = " ")
     tokens <- get_tokens(text,model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
      lapply(ls_mat, function(m) {
@@ -84,7 +133,7 @@ get_masked_log_prob <- function(x, .by = rep(1, length(x)), ignore_regex = "", m
 
 
 #' @noRd
-masked_log_prob_mat <- function(tensor_lst, model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL, N_pred = NULL) {
+masked_lp_mat <- function(tensor_lst, model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL, N_pred = NULL) {
 
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
 
@@ -396,7 +445,7 @@ lmat
 #' #' @return
 #' #'
 #' #' @noRd
-#' get_masked_log_prob_mat <- function(x,
+#' get_masked_lp_mat <- function(x,
 #'                                     by = rep(1, length(x)),
 #'                                     model = "distilbert-base-uncased",
 #'                                     max_batch_size = 50,
@@ -407,7 +456,7 @@ lmat
 #'   texts <- split(x, by)
 #'   N <- length(texts)
 #'   tidytable::map2.(texts,names(texts), function(words,item) {
-#'     masked_log_prob_mat(words,
+#'     masked_lp_mat(words,
 #'                         model = model,
 #'                         max_batch_size =max_batch_size,
 #'                         window_stride = window_stride,

@@ -62,7 +62,7 @@ It's straight-forward to get the log-probability (`-suprisal`) of each word base
 
 ```{r, cache = TRUE}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n))
+  mutate(lp = get_causal_lp(word, .by = sent_n))
 df_sent
 ```
 
