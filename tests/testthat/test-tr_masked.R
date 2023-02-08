@@ -12,3 +12,5 @@ test_that("bert masked works", {
     get_masked_tokens_tbl("[CLS] The apple doesn't fall far from [MASK] [MASK]. [SEP]", add_special_tokens = FALSE)
   expect_equal(mask_2, mask_2_)
 })
+
+get_masked_tokens_tbl("The apple doesn't fall far from the [MASK].", )

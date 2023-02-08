@@ -23,7 +23,7 @@ Calculates perplexity of a vector of (log-)probabilities.
 
 }
 \examples{
-probs <- c(.3,.5,.6)
+probs <- c(.3, .5, .6)
 perplexity(probs, log.p = FALSE)
 lprobs <- log(probs)
 perplexity(lprobs, log.p = TRUE)

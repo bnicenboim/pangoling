@@ -33,43 +33,37 @@ library(tictoc) #measure time
 
 
 ```{r}
-get_causal_next_tokens_tbl("The apple doesn't fall far from the [MASK] .")
+get_masked_tokens_tbl("The apple doesn't fall far from the [MASK]")
 ```
 
-The first time will take some time, and it will download some files. Afterwards, it will be much faster.
 
 ```{r}
-tic()
-(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
-toc()
+get_masked_tokens_tbl("The apple doesn't fall far from the [MASK].")
 ```
-
-Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence.
-
-In fact this is the way GPT2 interprets the sentence:
 
 ```{r}
-get_tokens("The apple doesn't fall far from the")
+df_masks <- get_masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
 ```
+
+
+
+<!-- Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence. -->
+
+<!-- In fact this is the way GPT2 interprets the sentence: -->
+
+<!-- ```{r} -->
+<!-- get_tokens("The apple doesn't fall far from the tree.",model = "bert-base-uncased") -->
+<!-- ``` -->
 
 Because they are log probabilities if we exponentiate them and we sum them we should get 1:
 
 ```{r}
-sum(exp(df_pred$log_prob))
+df_masks |> summarize(sum(exp(log_prob)), .by = mask_n)
 ```
 
 Because of approximation errors, this is not exactly one.
 
 
-When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But notice that the predictions are quite bad.
-
-```{r}
-preload_causal("sshleifer/tiny-gpt2")
-tic()
-get_causal_next_tokens_tbl("The apple doesn't fall far from the", 
-                           model = "sshleifer/tiny-gpt2")
-toc()
-```
 
 The intended use of this package is the following. Given a (toy) dataset like this.
 
@@ -85,15 +79,12 @@ It's straight-forward to get the log-probability of each word based on GPT-2. (I
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n))
+  mutate(lp = get_masked_log_prob(word, .by = sent_n))
 df_sent
 ```
 
 The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens:
 
-```{r}
-get_tokens("tree.")
-```
 
 The log-probability of "tree." is the sum of the log-probability of "tree" given its context and `.` given its context.
 

@@ -1,3 +1,9 @@
+get_word_by_word_texts <- function(x, .by) {
+  if (length(x) != length(.by)) stop2("The argument `.by` has an incorrect length.")
+  x <- trimws(x, whitespace = "[ \t]")
+  split(x, .by)
+}
+
 #' Sends a var to python
 #' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r
 #' @noRd
@@ -16,7 +22,7 @@ lst_to_kwargs <- function(x) {
 }
 
 #' @noRd
-lm_init <- function(model = "gpt2", task = "causal", config = NULL) {
+lang_model <- function(model = "gpt2", task = "causal", config = NULL) {
   reticulate::py_run_string('import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"')
 
   # to prevent memory leaks:
@@ -66,7 +72,7 @@ gc.collect()")
 
 #' https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer
 #' @noRd
-tokenizer_init <- function(model = "gpt2", add_special_tokens = NULL, config = NULL) {
+tokenizer <- function(model = "gpt2", add_special_tokens = NULL, config = NULL) {
   reticulate::py_run_string("import transformers")
   if (chr_detect(model, "gpt2") && !is.null(add_special_tokens)) {
     lst_to_kwargs(c(pretrained_model_name_or_path = model, add_bos_token = add_special_tokens, config))
@@ -90,12 +96,6 @@ gc.collect()")
   gc(full = TRUE)
   tkzr
 }
-
-#' @noRd
-tokenizer <- memoise::memoise(tokenizer_init)
-
-#' @noRd
-lang_model <- memoise::memoise(lm_init)
 
 
 
@@ -278,4 +278,77 @@ rel_pos_slide <- function(input_ids, max_tokens, stride) {
   ids_matrix <- embed(input_ids, max_tokens)[, max_tokens:1]
   rel_rows <- c(seq(1, nrow(ids_matrix) - 1, stride), nrow(ids_matrix))
   c(list(1:max_tokens), lapply(diff(rel_rows), function(.x) seq.int(from = max_tokens - .x + 1, to = max_tokens)))
+}
+
+#' @noRd
+create_tensor_lst <- function(texts, model = "gpt2", add_special_tokens = NULL, stride = 1, config = NULL) {
+  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config)
+  if(is.null(tkzr$special_tokens_map$pad_token) && !is.null(tkzr$special_tokens_map$eos_token)) {
+    tkzr$pad_token <- tkzr$eos_token
+  }
+  max_length <- tkzr$max_len_single_sentence
+  if (is.null(max_length) || is.na(max_length) || max_length < 1) {
+    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+    max_length <- Inf
+  }
+  # text <- paste0(words, collapse = " ")
+  if (is.null(add_special_tokens)) {
+    lapply(texts, function(text) {
+      tensor <- tkzr$encode(text, return_tensors = "pt", stride = as.integer(stride), truncation = is.finite(max_length), return_overflowing_tokens = is.finite(max_length), padding = is.finite(max_length))
+      tensor
+    })
+  } else {
+    lapply(texts, function(text) {
+      tensor <- tkzr$encode(text, return_tensors = "pt", stride = as.integer(stride), truncation = is.finite(max_length), return_overflowing_tokens = is.finite(max_length), padding = is.finite(max_length), add_special_tokens = add_special_tokens)
+      tensor
+    })
+  }
+}
+
+
+
+word_lp <- function(words, mat,ignore_regex, model, add_special_tokens, config_tokenizer){
+if (length(words) > 1) {
+  words_lm <- c(words[1], paste0(" ", words[-1]))
+} else {
+  words_lm <- words
+}
+tokens <- lapply(get_id(words_lm, model, add_special_tokens = add_special_tokens, config = config_tokenizer),
+                 get_tokens.numeric,
+                 model = model, add_special_tokens = add_special_tokens, config = config_tokenizer
+)
+token_n <- tidytable::map_dbl.(tokens, length)
+index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
+
+
+token_lp <- tidytable::map2_dbl.(index_vocab, 1:ncol(mat), ~ mat[.x, .y])
+
+if (options()$pangoling.debug) {
+  print("******")
+  sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
+  print(paste0("[", sent, "]", collapse = " "))
+  print(token_lp)
+}
+if (length(ignore_regex) > 0 && ignore_regex != "") {
+  pos <- which(grepl(pattern = ignore_regex, x = unlist(tokens)))
+  token_lp[pos] <- 0
+}
+# ignores the NA in the first column if it starts with a special character
+if (unlist(tokens)[1] %in% tokenizer(model)$all_special_tokens) token_lp[1] <- 0
+
+word_lp <- vector(mode = "numeric", length(words))
+n <- 1
+for (i in seq_along(token_n)) {
+  # i <- 1
+  t <- token_n[i]
+  if (n < 1 || !n %in% c(cumsum(c(0, token_n)) + 1)) {
+    word_lp[i] <- NA
+  } else {
+    word_lp[i] <- sum(token_lp[n:(n + (t - 1))])
+  }
+  n <- n + t
+  # i <- i + 1
+}
+names(word_lp) <- words
+word_lp
 }

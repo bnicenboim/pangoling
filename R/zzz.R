@@ -33,5 +33,11 @@ skip_if_no_python_stuff <- function() {
   )
   toset <- !(names(op.pangoling) %in% names(op))
   if (any(toset)) options(op.pangoling[toset])
+
+  #caching:
+  tokenizer <<- memoise::memoise(tokenizer)
+  lang_model <<- memoise::memoise(lang_model)
+
+
   invisible()
 }

@@ -7,7 +7,7 @@
 get_causal_tokens_log_prob_tbl(
   texts,
   model = "gpt2",
-  add_bos_token = NULL,
+  add_special_tokens = NULL,
   stride = 1,
   config_model = NULL,
   config_tokenizer = NULL,
@@ -19,7 +19,7 @@ get_causal_tokens_log_prob_tbl(
 
 \item{model}{Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)}
 
-\item{add_bos_token}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
+\item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
 \item{config_model}{List with other arguments that control how the model from hugging face is accessed.}
 
