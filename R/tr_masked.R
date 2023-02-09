@@ -1,35 +1,97 @@
-#' get_masked_tokens_tbl
+#' Preloads a masked language model
 #'
-#' @param context Context
-#' @param model Name of a pretrained model stored on the huggingface.co.
+#' Preloads a masked language model to speed up next runs.
 #'
-#' @return A table
+#' For more about masked models, see [chapter ? of hugging face documentation](https://huggingface.co/course/chapter?/?).
+#'
+#' If not specified, the causal model that will be used is the one set in specified in the global option `pangoling.masked.default`, this can be accessed via `getOption("pangoling.masked.default")` (by default "`r getOption("pangoling.masked.default")`"). To change the default option use `options(pangoling.masked.default = "newmaskedmodel")`.
+#'
+#' A list of possible causal masked can be found in [hugging face website](https://huggingface.co/).
+#'
+#' Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of [https://status.huggingface.co/](https://status.huggingface.co/)
+#'
+#' @inheritParams causal_preload
+#' @return Nothing.
+#'
+#' @examplesIf interactive()
+#' causal_preload(model = "bert-base-uncased")
+#'
+#' @family masked model functions
 #' @export
-get_masked_tokens_tbl <- function(masked_sentences,
-                                  model = "bert-base-uncased",
+#'
+masked_preload <- function(model = getOption("pangoling.masked.default"),
+                           add_special_tokens = NULL,
+                           config_model = NULL, config_tokenizer = NULL) {
+  lang_model(model, task = "masked", config_model)
+  tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer)
+  invisible()
+}
+
+
+#' Returns the configuration of a masked model
+#'
+#' Returns the configuration of a masked model.
+#'
+#' @inheritParams masked_preload
+#' @inherit  masked_preload details
+#' @return A list with the configuration of the model.
+#' @examplesIf interactive()
+#' masked_config(model = "bert-base-uncased")
+#'
+#' @family masked model functions
+#' @export
+causal_config <- function(model = getOption("pangoling.masked.default"), config_model = NULL) {
+  lang_model(model = model,
+             task = "masked",
+             config_model = config_model)$config$to_dict()
+}
+
+#' Get the possible tokens and their log probabilities for each mask in a sentence.
+#'
+#' For each mask in a sentence, get the possible tokens and their log probabilities using a masked transformer
+#'
+#' @section More examples:
+#' See the  [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html) in pangoling website for more examples.
+#'
+#'
+#' @param masked_sentence Context
+#' @inheritParams masked_preload
+#' @inherit masked_preload details
+#' @return A table with the masked sentences, the tokens (`token`), log probability (`lp`), and the respective mask number (`mask_n`).
+#' @examplesIf interactive()
+#' masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
+#'                    model = "bert-base-uncased")
+#'
+#' @family masked model functions
+#' @export
+masked_tokens_tbl <- function(masked_sentences,
+                                  model = getOption("pangoling.masked.default"),
                                   add_special_tokens = NULL,
                                   config_model = NULL,
                                   config_tokenizer = NULL) {
   message_verbose("Processing using masked model '", model, "'...")
-  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+  tkzr <- tokenizer(model,
+                    add_special_tokens = add_special_tokens,
+                    config = config_tokenizer)
+  trf <- lang_model(model,
+             task = "masked",
+             config = config_model)
   vocab <- get_vocab(tkzr)
-  if (!is.null(add_special_tokens)) {
-    encode <- function(x) tkzr$encode(x, return_tensors = "pt", add_special_tokens = add_special_tokens)
-  } else {
-    encode <- function(x) tkzr$encode(x, return_tensors = "pt")
-  }
   # non_batched:
   tidytable::map_dfr(masked_sentences, function(masked_sentence) {
-    masked_tensor <- encode(masked_sentence)
-    outputs <- lang_model(model, task = "masked", config = config_model)(masked_tensor)
+    masked_tensor <- encode(masked_sentence, tkzr,
+                            add_special_tokens = add_special_tokens)
+    outputs <- trf(masked_tensor)
     mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
-
     logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
     lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
     if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
     # names(lp) <-  1:length(lp)
     if (length(mask_pos) == 0) {
-      tidytable::tidytable(masked_sentence = masked_sentence, token = NA, lp = NA, mask_n = NA)
+      tidytable::tidytable(masked_sentence = masked_sentence,
+                           token = NA,
+                           lp = NA,
+                           mask_n = NA)
     } else {
       lp |> tidytable::map_dfr.(~
         tidytable::tidytable(
@@ -42,13 +104,41 @@ get_masked_tokens_tbl <- function(masked_sentences,
     tidytable::relocate(mask_n, .after = tidyselect::everything())
 }
 
+#' Get the log probability of the last word (or phrase) of given a context
+#'
+#' Get the log probability of the last word (or phrase) of given a context using a masked transformer
+#'
+#' @section More examples:
+#' See the  [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html) in pangoling website for more examples.
+#'
+#'
+#' @param contexts Context sentences.
+#' @param last_words One last word for each context sentence
+#' @inheritParams masked_preload
+#' @inherit masked_preload details
+#' @return A table with the masked sentences, the tokens (`token`), log probability (`lp`), and the respective mask number (`mask_n`).
+#' @examplesIf interactive()
+#' masked_last_lp(c("The apple doesn't fall far from the",
+#'                   "The tree doesn't fall far from the"),
+#'                last_words = c("tree","apple"),
+#'                model = "bert-base-uncased")
+#'
+#' @family masked model functions
 #' @export
-get_masked_last_lp <- function(contexts, last_words, ignore_regex = "", final_punctuation = ".", model = "bert-base-uncased", add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL) {
+masked_last_lp <- function(contexts,
+                           last_words,
+                           ignore_regex = "",
+                           final_punctuation = ".",
+                           model = getOption("pangoling.masked.default"),
+                           add_special_tokens = NULL,
+                           config_model = NULL, config_tokenizer = NULL) {
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
   message_verbose("Processing using masked model '", model, "'...")
 
   # word_by_word_texts <- get_word_by_word_texts(x, .by)
-  last_tokens <- get_tokens(last_words, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+  last_tokens <- tokenize(last_words,
+                          model = model,
+                          add_special_tokens = add_special_tokens, config = config_tokenizer)
   masked_sentences <- tidytable::map2_chr(contexts, last_tokens, ~ {
     paste0(.x, " ", paste0(rep(tkzr$mask_token, length(.y)), collapse = ""), final_punctuation)
   })
@@ -88,7 +178,7 @@ get_masked_last_lp <- function(contexts, last_words, ignore_regex = "", final_pu
 #'
 #' @return a vector of log probabilities.
 #' @export
-get_masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
   message_verbose("Processing using masked model '", model, "'...")
 

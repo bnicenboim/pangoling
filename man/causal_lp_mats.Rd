@@ -7,7 +7,7 @@
 causal_lp_mats(
   x,
   .by = rep(1, length(x)),
-  model = "gpt2",
+  model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL
@@ -35,7 +35,13 @@ A list of matrices with tokens in their columns and the vocabulary of the model 
 Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer model.
 }
 \details{
-For more about causal models, see \href{https://huggingface.co/course/chapter7/6}{chapter 7 of hugging face documentation}.  Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors check the status of \url{https://status.huggingface.co/}
+For more about causal models, see \href{https://huggingface.co/course/chapter7/6}{chapter 7 of hugging face documentation}.
+
+If not specified, the causal model that will be used is the one set in specified in the global option \code{pangoling.causal.default}, this can be accessed via \code{getOption("pangoling.causal.default")} (by default "gpt2"). To change the default option use \code{options(pangoling.causal.default = "newcausalmodel")}.
+
+A list of possible causal models can be found in \href{https://huggingface.co/}{hugging face website}.
+
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors check the status of \url{https://status.huggingface.co/}
 }
 \section{More examples}{
 

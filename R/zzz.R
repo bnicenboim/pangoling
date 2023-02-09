@@ -29,7 +29,9 @@ skip_if_no_python_stuff <- function() {
   op.pangoling <- list(
     pangoling.debug = FALSE,
     pangoling.verbose = 2,
-    pangoling.cache = cachem::cache_mem(max_size = 1024 * 1024^2)
+    pangoling.cache = cachem::cache_mem(max_size = 1024 * 1024^2),
+    pangoling.causal.default = "gpt2",
+    pangoling.masked.default = "bert-base-uncased"
   )
   toset <- !(names(op.pangoling) %in% names(op))
   if (any(toset)) options(op.pangoling[toset])

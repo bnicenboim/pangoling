@@ -20,7 +20,9 @@ The perplexity.
 Calculates perplexity of a vector of (log-)probabilities.
 }
 \details{
+If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
 
+\deqn{\left(\prod_{n} x_n \right)^\frac{1}{N}}
 }
 \examples{
 probs <- c(.3, .5, .6)

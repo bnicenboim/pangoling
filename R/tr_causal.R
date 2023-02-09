@@ -2,7 +2,13 @@
 #'
 #' Preloads a causal language model to speed up next runs.
 #'
-#' For more about causal models, see [chapter 7 of hugging face documentation](https://huggingface.co/course/chapter7/6).  Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of [https://status.huggingface.co/](https://status.huggingface.co/)
+#' For more about causal models, see [chapter 7 of hugging face documentation](https://huggingface.co/course/chapter7/6).
+#'
+#' If not specified, the causal model that will be used is the one set in specified in the global option `pangoling.causal.default`, this can be accessed via `getOption("pangoling.causal.default")` (by default "`r getOption("pangoling.causal.default")`"). To change the default option use `options(pangoling.causal.default = "newcausalmodel")`.
+#'
+#' A list of possible causal models can be found in [hugging face website](https://huggingface.co/).
+#'
+#' Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @param model Name of a pretrained model stored locally on the (huggingface.co).
 #' @param add_special_tokens Whether to include beginning of text special tokens. By default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer).
@@ -17,7 +23,7 @@
 #' @family causal model functions
 #' @export
 #'
-causal_preload <- function(model = "gpt2",
+causal_preload <- function(model = getOption("pangoling.causal.default"),
                            add_special_tokens = NULL,
                            config_model = NULL, config_tokenizer = NULL) {
   lang_model(model, task = "causal", config_model)
@@ -35,7 +41,7 @@ causal_preload <- function(model = "gpt2",
 #'
 #' @family causal model functions
 #' @export
-causal_config <- function(model = "gpt2", config_model = NULL) {
+causal_config <- function(model = getOption("pangoling.causal.default"), config_model = NULL) {
   lang_model(model = model,
              task = "causal",
              config_model = config_model)$config$to_dict()
@@ -60,7 +66,7 @@ causal_config <- function(model = "gpt2", config_model = NULL) {
 #'
 #' @family causal model functions
 #' @export
-causal_next_tokens_tbl <- function(context, model = "gpt2",
+causal_next_tokens_tbl <- function(context, model = getOption("pangoling.causal.default"),
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
@@ -108,7 +114,7 @@ causal_next_tokens_tbl <- function(context, model = "gpt2",
 causal_lp <- function(x,
                       .by = rep(1, length(x)),
                       ignore_regex = "",
-                      model = "gpt2",
+                      model = getOption("pangoling.causal.default"),
                       add_special_tokens = NULL,
                       config_model = NULL,
                       config_tokenizer = NULL) {
@@ -175,7 +181,7 @@ causal_lp <- function(x,
 #' @family causal model functions
 #' @export
 causal_tokens_lp_tbl <- function(texts,
-                                 model = "gpt2",
+                                 model = getOption("pangoling.causal.default"),
                                  add_special_tokens = NULL,
                                  config_model = NULL,
                                  config_tokenizer = NULL,
@@ -281,7 +287,7 @@ causal_mat <- function(tensor,
 #'
 causal_lp_mats <- function(x,
                           .by = rep(1, length(x)),
-                          model = "gpt2",
+                          model = getOption("pangoling.causal.default"),
                           add_special_tokens = NULL,
                           config_model = NULL,
                           config_tokenizer = NULL) {
