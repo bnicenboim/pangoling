@@ -36,56 +36,9 @@ test_that("bert last word works", {
                      "The tree doesn't fall far from the"),
                 last_words = c("tree","apple"),
                   model = "google/bert_uncased_L-2_H-128_A-2")
-
-})
-model = "google/bert_uncased_L-2_H-128_A-2"
-tkzr <- tokenizer(model,
-                  add_special_tokens = NULL,
-                  config_tokenizer = NULL)
-tkzr$encode("it", return_tensors = "pt")
-encode("it",tkzr)
-# AttributeError: 'BertTokenizerFast' object has no attribute 'encode'
-masked_sentences <- "bb"
-last_words <- "Asd"
-  l <- create_tensor_lst("pp",
-                         tkzr,
-                         add_special_tokens = NULL,
-                         stride = 1)
-
-  if (is.null(tkzr$special_tokens_map$pad_token) &&
-      !is.null(tkzr$special_tokens_map$eos_token)) {
-    tkzr$pad_token <- tkzr$eos_token
-  }
-  max_length <- tkzr$max_len_single_sentence
-  if (is.null(max_length) || is.na(max_length) || max_length < 1) {
-    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
-    max_length <- Inf
-  }
-
-xx <- function(texts,
-               tkzr,
-               add_special_tokens = NULL,
-               stride = 1,
-               max_length = 512) {
-  if (is.null(tkzr$special_tokens_map$pad_token) &&
-      !is.null(tkzr$special_tokens_map$eos_token)) {
-    tkzr$pad_token <- tkzr$eos_token
-  }
-
-  if (is.null(max_length) || is.na(max_length) || max_length < 1) {
-    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
-    max_length <- Inf
-  }
-  lapply(texts, function(text) {
-    tensor <- encode(text,
-                     tkzr,
-                     add_special_tokens = add_special_tokens,
-                     stride = as.integer(stride),
-                     truncation = is.finite(max_length),
-                     return_overflowing_tokens = is.finite(max_length),
-                     padding = is.finite(max_length)
-    )
-    tensor
+  ms <-  masked_tokens_tbl(c("The apple doesn't fall far from the [MASK].", "The tree doesn't fall far from the [MASK]." ), model = "google/bert_uncased_L-2_H-128_A-2")
+  lps <- c(ms[token== "tree",][1,]$lp,
+  ms[token== "apple",][2,]$lp)
+  names(lps) <- c("tree","apple")
+  expect_equal(lw, lps)
   })
-}
-xx(texts = "a",tkzr,add_special_tokens = NULL,stride = 1)

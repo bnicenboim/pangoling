@@ -145,10 +145,7 @@ masked_last_lp <- function(contexts,
   message_verbose("Processing using masked model '", model, "'...")
 
   # word_by_word_texts <- get_word_by_word_texts(x, .by)
-  last_tokens <- tokenize(last_words,
-                          model = model,
-                          add_special_tokens = add_special_tokens,
-                          config_tokenizer = config_tokenizer)
+  last_tokens <- char_to_token(last_words,tkzr)
   masked_sentences <- tidytable::map2_chr(contexts, last_tokens, ~ {
     paste0(.x,
            " ",
@@ -177,7 +174,7 @@ masked_last_lp <- function(contexts,
                             add_special_tokens = add_special_tokens,
                             stride = stride)
     text <- paste0(words, collapse = " ")
-    tokens <- tokenize(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
+    tokens <- char_to_token(text, tkzr)[[1]]
     lapply(ls_mat, function(m) {
       # m <- ls_mat[[1]]
       message_verbose("Context: ", item, "\n`", paste(words, collapse = " "), "`")
@@ -224,7 +221,7 @@ masked_lp <- function(x,
   masked_word_by_word_texts <- lapply(word_by_word_texts, function(word_by_word_text) {
     # word_by_word_text <- word_by_word_texts[[1]]
     len <- length(word_by_word_text)
-    tokens <- tokenize(word_by_word_text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+    tokens <- char_to_token(word_by_word_text, tkzr)
     lapply(1:len, function(pos) {
       word_by_word_text[pos:len] <- tidytable::map_chr(lengths(tokens[pos:len]), ~ paste0(rep(tkzr$mask_token, .x), collapse = ""))
       word_by_word_text
@@ -255,7 +252,7 @@ masked_lp <- function(x,
                             stride = stride,
                             N_pred = 1)
     text <- paste0(words, collapse = " ")
-    tokens <- tokenize(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
+    tokens <- char_to_token(text, model = model, tkzr)[[1]]
     lapply(ls_mat, function(m) {
       # m <- ls_mat[[1]]
       message_verbose("Text id: ", item, "\n`", paste(words, collapse = " "), "`")
@@ -278,10 +275,7 @@ masked_lp_mat <- function(tensor_lst,
 
   tensor <- torch$row_stack(unname(tensor_lst))
   words <- names(tensor_lst)
-  tokens <- tokenize(words,
-                     model,
-                     add_special_tokens = add_special_tokens,
-                     config_tokenizer = config_tokenizer)
+  tokens <- char_to_token(words, tkzr)
   n_masks <- sum(tensor_lst[[1]]$tolist()[[1]] == tkzr$mask_token_id)
   message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
 

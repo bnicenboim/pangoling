@@ -8,13 +8,13 @@
 #' @export
 #'
 #' @family tokens
-transformer_vocab <- function(model = "gpt2",
+transformer_vocab <- function(model = getOption("pangoling.causal.default"),
                               add_special_tokens = NULL,
                               config_tokenizer = NULL) {
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
                     config_tokenizer = config_tokenizer)
-  vocab <- sort(unlist(tkzr$get_vocab())) |> names()
+  sort(unlist(tkzr$get_vocab())) |> names()
 }
 
 #' Tokenize the input
@@ -27,18 +27,27 @@ transformer_vocab <- function(model = "gpt2",
 #' tokenize(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 #' @family tokens
 #' @export
-tokenize <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
+tokenize <- function(x,
+                     model = getOption("pangoling.causal.default"),
+                     add_special_tokens = NULL,
+                     config_tokenizer = NULL) {
   UseMethod("tokenize")
 }
 
 #' @export
-tokenize.character <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
+tokenize.character <- function(x,
+                               model = getOption("pangoling.causal.default"),
+                               add_special_tokens = NULL,
+                               config_tokenizer = NULL) {
   id <- get_id(x, model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
   lapply(id, function(i) tokenize.numeric(i, model = model,  add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer))
 }
 
 #' @export
-tokenize.numeric <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
+tokenize.numeric <- function(x,
+                             model = getOption("pangoling.causal.default"),
+                             add_special_tokens = NULL,
+                             config_tokenizer = NULL) {
   tidytable::map_chr.(as.integer(x), function(x) {
     tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)$convert_ids_to_tokens(x)
   })
@@ -56,8 +65,14 @@ tokenize.numeric <- function(x, model = "gpt2", add_special_tokens = NULL, confi
 #' ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 #' @family tokens
 #' @export
-ntokens <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
-  length(unlist(tokenize(x, model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer), recursive = TRUE))
+ntokens <- function(x,
+                    model = getOption("pangoling.causal.default"),
+                    add_special_tokens = NULL,
+                    config_tokenizer = NULL) {
+  lengths(tokenize(x,
+                   model = model,
+                   add_special_tokens = add_special_tokens,
+                   config_tokenizer = config_tokenizer))
 }
 
 
@@ -159,8 +174,13 @@ gc.collect()")
 
 #' Get ids (without adding special characters at beginning or end?)
 #' @noRd
-get_id <- function(x, model = "gpt2", add_special_tokens = add_special_tokens, config_tokenizer = NULL) {
-  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
+get_id <- function(x,
+                   model = "gpt2",
+                   add_special_tokens = NULL,
+                   config_tokenizer = NULL,
+                   tkzr = NULL) {
+
+  if(is.null(tkzr)) tkzr <-  tokenizer(model,  add_special_tokens, config_tokenizer)
   if (!is.null(add_special_tokens) && add_special_tokens) {
     x[1] <- paste0(
       tkzr$special_tokens_map$bos_token,
@@ -253,4 +273,16 @@ word_lp <- function(words, mat, ignore_regex, model, add_special_tokens, config_
   }
   names(word_lp) <- words
   word_lp
+}
+
+char_to_token <- function(x, tkzr = NULL) {
+  tokenizer <- tkzr
+  id <- get_id(x, tkzr = tokenizer)
+  lapply(id, function(i) num_to_token(i, tkzr))
+}
+
+num_to_token <- function(x, tkzr) {
+  tidytable::map_chr.(as.integer(x), function(x) {
+    tkzr$convert_ids_to_tokens(x)
+  })
 }
