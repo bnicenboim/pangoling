@@ -3,7 +3,15 @@ options(pangoling.verbose = FALSE)
 prov <- "The apple doesn't fall far from the tree"
 sent2 <- "He realizes something." # realizes is differently encoded at the begginning or end
 sent3 <- "realizes something."
-test_that("gp2 get prob work", {
+
+test_that("gpt2 load and gets config", {
+ expect_invisible(causal_preload())
+  conf_lst <- causal_config()
+  expect_true(is.list(conf_lst))
+  expect_equal(conf_lst$`_name_or_path`, getOption("pangoling.causal.default"))
+})
+
+test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
     causal_next_tokens_tbl("The apple doesn't fall far from the")
@@ -96,11 +104,10 @@ if (0) {
 test_that("other models using get prob work", {
   skip_if_no_python_stuff()
   tokenize("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
-  if (0) { # not working :()
+
     expect_snapshot(
       causal_lp(x = c("El", "bebé", "de", "cigüeña."), model = "flax-community/gpt-2-spanish")
     )
-  }
 
   lp_provd <-
     causal_lp(

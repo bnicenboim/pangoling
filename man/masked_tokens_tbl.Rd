@@ -24,13 +24,13 @@ masked_tokens_tbl(
 \item{masked_sentence}{Context}
 }
 \value{
-A table with
+A table with the masked sentences, the tokens (\code{token}), log probability (\code{lp}), and the respective mask number (\code{mask_n}).
 }
 \description{
 For each mask in a sentence, get the possible tokens and their log probabilities using a masked transformer
 }
 \details{
-For more about masked models, see \href{https://huggingface.co/course/chapter?/?}{chapter ? of hugging face documentation}.
+A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence.
 
 If not specified, the causal model that will be used is the one set in specified in the global option \code{pangoling.masked.default}, this can be accessed via \code{getOption("pangoling.masked.default")} (by default "bert-base-uncased"). To change the default option use \code{options(pangoling.masked.default = "newmaskedmodel")}.
 
@@ -51,7 +51,8 @@ masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
 }
 \seealso{
 Other masked model functions: 
-\code{\link{causal_config}()},
+\code{\link{masked_config}()},
+\code{\link{masked_last_lp}()},
 \code{\link{masked_preload}()}
 }
 \concept{masked model functions}

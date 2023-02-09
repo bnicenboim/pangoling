@@ -2,7 +2,7 @@
 #'
 #' Preloads a masked language model to speed up next runs.
 #'
-#' For more about masked models, see [chapter ? of hugging face documentation](https://huggingface.co/course/chapter?/?).
+#' A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence.
 #'
 #' If not specified, the causal model that will be used is the one set in specified in the global option `pangoling.masked.default`, this can be accessed via `getOption("pangoling.masked.default")` (by default "`r getOption("pangoling.masked.default")`"). To change the default option use `options(pangoling.masked.default = "newmaskedmodel")`.
 #'
@@ -40,7 +40,8 @@ masked_preload <- function(model = getOption("pangoling.masked.default"),
 #'
 #' @family masked model functions
 #' @export
-causal_config <- function(model = getOption("pangoling.masked.default"), config_model = NULL) {
+masked_config <- function(model = getOption("pangoling.masked.default"),
+                          config_model = NULL) {
   lang_model(model = model,
              task = "masked",
              config_model = config_model)$config$to_dict()
@@ -116,7 +117,7 @@ masked_tokens_tbl <- function(masked_sentences,
 #' @param last_words One last word for each context sentence
 #' @inheritParams masked_preload
 #' @inherit masked_preload details
-#' @return A table with the masked sentences, the tokens (`token`), log probability (`lp`), and the respective mask number (`mask_n`).
+#' @return A named vector of log probabilities.
 #' @examplesIf interactive()
 #' masked_last_lp(c("The apple doesn't fall far from the",
 #'                   "The tree doesn't fall far from the"),
@@ -131,36 +132,61 @@ masked_last_lp <- function(contexts,
                            final_punctuation = ".",
                            model = getOption("pangoling.masked.default"),
                            add_special_tokens = NULL,
-                           config_model = NULL, config_tokenizer = NULL) {
-  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+                           config_model = NULL,
+                           config_tokenizer = NULL) {
+  stride <- 1
+  tkzr <- tokenizer(model,
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer)
+  trf <- lang_model(model,
+                    task = "masked",
+                    config = config_model)
+
   message_verbose("Processing using masked model '", model, "'...")
 
   # word_by_word_texts <- get_word_by_word_texts(x, .by)
   last_tokens <- tokenize(last_words,
                           model = model,
-                          add_special_tokens = add_special_tokens, config = config_tokenizer)
+                          add_special_tokens = add_special_tokens,
+                          config_tokenizer = config_tokenizer)
   masked_sentences <- tidytable::map2_chr(contexts, last_tokens, ~ {
-    paste0(.x, " ", paste0(rep(tkzr$mask_token, length(.y)), collapse = ""), final_punctuation)
+    paste0(.x,
+           " ",
+           paste0(rep(tkzr$mask_token, length(.y)), collapse = ""),
+           final_punctuation)
   })
 
   # named tensor list:
   tensors_lst <- tidytable::map2(masked_sentences, last_words, function(t, w) {
-    l <- create_tensor_lst(t, model = model, add_special_tokens = add_special_tokens, stride = stride, config = config_tokenizer)
+    l <- create_tensor_lst(t,
+                           tkzr,
+                           add_special_tokens = add_special_tokens,
+                           stride = stride)
     names(l) <- w
     l
   })
 
-  out <- tidytable::pmap.(list(last_words, contexts, tensors_lst), function(words, item, tensor_lst) {
+  out <- tidytable::pmap.(list(last_words, contexts, tensors_lst),
+                          function(words, item, tensor_lst) {
     # words <- word_by_word_texts[[1]]
     # item <- names(word_by_word_texts[[1]])
     # tensor_lst <- tensors_lst[[1]]
-    ls_mat <- masked_lp_mat(tensor_lst, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer, N_pred = 1)
+    ls_mat <- masked_lp_mat(tensor_lst,
+                            trf = trf,
+                            tkzr = tkzr,
+                            add_special_tokens = add_special_tokens,
+                            stride = stride)
     text <- paste0(words, collapse = " ")
-    tokens <- get_tokens(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
+    tokens <- tokenize(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
     lapply(ls_mat, function(m) {
       # m <- ls_mat[[1]]
       message_verbose("Context: ", item, "\n`", paste(words, collapse = " "), "`")
-      word_lp(words, mat = m, ignore_regex = ignore_regex, model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
+      word_lp(words,
+              mat = m,
+              ignore_regex = ignore_regex,
+              model = model,
+              add_special_tokens = add_special_tokens,
+              config_tokenizer = config_tokenizer)
     })
     # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
   })
@@ -178,8 +204,19 @@ masked_last_lp <- function(contexts,
 #'
 #' @return a vector of log probabilities.
 #' @export
-masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL) {
+masked_lp <- function(x,
+                      .by = rep(1, length(x)),
+                      ignore_regex = "",
+                      model = "bert-base-uncased",
+                      add_special_tokens = NULL,
+                      stride = 1,
+                      config_model = NULL,
+                      config_tokenizer = NULL) {
   tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+  trf <- lang_model(model,
+                    task = "masked",
+                    config = config_model)
+
   message_verbose("Processing using masked model '", model, "'...")
 
   word_by_word_texts <- get_word_by_word_texts(x, .by)
@@ -187,7 +224,7 @@ masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "be
   masked_word_by_word_texts <- lapply(word_by_word_texts, function(word_by_word_text) {
     # word_by_word_text <- word_by_word_texts[[1]]
     len <- length(word_by_word_text)
-    tokens <- get_tokens(word_by_word_text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+    tokens <- tokenize(word_by_word_text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)
     lapply(1:len, function(pos) {
       word_by_word_text[pos:len] <- tidytable::map_chr(lengths(tokens[pos:len]), ~ paste0(rep(tkzr$mask_token, .x), collapse = ""))
       word_by_word_text
@@ -199,7 +236,10 @@ masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "be
 
   # named tensor list:
   tensors_lst <- tidytable::map2(pasted_masked_texts, word_by_word_texts, function(t, w) {
-    l <- create_tensor_lst(t, model = model, add_special_tokens = add_special_tokens, stride = stride, config = config_tokenizer)
+    l <- create_tensor_lst(t,
+                           tkzr,
+                           add_special_tokens = add_special_tokens,
+                           stride = stride)
     names(l) <- w
     l
   })
@@ -208,9 +248,14 @@ masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "be
     # words <- word_by_word_texts[[1]]
     # item <- names(word_by_word_texts[[1]])
     # tensor_lst <- tensors_lst[[1]]
-    ls_mat <- masked_lp_mat(tensor_lst, model = model, add_special_tokens = add_special_tokens, stride = stride, config_model = config_model, config_tokenizer = config_tokenizer, N_pred = 1)
+    ls_mat <- masked_lp_mat(tensor_lst,
+                            trf,
+                            tkzr,
+                            add_special_tokens = add_special_tokens,
+                            stride = stride,
+                            N_pred = 1)
     text <- paste0(words, collapse = " ")
-    tokens <- get_tokens(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
+    tokens <- tokenize(text, model = model, add_special_tokens = add_special_tokens, config = config_tokenizer)[[1]]
     lapply(ls_mat, function(m) {
       # m <- ls_mat[[1]]
       message_verbose("Text id: ", item, "\n`", paste(words, collapse = " "), "`")
@@ -224,17 +269,23 @@ masked_lp <- function(x, .by = rep(1, length(x)), ignore_regex = "", model = "be
 
 
 #' @noRd
-masked_lp_mat <- function(tensor_lst, model = "bert-base-uncased", add_special_tokens = NULL, stride = 1, config_model = NULL, config_tokenizer = NULL, N_pred = NULL) {
-  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+masked_lp_mat <- function(tensor_lst,
+                          trf,
+                          tkzr,
+                          add_special_tokens = NULL,
+                          stride = 1,
+                          N_pred =1) {
 
   tensor <- torch$row_stack(unname(tensor_lst))
   words <- names(tensor_lst)
-  tokens <- get_tokens(words, model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+  tokens <- tokenize(words,
+                     model,
+                     add_special_tokens = add_special_tokens,
+                     config_tokenizer = config_tokenizer)
   n_masks <- sum(tensor_lst[[1]]$tolist()[[1]] == tkzr$mask_token_id)
   message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
 
-
-  out_lm <- lang_model(model, task = "masked", config = config_model)(tensor)
+  out_lm <- trf(tensor)
   logits_b <- out_lm$logits
 
   is_masked_lst <- lapply(tensor_lst, function(t) {
@@ -245,7 +296,6 @@ masked_lp_mat <- function(tensor_lst, model = "bert-base-uncased", add_special_t
   # number of predictions ahead
   # if(is.null(N_pred)) N_pred <- sum(is_masked_lst[[1]])
   if (is.null(N_pred)) N_pred <- length(words)
-
 
   lmat <- lapply(1:N_pred, function(n_pred) {
     logits_masked <- lapply(seq_along(tensor_lst), function(n) {
@@ -278,7 +328,7 @@ masked_lp_mat <- function(tensor_lst, model = "bert-base-uncased", add_special_t
     # add NA columns for predictions not made
     mat <- cbind(mat_NA, mat)
     colnames(mat) <- unlist(tokens)
-    rownames(mat) <- get_tr_vocab(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
+    rownames(mat) <- get_vocab(tkzr)
     mat
   })
   gc(full = TRUE)

@@ -22,7 +22,6 @@ transformer_vocab <- function(model = "gpt2",
 #' @param x Strings or token ids.
 #' @inheritParams causal_lp
 #' @return A list with tokens
-
 #'
 #' @examplesIf interactive()
 #' tokenize(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
@@ -35,7 +34,7 @@ tokenize <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokeni
 #' @export
 tokenize.character <- function(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
   id <- get_id(x, model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
-  lapply(id, function(i) tokenize.numeric(i, model = model))
+  lapply(id, function(i) tokenize.numeric(i, model = model,  add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer))
 }
 
 #' @export
@@ -185,9 +184,15 @@ create_tensor_lst <- function(texts,
     !is.null(tkzr$special_tokens_map$eos_token)) {
     tkzr$pad_token <- tkzr$eos_token
   }
-  max_length <- tkzr$max_len_single_sentence
+  #If I runt the following line, some models such as
+  # 'flax-community/gpt-2-spanish' give a weird error of
+  # 'GPT2TokenizerFast' object has no attribute 'is_fast'
+  #max_length <- tkzr$model_max_length
+  # thus the ugly hack
+  max_length <- chr_match(capture.output(tkzr), "model_max_len=([0-9]*)")[1,2]
+
   if (is.null(max_length) || is.na(max_length) || max_length < 1) {
-    warning("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+    message_verbose("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
     max_length <- Inf
   }
   lapply(texts, function(text) {

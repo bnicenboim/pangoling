@@ -2,11 +2,11 @@
 #'
 #' Preloads a causal language model to speed up next runs.
 #'
-#' For more about causal models, see [chapter 7 of hugging face documentation](https://huggingface.co/course/chapter7/6).
+#' A causal language model (also called GPT-like, auto-regressive, or decoder model) is a type of large language model usually used for text-generation that can predict the next word (or more accurately in fact token) based on a preceding context.
 #'
 #' If not specified, the causal model that will be used is the one set in specified in the global option `pangoling.causal.default`, this can be accessed via `getOption("pangoling.causal.default")` (by default "`r getOption("pangoling.causal.default")`"). To change the default option use `options(pangoling.causal.default = "newcausalmodel")`.
 #'
-#' A list of possible causal models can be found in [hugging face website](https://huggingface.co/).
+#' A list of possible causal models can be found in [hugging face website](https://huggingface.co/models?pipeline_tag=text-generation).
 #'
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors check the status of [https://status.huggingface.co/](https://status.huggingface.co/)
 #'

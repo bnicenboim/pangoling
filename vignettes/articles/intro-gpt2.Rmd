@@ -16,9 +16,9 @@ Transformer models are a type of neural network architecture used for natural la
 
 Large Language Models (LLMs) are a specific type of pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
 
-There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
+A causal language model (also called GPT-like, auto-regressive, or decoder model) is a type of large language model usually used for text-generation that can predict the next word (or more accurately in fact token) based on a preceding context. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
 
-One interesting side-effect of the these models is that the (log) probability of a word given a certain context can be extracted. 
+One interesting side-effect of causal language model is that the (log) probability of a word given a certain context can be extracted. 
 
 
 ```{r setup, message = FALSE}
@@ -27,7 +27,7 @@ library(tidytable) #fast alternative to dplyr
 library(tictoc) #measure time
 ```
 
-First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
+First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
 
 
 ```{r}

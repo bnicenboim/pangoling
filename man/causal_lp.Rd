@@ -36,11 +36,11 @@ A named vector of log probabilities.
 Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
 }
 \details{
-For more about causal models, see \href{https://huggingface.co/course/chapter7/6}{chapter 7 of hugging face documentation}.
+A causal language model (also called GPT-like, auto-regressive, or decoder model) is a type of large language model usually used for text-generation that can predict the next word (or more accurately in fact token) based on a preceding context.
 
 If not specified, the causal model that will be used is the one set in specified in the global option \code{pangoling.causal.default}, this can be accessed via \code{getOption("pangoling.causal.default")} (by default "gpt2"). To change the default option use \code{options(pangoling.causal.default = "newcausalmodel")}.
 
-A list of possible causal models can be found in \href{https://huggingface.co/}{hugging face website}.
+A list of possible causal models can be found in \href{https://huggingface.co/models?pipeline_tag=text-generation}{hugging face website}.
 
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors check the status of \url{https://status.huggingface.co/}
 }
