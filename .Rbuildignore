@@ -2,6 +2,9 @@ _test
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^README\.md$
+^README\.Rmd$
+^extdata$
 ^data-raw$
 ^_pkgdown\.yml$
 ^docs$
@@ -10,3 +13,4 @@ _test
 ^codecov\.yml$
 ^vignettes/articles$
 ^codemeta\.json$
+^inst/.auctex-auto$

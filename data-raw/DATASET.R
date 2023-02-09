@@ -179,6 +179,6 @@ data_natural_spr <- b %>%
 
 
 usethis::use_data(data_provo_cloze, data_frank2013_stimuli, data_frank2013_spr, data_frank2013_spr_complete, data_frank2013_et_fix, data_frank2013_et_rt,
-  data_natural_spr,
+  #data_natural_spr,
   overwrite = TRUE
 )

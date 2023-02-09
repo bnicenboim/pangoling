@@ -5,6 +5,7 @@ sent2 <- "He realizes something." # realizes is differently encoded at the beggi
 sent3 <- "realizes something."
 
 test_that("gpt2 load and gets config", {
+  skip_if_no_python_stuff()
  expect_invisible(causal_preload())
   conf_lst <- causal_config()
   expect_true(is.list(conf_lst))

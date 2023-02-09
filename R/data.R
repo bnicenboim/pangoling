@@ -2,7 +2,7 @@
 #'
 #' A dataset adapted  from the Provo Corpus `r RefManageR::Citep(mybib,"provo")` with the word probability of the stimuli of the eye-tracking experiment.
 #'
-#' @format A data frame with `r nrow(data_provo_cloze)` rows and `r nrow(data_provo_cloze)` columns:
+#' @format A data frame:
 #'
 #' * `word_unique_id`:  A unique ID number for each word (each token) in the data set.
 #' * `text_id`:  The text number (paragraph 1–55).
@@ -25,7 +25,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib["provo"],.opts=list(style= "latex"))
+#' print(mybib["provo"],.opts=list(style= "latex"))
 #' ```
 #' @source \url{https://osf.io/sjefs//}
 "data_provo_cloze"
@@ -53,7 +53,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib[c("Frank2013","Frank2013a")],.opts=list(style= "latex"))
+#' print(mybib[c("Frank2013","Frank2013a")],.opts=list(style= "latex"))
 #' ```
 #' @seealso [data_frank2013_spr_complete] for the associated self-paced reading data, [data_frank2013_spr] for a cleaned version of that dataaset,  [data_frank2013_et_fix] for the eye-tracking version of this dataset with the fixation information, and [data_frank2013_et_rt] for a preprocessed eye-tracking dataset.
 #
@@ -87,7 +87,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib[c("Frank2013")],.opts=list(style= "latex"))
+#' print(mybib[c("Frank2013")],.opts=list(style= "latex"))
 #' ```
 #'
 #' @family datasets
@@ -102,7 +102,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib[c("Frank2013")],.opts=list(style= "latex"))
+#' print(mybib[c("Frank2013")],.opts=list(style= "latex"))
 #' ```
 #' @family datasets
 #' @seealso [data_frank2013_stimuli] for the enriched stimuli,  [data_frank2013_spr_complete] for the complete version of this dataset, [data_frank2013_et_fix] for the eye-tracking version of this dataset with the fixation information, and [data_frank2013_et_rt] for a preprocessed eye-tracking dataset.
@@ -115,7 +115,7 @@
 #' Eye-tracking reading data of `r RefManageR::Citet(mybib,"Frank2013")`
 #
 #'
-#' @format A data frame with `r nrow(data_frank2013_et_rt)` rows and `r ncol(data_frank2013_et_rt)` columns:
+#' @format A data frame:
 #'
 #' * `subj`: Subject id.
 #' * `sent_id`: Sentence unique id.
@@ -132,7 +132,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib[c("Frank2013")],.opts=list(style= "latex"))
+#' print(mybib[c("Frank2013")],.opts=list(style= "latex"))
 #' ```
 #' @family datasets
 #' @seealso [data_frank2013_stimuli] for the enriched stimuli,  [data_frank2013_spr_complete] for the complete version of this dataset, [data_frank2013_spr] for a "cleaned" version of the self-paced reading data, and [data_frank2013_et_fix] for the raw fixation of this eye-tracking dataset.
@@ -160,7 +160,7 @@
 #' @references
 #'
 #' ```{r, echo = FALSE, results ="asis"}
-#' print(pangoling:::mybib[c("Frank2013")],.opts=list(style= "latex"))
+#' print(mybib[c("Frank2013")],.opts=list(style= "latex"))
 #' ```
 #' @seealso  [data_frank2013_stimuli] for the enriched stimuli, [data_frank2013_spr_complete] for the associated self-paced reading data, [data_frank2013_spr] for a cleaned version of that dataaset,  and [data_frank2013_et_rt] for a preprocessed this dataset.
 "data_frank2013_et_fix"

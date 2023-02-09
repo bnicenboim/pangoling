@@ -167,6 +167,7 @@ causal_lp <- function(x,
 #' @param texts Vector or list of texts.
 #' @param .id Name of the column with the sentence id.
 #' @inheritParams causal_preload
+#' @inheritParams causal_lp
 #' @param ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
@@ -267,6 +268,7 @@ causal_mat <- function(tensor,
 #' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer model.
 #'
 #' @inheritParams causal_lp
+#' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples

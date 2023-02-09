@@ -55,7 +55,7 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #' See the  [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html) in pangoling website for more examples.
 #'
 #'
-#' @param masked_sentence Context
+#' @param masked_sentences Masked sentences.
 #' @inheritParams masked_preload
 #' @inherit masked_preload details
 #' @return A table with the masked sentences, the tokens (`token`), log probability (`lp`), and the respective mask number (`mask_n`).
@@ -73,10 +73,10 @@ masked_tokens_tbl <- function(masked_sentences,
   message_verbose("Processing using masked model '", model, "'...")
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
-                    config = config_tokenizer)
+                    config_tokenizer = config_tokenizer)
   trf <- lang_model(model,
              task = "masked",
-             config = config_model)
+             config_model = config_model)
   vocab <- get_vocab(tkzr)
   # non_batched:
   tidytable::map_dfr(masked_sentences, function(masked_sentence) {
@@ -115,7 +115,9 @@ masked_tokens_tbl <- function(masked_sentences,
 #'
 #' @param contexts Context sentences.
 #' @param last_words One last word for each context sentence
+#' @param final_punctuation Punctuation at the end of the sentence
 #' @inheritParams masked_preload
+#' @inheritParams causal_lp
 #' @inherit masked_preload details
 #' @return A named vector of log probabilities.
 #' @examplesIf interactive()
@@ -140,7 +142,7 @@ masked_last_lp <- function(contexts,
                     config_tokenizer = config_tokenizer)
   trf <- lang_model(model,
                     task = "masked",
-                    config = config_model)
+                    config_model = config_model)
 
   message_verbose("Processing using masked model '", model, "'...")
 
@@ -189,80 +191,6 @@ masked_last_lp <- function(contexts,
   })
   unlist(out, recursive = TRUE)
 }
-
-#' Get the log probability of each word phrase of a vector given its previous context using a transformer model from huggingface.co.
-#'
-#' In case of errors check the status of https://status.huggingface.co/
-#'
-#' @param x Vector of words, phrases or texts.
-#' @param .by Vector that indicates how the text should be split.
-#' @param model Name of a pretrained model stored on the huggingface.co. (Maybe a path to a  model (.pt or .bin file) stored locally will work.)
-#' @ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
-#'
-#' @return a vector of log probabilities.
-#' @export
-masked_lp <- function(x,
-                      .by = rep(1, length(x)),
-                      ignore_regex = "",
-                      model = "bert-base-uncased",
-                      add_special_tokens = NULL,
-                      stride = 1,
-                      config_model = NULL,
-                      config_tokenizer = NULL) {
-  tkzr <- tokenizer(model, add_special_tokens = add_special_tokens, config = config_tokenizer)
-  trf <- lang_model(model,
-                    task = "masked",
-                    config = config_model)
-
-  message_verbose("Processing using masked model '", model, "'...")
-
-  word_by_word_texts <- get_word_by_word_texts(x, .by)
-
-  masked_word_by_word_texts <- lapply(word_by_word_texts, function(word_by_word_text) {
-    # word_by_word_text <- word_by_word_texts[[1]]
-    len <- length(word_by_word_text)
-    tokens <- char_to_token(word_by_word_text, tkzr)
-    lapply(1:len, function(pos) {
-      word_by_word_text[pos:len] <- tidytable::map_chr(lengths(tokens[pos:len]), ~ paste0(rep(tkzr$mask_token, .x), collapse = ""))
-      word_by_word_text
-    })
-  })
-
-  # N <- length(word_by_word_texts)
-  pasted_masked_texts <- lapply(masked_word_by_word_texts, function(t) lapply(t, function(word) paste0(word, collapse = " ")))
-
-  # named tensor list:
-  tensors_lst <- tidytable::map2(pasted_masked_texts, word_by_word_texts, function(t, w) {
-    l <- create_tensor_lst(t,
-                           tkzr,
-                           add_special_tokens = add_special_tokens,
-                           stride = stride)
-    names(l) <- w
-    l
-  })
-
-  out <- tidytable::pmap.(list(word_by_word_texts, names(word_by_word_texts), tensors_lst), function(words, item, tensor_lst) {
-    # words <- word_by_word_texts[[1]]
-    # item <- names(word_by_word_texts[[1]])
-    # tensor_lst <- tensors_lst[[1]]
-    ls_mat <- masked_lp_mat(tensor_lst,
-                            trf,
-                            tkzr,
-                            add_special_tokens = add_special_tokens,
-                            stride = stride,
-                            N_pred = 1)
-    text <- paste0(words, collapse = " ")
-    tokens <- char_to_token(text, model = model, tkzr)[[1]]
-    lapply(ls_mat, function(m) {
-      # m <- ls_mat[[1]]
-      message_verbose("Text id: ", item, "\n`", paste(words, collapse = " "), "`")
-      word_lp(words, mat = m, ignore_regex = ignore_regex, model = model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
-    })
-    # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
-  })
-  unlist(out, recursive = TRUE)
-}
-
 
 
 #' @noRd

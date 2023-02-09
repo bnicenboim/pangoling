@@ -29,7 +29,7 @@ masked_last_lp(
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
 }
 \value{
-A table with the masked sentences, the tokens (\code{token}), log probability (\code{lp}), and the respective mask number (\code{mask_n}).
+A named vector of log probabilities.
 }
 \description{
 Get the log probability of the last word (or phrase) of given a context using a masked transformer

@@ -5,7 +5,7 @@
 \alias{data_provo_cloze}
 \title{Cloze probabilities from the Provo Corpus (Luke and Christianson, 2018).}
 \format{
-A data frame with 2730 rows and 2730 columns:
+A data frame:
 \itemize{
 \item \code{word_unique_id}:  A unique ID number for each word (each token) in the data set.
 \item \code{text_id}:  The text number (paragraph 1–55).

@@ -25,10 +25,6 @@ chr_match <- function(string, pattern) {
   do.call("rbind", list_matches)
 }
 
-#' Replacement of str_detect
-#' @noRd
-chr_detect <- function(string, pattern, ignore.case = FALSE) {
-  grepl(pattern = pattern, x = string, ignore.case = ignore.case)
-}
+
 
 

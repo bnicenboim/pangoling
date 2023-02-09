@@ -4,7 +4,12 @@
 \alias{ntokens}
 \title{The number of tokens in a string or vector of strings}
 \usage{
-ntokens(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL)
+ntokens(
+  x,
+  model = getOption("pangoling.causal.default"),
+  add_special_tokens = NULL,
+  config_tokenizer = NULL
+)
 }
 \arguments{
 \item{x}{character input}

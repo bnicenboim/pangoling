@@ -5,7 +5,7 @@
 \title{Returns the vocabulary of a model}
 \usage{
 transformer_vocab(
-  model = "gpt2",
+  model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
   config_tokenizer = NULL
 )

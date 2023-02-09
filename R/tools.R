@@ -18,13 +18,13 @@
 #' perplexity(lprobs, log.p = TRUE)
 #' @export
 #'
-perplexity <- function(x, na.rm = FALSE, log.p
-                       = TRUE) {
+perplexity <- function(x, na.rm = FALSE, log.p = TRUE) {
   if (log.p == FALSE) {
     prod(x, na.rm = na.rm)^(-1 / length(x))
-  } else if (log.p || all.equal(log.p, exp(1))) {
+  } else if ((log.p == TRUE) || identical(log.p, exp(1))) {
     exp(-sum(x, na.rm = na.rm) / length(x))
   } else {
     log.p^(-sum(x, na.rm = na.rm) / length(x))
   }
 }
+

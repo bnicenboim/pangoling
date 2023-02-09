@@ -3,6 +3,7 @@ options(pangoling.verbose = FALSE)
 
 
 test_that("masked load and gets config", {
+  skip_if_no_python_stuff()
   expect_invisible(masked_preload())
   conf_lst <- masked_config()
   expect_true(is.list(conf_lst))
@@ -32,6 +33,7 @@ test_that("bert masked works", {
 })
 
 test_that("bert last word works", {
+  skip_if_no_python_stuff()
    lw <- masked_last_lp(c("The apple doesn't fall far from the",
                      "The tree doesn't fall far from the"),
                 last_words = c("tree","apple"),

@@ -5,7 +5,7 @@
 \alias{data_frank2013_et_rt}
 \title{Eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)}
 \format{
-A data frame with 81109 rows and 11 columns:
+A data frame:
 \itemize{
 \item \code{subj}: Subject id.
 \item \code{sent_id}: Sentence unique id.

@@ -4,7 +4,12 @@
 \alias{tokenize}
 \title{Tokenize the input}
 \usage{
-tokenize(x, model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL)
+tokenize(
+  x,
+  model = getOption("pangoling.causal.default"),
+  add_special_tokens = NULL,
+  config_tokenizer = NULL
+)
 }
 \arguments{
 \item{x}{Strings or token ids.}
