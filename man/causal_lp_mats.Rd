@@ -18,15 +18,13 @@ causal_lp_mats(
 
 \item{.by}{Vector that indicates how the text should be split.}
 
-\item{model}{Name of a pretrained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
 
 \item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config_model}{List with other arguments that control how the model from hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
-
-\item{ignore_regex}{Can ignore certain characters when calculates the log probabilities. For example \verb{^[[:punct:]]$} will ignore all punctuation  that stands alone in a token.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging face is accessed.}
 }
 \value{
 A list of matrices with tokens in their columns and the vocabulary of the model in their rows
@@ -35,17 +33,31 @@ A list of matrices with tokens in their columns and the vocabulary of the model 
 Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer model.
 }
 \details{
-A causal language model (also called GPT-like, auto-regressive, or decoder model) is a type of large language model usually used for text-generation that can predict the next word (or more accurately in fact token) based on a preceding context.
+A causal language model (also called GPT-like, auto-regressive, or decoder
+model) is a type of large language model usually used for text-generation
+that can predict the next word (or more accurately in fact token) based on a preceding context.
 
-If not specified, the causal model that will be used is the one set in specified in the global option \code{pangoling.causal.default}, this can be accessed via \code{getOption("pangoling.causal.default")} (by default "gpt2"). To change the default option use \code{options(pangoling.causal.default = "newcausalmodel")}.
+If not specified, the causal model that will be used is the one set in
+specified in the global option \code{pangoling.causal.default}, this can be
+accessed via \code{getOption("pangoling.causal.default")} (by default
+"gpt2"). To change the default option
+use \code{options(pangoling.causal.default = "newcausalmodel")}.
 
-A list of possible causal models can be found in \href{https://huggingface.co/models?pipeline_tag=text-generation}{hugging face website}.
+A list of possible causal models can be found in
+\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
 
-Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors check the status of \url{https://status.huggingface.co/}
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
+control how the model and tokenizer from Hugging Face is accessed, see the
+python method
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details. In case of errors check the status of
+\url{https://status.huggingface.co/}
 }
 \section{More examples}{
 
-See the  \href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article} in pangoling website for more examples.
+See the
+\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
+in pangoling website for more examples.
 }
 
 \examples{

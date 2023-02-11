@@ -1,6 +1,6 @@
 Package: pangoling
 Type: Package
-Title: Access to language model predictions in R
+Title: Access to Language Model Predictions
 Version: 0.0.0.9000
 Authors@R: c(
     person("Bruno", "Nicenboim",
@@ -9,9 +9,9 @@ Authors@R: c(
     comment = c(ORCID = "0000-0002-5176-3943")),
     person("Chris", "Emmerly", role = "ctb"),
     person("Giovanni", "Cassani", role = "ctb"))
-Description: Access to large language model word predictability in R.
-URL: https://github.com/bnicenboim/pangoling
-BugReports: https://github.com/bnicenboim/pangoling/issues
+Description: Access to word predictability using large language (transformer) models.
+URL: <https://bruno.nicenboim.me/pangoling>, <https://github.com/bnicenboim/pangoling>
+BugReports: <https://github.com/bnicenboim/pangoling/issues>
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
@@ -28,7 +28,6 @@ Imports:
     reticulate,
     tidyselect,
     tidytable (>= 0.7.2),
-    RefManageR,
     utils,
     cachem
 Suggests: 
@@ -36,7 +35,8 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     tictoc,
-    covr
+    covr,
+    spelling
 Config/testthat/edition: 3
 RoxygenNote: 7.2.2
 Roxygen: list(markdown = TRUE)
@@ -44,4 +44,4 @@ Depends:
     R (>= 2.10)
 VignetteBuilder: knitr
 StagedInstall: no
-
+Language: en-US

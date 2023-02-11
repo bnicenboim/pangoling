@@ -2,7 +2,8 @@
 #'
 #' Calculates perplexity of a vector of (log-)probabilities.
 #'
-#' If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
+#' If x are raw probabilities (NOT the default),
+#' then perplexity is calculated as follows:
 #'
 #' \deqn{\left(\prod_{n} x_n \right)^\frac{1}{N}}
 #'
@@ -17,7 +18,7 @@
 #' lprobs <- log(probs)
 #' perplexity(lprobs, log.p = TRUE)
 #' @export
-#'
+#' @family general functions
 perplexity <- function(x, na.rm = FALSE, log.p = TRUE) {
   if (log.p == FALSE) {
     prod(x, na.rm = na.rm)^(-1 / length(x))
@@ -27,4 +28,3 @@ perplexity <- function(x, na.rm = FALSE, log.p = TRUE) {
     log.p^(-sum(x, na.rm = na.rm) / length(x))
   }
 }
-

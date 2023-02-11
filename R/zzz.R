@@ -4,13 +4,11 @@ torch <- NULL
 # data table :=
 .datatable.aware <- TRUE
 
-mybib <- RefManageR::ReadBib(system.file("REFERENCES.bib", package = "pangoling"), check = FALSE)
-
-
-
 #' @noRd
 .onLoad <- function(libname, pkgname) {
-  # This will instruct reticulate to immediately try to configure the active Python environment, installing any required Python packages as necessary.
+  # This will instruct reticulate to immediately try to configure the
+  # active Python environment, installing any required Python packages
+  # as necessary.
   reticulate::configure_environment(pkgname)
   # use superassignment to update global reference
   transformers <<- reticulate::import("transformers", delay_load = TRUE, convert = FALSE)
@@ -27,7 +25,7 @@ mybib <- RefManageR::ReadBib(system.file("REFERENCES.bib", package = "pangoling"
   toset <- !(names(op.pangoling) %in% names(op))
   if (any(toset)) options(op.pangoling[toset])
 
-  #caching:
+  # caching:
   tokenizer <<- memoise::memoise(tokenizer)
   lang_model <<- memoise::memoise(lang_model)
   transformer_vocab <<- memoise::memoise(transformer_vocab)

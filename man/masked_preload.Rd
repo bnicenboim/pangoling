@@ -12,13 +12,13 @@ masked_preload(
 )
 }
 \arguments{
-\item{model}{Name of a pretrained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
 
 \item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config_model}{List with other arguments that control how the model from hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging face is accessed.}
 }
 \value{
 Nothing.
@@ -27,13 +27,24 @@ Nothing.
 Preloads a masked language model to speed up next runs.
 }
 \details{
-A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence.
+A masked language model (also called BERT-like, or encoder model) is a type
+of large language model  that can be used to predict the content of a mask
+in a sentence.
 
-If not specified, the causal model that will be used is the one set in specified in the global option \code{pangoling.masked.default}, this can be accessed via \code{getOption("pangoling.masked.default")} (by default "bert-base-uncased"). To change the default option use \code{options(pangoling.masked.default = "newmaskedmodel")}.
+If not specified, the causal model that will be used is the one set in
+specified in the global option \code{pangoling.masked.default}, this can be
+accessed via \code{getOption("pangoling.masked.default")} (by default
+"bert-base-uncased"). To change the default option
+use \code{options(pangoling.masked.default = "newmaskedmodel")}.
 
-A list of possible causal masked can be found in \href{https://huggingface.co/}{hugging face website}.
+A list of possible causal masked can be found in
+\href{https://huggingface.co/}{Hugging Face website}.
 
-Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to control how the model and tokenizer from hugging face is accessed, see the python method \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors check the status of \url{https://status.huggingface.co/}
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
+control how the model and tokenizer from Hugging Face is accessed, see the
+python method
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
+check the status of \url{https://status.huggingface.co/}
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -43,7 +54,7 @@ causal_preload(model = "bert-base-uncased")
 \seealso{
 Other masked model functions: 
 \code{\link{masked_config}()},
-\code{\link{masked_last_lp}()},
+\code{\link{masked_lp}()},
 \code{\link{masked_tokens_tbl}()}
 }
 \concept{masked model functions}

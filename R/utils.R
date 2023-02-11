@@ -1,17 +1,11 @@
-stop2 <- function(...) {
-  stop(..., call. = FALSE)
-}
-
-
 
 #' @noRd
 message_verbose <- function(...) {
   if (options()$pangoling.verbose > 0) message(...)
 }
 
-#' @noRd
-message_debug <- function(...) {
-  if (options()$pangoling.verbose > 1) message(...)
+stop2 <- function(...) {
+  stop(..., call. = FALSE)
 }
 
 #' Replacement of str_match
@@ -25,6 +19,7 @@ chr_match <- function(string, pattern) {
   do.call("rbind", list_matches)
 }
 
-
-
-
+#' #' @noRd
+#' message_debug <- function(...) {
+#'   if (options()$pangoling.verbose > 1) message(...)
+#' }

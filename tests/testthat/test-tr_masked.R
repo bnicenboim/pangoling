@@ -14,33 +14,61 @@ test_that("masked load and gets config", {
 test_that("bert masked works", {
   skip_if_no_python_stuff()
   mask_1 <-
-    masked_tokens_tbl("The apple doesn't fall far from the [MASK].", model = "google/bert_uncased_L-2_H-128_A-2")
+    masked_tokens_tbl("The apple doesn't fall far from the [MASK].",
+      model = "google/bert_uncased_L-2_H-128_A-2"
+    )
 
   expect_snapshot(mask_1)
   mask_2 <-
-    masked_tokens_tbl("The apple doesn't fall far from [MASK] [MASK].", model = "google/bert_uncased_L-2_H-128_A-2")
+    masked_tokens_tbl("The apple doesn't fall far from [MASK] [MASK].",
+      model = "google/bert_uncased_L-2_H-128_A-2"
+    )
   expect_snapshot(mask_2)
   mask_2_ <-
-    masked_tokens_tbl("[CLS] The apple doesn't fall far from [MASK] [MASK]. [SEP]", model = "google/bert_uncased_L-2_H-128_A-2", add_special_tokens = FALSE)
-  expect_equal(mask_2[,-1], mask_2_[,-1])
+    masked_tokens_tbl(
+      "[CLS] The apple doesn't fall far from [MASK] [MASK]. [SEP]",
+      model = "google/bert_uncased_L-2_H-128_A-2",
+      add_special_tokens = FALSE
+    )
+  expect_equal(mask_2[, -1], mask_2_[, -1])
 
-  nomask <- masked_tokens_tbl("Don't judge a book by its cover.", model = "google/bert_uncased_L-2_H-128_A-2")
-  masks_2_nomask <- masked_tokens_tbl(masked_sentences = c("The apple doesn't fall far from [MASK] [MASK].", "Don't judge a book by its [MASK].","Don't judge a book by its cover."), model = "google/bert_uncased_L-2_H-128_A-2")
+  nomask <- masked_tokens_tbl("Don't judge a book by its cover.",
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
+  masks_2_nomask <- masked_tokens_tbl(
+    masked_sentences = c(
+      "The apple doesn't fall far from [MASK] [MASK].",
+      "Don't judge a book by its [MASK].",
+      "Don't judge a book by its cover."
+    ),
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
 
-  expect_equal(mask_2, masks_2_nomask |>
-                 tidytable::filter(masked_sentence == "The apple doesn't fall far from [MASK] [MASK]."))
-
+  expect_equal(
+    mask_2,
+    masks_2_nomask |>
+      tidytable::filter(masked_sentence == "The apple doesn't fall far from [MASK] [MASK].")
+  )
 })
 
 test_that("bert last word works", {
   skip_if_no_python_stuff()
-   lw <- masked_last_lp(c("The apple doesn't fall far from the",
-                     "The tree doesn't fall far from the"),
-                last_words = c("tree","apple"),
-                  model = "google/bert_uncased_L-2_H-128_A-2")
-  ms <-  masked_tokens_tbl(c("The apple doesn't fall far from the [MASK].", "The tree doesn't fall far from the [MASK]." ), model = "google/bert_uncased_L-2_H-128_A-2")
-  lps <- c(ms[token== "tree",][1,]$lp,
-  ms[token== "apple",][2,]$lp)
-  names(lps) <- c("tree","apple")
+  lw <- masked_lp(
+    l_contexts = c("The", "The"),
+    targets = c("apple", "pear"),
+    r_contexts = c(
+      "doesn't fall far from the tree.",
+      "doesn't fall far from the tree."
+    ),
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
+  ms <- masked_tokens_tbl(c("The [MASK] doesn't fall far from the tree."),
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
+  lps <- c(
+    ms[token == "apple", ]$lp,
+    ms[token == "pear", ]$lp
+  )
+  names(lps) <- c("apple", "pear")
   expect_equal(lw, lps)
-  })
+})

@@ -1,15 +1,22 @@
 options(pangoling.verbose = FALSE)
 
 prov <- "The apple doesn't fall far from the tree"
-sent2 <- "He realizes something." # realizes is differently encoded at the begginning or end
+# realizes is differently encoded at the beginning or end
+sent2 <- "He realizes something."
 sent3 <- "realizes something."
 
 test_that("gpt2 load and gets config", {
   skip_if_no_python_stuff()
- expect_invisible(causal_preload())
+  expect_invisible(causal_preload())
   conf_lst <- causal_config()
   expect_true(is.list(conf_lst))
   expect_equal(conf_lst$`_name_or_path`, getOption("pangoling.causal.default"))
+})
+
+test_that("errors work", {
+  skip_if_no_python_stuff()
+  expect_error(causal_lp("It"))
+  expect_error(causal_lp(c("It", "is."), .by = 3))
 })
 
 test_that("gpt2 get prob work", {
@@ -33,8 +40,14 @@ test_that("gpt2 get prob work", {
   mat <- lp_prov_mat[[1]]
   expect_equal(
     c(
-      NA, mat["Ġapple", 2], mat["Ġdoesn", 3] + mat["'t", 4],
-      mat["Ġfall", 5], mat["Ġfar", 6], mat["Ġfrom", 7], mat["Ġthe", 8], mat["Ġtree", 9]
+      NA,
+      mat["Ġapple", 2],
+      mat["Ġdoesn", 3] + mat["'t", 4],
+      mat["Ġfall", 5],
+      mat["Ġfar", 6],
+      mat["Ġfrom", 7],
+      mat["Ġthe", 8],
+      mat["Ġtree", 9]
     ),
     unname(unlist(lp_prov))
   )
@@ -97,7 +110,11 @@ if (0) {
     lp_num0 <- get_causal_lp(x = num0, model = "sshleifer/tiny-gpt2")
 
     num1 <- paste0(1:500, sep = ",")
-    lp_num1 <- get_causal_lp(x = num1, model = "sshleifer/tiny-gpt2", stride = 10)
+    lp_num1 <- get_causal_lp(
+      x = num1,
+      model = "sshleifer/tiny-gpt2",
+      stride = 10
+    )
     expect_equal(lp_num0, lp_num1[1:485])
   })
 }
@@ -106,9 +123,9 @@ test_that("other models using get prob work", {
   skip_if_no_python_stuff()
   tokenize("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
 
-    expect_snapshot(
-      causal_lp(x = c("El", "bebé", "de", "cigüeña."), model = "flax-community/gpt-2-spanish")
-    )
+  expect_snapshot(
+    causal_lp(x = c("El", "bebé", "de", "cigüeña."), model = "flax-community/gpt-2-spanish")
+  )
 
   lp_provd <-
     causal_lp(

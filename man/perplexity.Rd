@@ -20,7 +20,8 @@ The perplexity.
 Calculates perplexity of a vector of (log-)probabilities.
 }
 \details{
-If x are raw probabilities (NOT the default), then perplexity is calculated as follows:
+If x are raw probabilities (NOT the default),
+then perplexity is calculated as follows:
 
 \deqn{\left(\prod_{n} x_n \right)^\frac{1}{N}}
 }
@@ -30,3 +31,4 @@ perplexity(probs, log.p = FALSE)
 lprobs <- log(probs)
 perplexity(lprobs, log.p = TRUE)
 }
+\concept{general functions}

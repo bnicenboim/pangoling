@@ -14,4 +14,3 @@ chr_match <- function(string, pattern) {
 chr_detect <- function(string, pattern, ignore.case = FALSE) {
   grepl(pattern = pattern, x = string, ignore.case = ignore.case)
 }
-

@@ -14,11 +14,11 @@ ntokens(
 \arguments{
 \item{x}{character input}
 
-\item{model}{Name of a pretrained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
 
 \item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from hugging face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging face is accessed.}
 }
 \value{
 The number of tokens in a string or vector of words.
@@ -32,8 +32,8 @@ ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other tokens: 
+Other token-related functions: 
 \code{\link{tokenize}()},
 \code{\link{transformer_vocab}()}
 }
-\concept{tokens}
+\concept{token-related functions}

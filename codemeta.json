@@ -2,10 +2,9 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "pangoling",
-  "description": "Access to large language model word predictability in R.",
-  "name": "pangoling: Access to language model predictions in R",
-  "codeRepository": "https://github.com/bnicenboim/pangoling",
-  "issueTracker": "https://github.com/bnicenboim/pangoling/issues",
+  "description": "Access to word predictability using large language (transformer) models.",
+  "name": "pangoling: Access to Language Model Predictions",
+  "issueTracker": "<https://github.com/bnicenboim/pangoling/issues>",
   "license": "https://spdx.org/licenses/MIT",
   "version": "0.0.0.9000",
   "programmingLanguage": {
@@ -105,6 +104,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=covr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "spelling",
+      "name": "spelling",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spelling"
     }
   ],
   "softwareRequirements": {
@@ -122,18 +133,6 @@
     },
     "2": {
       "@type": "SoftwareApplication",
-      "identifier": "magrittr",
-      "name": "magrittr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=magrittr"
-    },
-    "3": {
-      "@type": "SoftwareApplication",
       "identifier": "memoise",
       "name": "memoise",
       "provider": {
@@ -144,7 +143,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=memoise"
     },
-    "4": {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "reticulate",
       "name": "reticulate",
@@ -156,7 +155,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=reticulate"
     },
-    "5": {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -168,7 +167,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "6": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "tidytable",
       "name": "tidytable",
@@ -181,17 +180,22 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidytable"
     },
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "utils",
+      "name": "utils"
+    },
     "7": {
       "@type": "SoftwareApplication",
-      "identifier": "RefManageR",
-      "name": "RefManageR",
+      "identifier": "cachem",
+      "name": "cachem",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=RefManageR"
+      "sameAs": "https://CRAN.R-project.org/package=cachem"
     },
     "8": {
       "@type": "SoftwareApplication",
@@ -201,9 +205,21 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "439369.045KB",
-  "releaseNotes": "https://github.com/bnicenboim/pangoling/blob/master/NEWS.md",
-  "readme": "https://github.com/bnicenboim/pangoling/blob/main/README.md",
-  "contIntegration": "https://app.codecov.io/gh/bnicenboim/pangoling?branch=main",
-  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#wip"]
+  "fileSize": "2061.121KB",
+  "citation": [
+    {
+      "@type": "SoftwareSourceCode",
+      "datePublished": "2023",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": "Bruno",
+          "familyName": "Nicenboim"
+        }
+      ],
+      "name": "{pangoling}: {Access} to language model predictions in {R}",
+      "url": "https://github.com/bnicenboim/pangoling",
+      "description": "R package version 0.0.0.9000"
+    }
+  ]
 }
