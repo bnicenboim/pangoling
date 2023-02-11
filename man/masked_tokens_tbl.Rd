@@ -15,13 +15,13 @@ masked_tokens_tbl(
 \arguments{
 \item{masked_sentences}{Masked sentences.}
 
-\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
+\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
 \value{
 A table with the masked sentences, the tokens (\code{token}), log probability (\code{lp}), and the respective mask number (\code{mask_n}).

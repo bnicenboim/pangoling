@@ -1,6 +1,6 @@
 #' Calculates perplexity
 #'
-#' Calculates perplexity of a vector of (log-)probabilities.
+#' Calculates the perplexity of a vector of (log-)probabilities.
 #'
 #' If x are raw probabilities (NOT the default),
 #' then perplexity is calculated as follows:

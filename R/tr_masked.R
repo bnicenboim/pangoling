@@ -6,14 +6,14 @@
 #'  of large language model  that can be used to predict the content of a mask
 #'  in a sentence.
 #'
-#' If not specified, the causal model that will be used is the one set in
+#' If not specified, the masked model that will be used is the one set in
 #' specified in the global option `pangoling.masked.default`, this can be
 #' accessed via `getOption("pangoling.masked.default")` (by default
 #' "`r getOption("pangoling.masked.default")`"). To change the default option
 #'  use `options(pangoling.masked.default = "newmaskedmodel")`.
 #'
-#' A list of possible causal masked can be found in
-#'  [Hugging Face website](https://huggingface.co/).
+#' A list of possible masked can be found in
+#'  [Hugging Face website](https://huggingface.co/models?pipeline_tag=fill-mask).
 #'
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to
 #'  control how the model and tokenizer from Hugging Face is accessed, see the
@@ -129,10 +129,9 @@ masked_tokens_tbl <- function(masked_sentences,
     tidytable::relocate(mask_n, .after = tidyselect::everything())
 }
 
-#' Get the log probability of the last word (or phrase) of given a context
+#' Get the log probability of a target word (or phrase) given a left and right context
 #'
-#' Get the log probability of the last word (or phrase) of given a context using
-#' a masked transformer
+#' Get the log probability of a vector of target words (or phrase) given a vector of left and of right contexts using a masked transformer.
 #'
 #' @section More examples:
 #' See the  [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html) in pangoling website for more examples.

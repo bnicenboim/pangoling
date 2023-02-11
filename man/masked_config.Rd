@@ -10,9 +10,9 @@ masked_config(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
 }
 \value{
 A list with the configuration of the model.

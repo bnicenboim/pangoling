@@ -10,9 +10,9 @@ causal_config(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
 }
 \value{
 A list with the configuration of the model.
@@ -36,9 +36,11 @@ A list of possible causal models can be found in
 
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
-python method
+Python method
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
-for details. In case of errors check the status of
+for details.
+
+In case of errors when a new model is run, check the status of
 \url{https://status.huggingface.co/}
 }
 \examples{

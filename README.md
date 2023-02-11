@@ -23,8 +23,7 @@ leverage the power of transformer models in their work.
 
 The package is mostly a wrapper of the python package
 [`transformers`](https://pypi.org/project/transformers/) to process data
-in a convenient format. At the moment only “causal” models such as GPT-2
-are working.
+in a convenient format.
 
 ## Important! Limitations and bias
 
@@ -34,15 +33,14 @@ contain a lot of unfiltered content from the internet, which is far from
 neutral. See for example the scope in the [openAI team’s model card for
 GPT-2](https://github.com/openai/gpt-2/blob/master/model_card.md#out-of-scope-use-cases),
 but it should be the same for many other models, and the [limitations
-and bias section of GPT-2 in hugging face
+and bias section of GPT-2 in Hugging Face
 website](https://huggingface.co/gpt2).
 
 ## Installation
 
 There is still no released version of `pangoling`. The package is in the
-**very early** stages of development, it’s **not well tested**, and it
-will be subject to a lot of changes. To install the latest version from
-github use:
+\*\* early\*\* stages of development, and it will probably be subject to
+changes. To install the latest version from github use:
 
 ``` r
 # install.packages("remotes") # if needed
@@ -51,15 +49,16 @@ remotes::install_github("bnicenboim/pangoling")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to get log-probabilities of
+words in a dataset:
 
 ``` r
 library(pangoling)
 library(tidytable) #fast alternative to dplyr
 ```
 
-The intended use of this package is the following. Given a (toy) dataset
-like this.
+Given a (toy) dataset where sentences are organized with one word or
+short phrase in each row:
 
 ``` r
 sentences <- c("The apple doesn't fall far from the tree.", 
@@ -86,8 +85,8 @@ sentences <- c("The apple doesn't fall far from the tree.",
 #> 15      2 cover.
 ```
 
-It’s straight-forward to get the log-probability (`-suprisal`) of each
-word based on GPT-2.
+One can get the log-transformed probability of each word based on GPT-2
+as follows:
 
 ``` r
 df_sent <- df_sent |>

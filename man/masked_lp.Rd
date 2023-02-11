@@ -24,13 +24,13 @@ masked_lp(
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log probabilities. For example \verb{^[[:punct:]]$} will ignore all punctuation  that stands alone in a token.}
 
-\item{model}{Name of a pre-trained model stored locally on the (huggingface.co).}
+\item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include beginning of text special tokens. By default  acts as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}.}
+\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging face is accessed.}
+\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
 \value{
 A named vector of log probabilities.

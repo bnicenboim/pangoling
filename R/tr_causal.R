@@ -17,15 +17,17 @@
 #'
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to
 #'  control how the model and tokenizer from Hugging Face is accessed, see the
-#'  python method
+#'  Python method
 #'  [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained)
-#'  for details. In case of errors check the status of
+#'  for details.
+#'
+#'  In case of errors when a new model is run, check the status of
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
-#' @param model Name of a pre-trained model stored locally on the (huggingface.co).
-#' @param add_special_tokens Whether to include beginning of text special tokens. By default  acts as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer).
-#' @param config_model List with other arguments that control how the model from Hugging face is accessed.
-#' @param config_tokenizer List with other arguments that control how the tokenizer from Hugging face is accessed.
+#' @param model Name of a pre-trained model.
+#' @param add_special_tokens Whether to include special tokens. It has the same default as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer) method in Python.
+#' @param config_model List with other arguments that control how the model from Hugging Face is accessed.
+#' @param config_tokenizer List with other arguments that control how the tokenizer from Hugging Face is accessed.
 #'
 #' @return Nothing.
 #'
@@ -117,7 +119,9 @@ causal_next_tokens_tbl <- function(context,
 
 #' Get the log probability of each element of a vector of words (or phrases) using a causal transformer
 #'
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See \code{vignette("transformer-gpt2", package = "pangoling")} for examples.
+#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See the
+#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
+#' in pangoling website for more examples.
 #'
 #'
 #' @param x Vector of words, phrases or texts.

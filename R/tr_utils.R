@@ -1,5 +1,7 @@
 #' Returns the vocabulary of a model
 #'
+#' Returns the vocabulary of a model.
+#'
 #' @inheritParams causal_lp
 #'
 #' @return A vector with the vocabulary of a model.
@@ -18,7 +20,9 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
   sort(unlist(tkzr$get_vocab())) |> names()
 }
 
-#' Tokenize the input
+#' Tokenize an input
+#'
+#' Tokenize a string or token ids.
 #'
 #' @param x Strings or token ids.
 #' @inheritParams causal_lp
