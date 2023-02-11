@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 <!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
 
-Whereas [the introductory vignette](articles/intro-gpt2) presents the most popular way to calculate word probabilities using transformer models, masked models present an alternative, especially, when we just care about the final word following a certain context.
+Whereas [the introductory vignette](articles/intro-gpt2) presents the most popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
 
 A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also @Devlinetal2018].
 
@@ -24,15 +24,14 @@ library(pangoling)
 library(tidytable) # fast alternative to dplyr
 ```
 
-<!-- First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`. -->
 
-This would be a **bad** approach for making predictions in a masked model:
+Notice the following potential pitfall. This would be a **bad** approach for making predictions in a masked model:
 
 ```{r}
 masked_tokens_tbl("The apple doesn't fall far from the [MASK]")
 ```
 
-The most common predictions are punctuation, because BERT uses the left *and* right context, and in this case, the right context indicates that this is the final *token* of the sentence.
+The most common predictions are punctuation marks, because BERT uses the left *and* right context. In this case, the right context indicates that the mask is the final *token* of the sentence.
 More expected results are obtained in the following way:
 
 ```{r}
@@ -47,7 +46,7 @@ df_masks |> filter(mask_n == 1)
 df_masks |> filter(mask_n == 2)
 ```
 
-We can use BERT to examine the predictability of words assuming that both the left and right contexts are known:
+We can also use BERT to examine the predictability of words assuming that both the left and right contexts are known:
 
 ```{r}
 (df_sent <- data.frame(
@@ -58,6 +57,11 @@ We can use BERT to examine the predictability of words assuming that both the le
     "doesn't fall far from the tree."
   )
 ))
+```
+
+The function `masked_lp()` will give us the log-probability of the target word (and will take care of summing the log-probabilities in case the target is composed by several tokens).
+
+```{r}
 df_sent <- df_sent %>%
   mutate(lp = masked_lp(
     l_contexts = left,
@@ -67,79 +71,7 @@ df_sent <- df_sent %>%
 df_sent
 ```
 
+As expected (given the popularity of the proverb), "apple" is a more likely target word than "pear".
 
-
-
-<!-- Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence. -->
-
-<!-- In fact this is the way GPT2 interprets the sentence: -->
-
-<!-- ```{r} -->
-<!-- get_tokens("The apple doesn't fall far from the tree.",model = "bert-base-uncased") -->
-<!-- ``` -->
-
-<!-- Because they are log probabilities if we exponentiate them and we sum them we should get 1: -->
-
-<!-- ```{r} -->
-<!-- df_masks |> summarize(sum(exp(log_prob)), .by = mask_n) -->
-<!-- ``` -->
-
-<!-- Because of approximation errors, this is not exactly one. -->
-
-
-
-<!-- The intended use of this package is the following. Given a (toy) dataset like this. -->
-
-<!-- ```{r, cache = TRUE} -->
-<!-- sentences <- c("The apple doesn't fall far from the tree.",  -->
-<!--                "Don't judge a book by its cover.") -->
-<!-- df_sent <- strsplit(x = sentences, split = " ") |>  -->
-<!--   map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n") -->
-<!-- df_sent -->
-<!-- ``` -->
-
-<!-- It's straight-forward to get the log-probability of each word based on GPT-2. (It' also possible to use `group_by()` rather than the argument `.by`, but it will be slower.) -->
-
-<!-- ```{r} -->
-<!-- df_sent <- df_sent |> -->
-<!--   mutate(lp = get_masked_log_prob(word, .by = sent_n)) -->
-<!-- df_sent -->
-
-<!-- df_sent |> -->
-<!--   mutate(lp = get_masked_log_prob(word, .by = sent_n, model = "bert-large-uncased-whole-word-masking")) -->
-
-<!-- ``` -->
-
-<!-- The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens: -->
-
-
-<!-- The log-probability of "tree." is the sum of the log-probability of "tree" given its context and `.` given its context. -->
-
-<!-- We can verify it in the following way. -->
-
-<!-- ```{r} -->
-<!-- df_token_lp <- get_causal_tokens_log_prob_tbl("The apple doesn't fall far from the tree.") -->
-<!-- df_token_lp -->
-
-<!-- (tree_lp <- df_token_lp -->
-<!--   # requires a Ġ because there is a space before -->
-<!--   |> filter(token =="Ġtree") -->
-<!--   |> pull()) -->
-
-<!-- (dot_lp <- df_token_lp |> -->
-<!--   # doesn't require a Ġ because there is no space before -->
-<!--    filter(token ==".") |> -->
-<!--    pull()) -->
-
-<!-- tree._lp <- df_sent |>  -->
-<!--   filter(word == "tree.") |> -->
-<!--           pull() -->
-
-<!-- # Test whether it is equal -->
-<!-- all.equal(tree_lp + dot_lp, -->
-<!--           tree._lp) -->
-<!-- ``` -->
-
-<!-- In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it. -->
 
 # References
