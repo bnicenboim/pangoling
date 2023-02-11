@@ -14,3 +14,5 @@ _test
 ^vignettes/articles$
 ^codemeta\.json$
 ^inst/.auctex-auto$
+README_cache
+^.covrignore$

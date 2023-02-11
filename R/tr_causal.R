@@ -83,7 +83,8 @@ causal_config <- function(model = getOption("pangoling.causal.default"), config_
 #'
 #' @family causal model functions
 #' @export
-causal_next_tokens_tbl <- function(context, model = getOption("pangoling.causal.default"),
+causal_next_tokens_tbl <- function(context,
+                                   model = getOption("pangoling.causal.default"),
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
@@ -366,4 +367,5 @@ causal_lp_mats <- function(x,
       )
     }
   )
+  lmat
 }

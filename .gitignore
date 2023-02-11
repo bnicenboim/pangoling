@@ -6,3 +6,4 @@ _test
 .DS_Store
 inst/doc
 docs
+README_cache

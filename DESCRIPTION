@@ -11,7 +11,7 @@ Authors@R: c(
     person("Giovanni", "Cassani", role = "ctb"))
 Description: Access to word predictability using large language (transformer) models.
 URL: <https://bruno.nicenboim.me/pangoling>, <https://github.com/bnicenboim/pangoling>
-BugReports: <https://github.com/bnicenboim/pangoling/issues>
+BugReports: https://github.com/bnicenboim/pangoling/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
@@ -43,5 +43,5 @@ Roxygen: list(markdown = TRUE)
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
-StagedInstall: no
+StagedInstall: yes
 Language: en-US

@@ -66,11 +66,15 @@ See the  \href{https://bruno.nicenboim.me/pangoling/articles/intro-bert.html}{on
 
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-masked_lp(l_contexts = c("The", "The"),
-           targets = c("apple", "pear"),
-           r_contexts = c("doesn't fall far from the tree.",
-                           "doesn't fall far from the tree."),
-               model = "bert-base-uncased")
+masked_lp(
+  l_contexts = c("The", "The"),
+  targets = c("apple", "pear"),
+  r_contexts = c(
+    "doesn't fall far from the tree.",
+    "doesn't fall far from the tree."
+  ),
+  model = "bert-base-uncased"
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

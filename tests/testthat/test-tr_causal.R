@@ -10,7 +10,8 @@ test_that("gpt2 load and gets config", {
   expect_invisible(causal_preload())
   conf_lst <- causal_config()
   expect_true(is.list(conf_lst))
-  expect_equal(conf_lst$`_name_or_path`, getOption("pangoling.causal.default"))
+  expect_equal(conf_lst$`_name_or_path`,
+               getOption("pangoling.causal.default"))
 })
 
 test_that("errors work", {
@@ -23,6 +24,7 @@ test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
     causal_next_tokens_tbl("The apple doesn't fall far from the")
+  expect_equal(sum(exp(cont$lp)),1,tolerance = .0001)
   expect_snapshot(cont)
   expect_equal(cont[1]$token, "Ġtree")
   prov_words <- strsplit(prov, " ")[[1]]
@@ -76,13 +78,21 @@ test_that("gpt2 get prob work", {
   lp_sent_rep <-
     causal_lp(
       x = rep(sent_w, 2),
-      .by = rep(1:2, each = length(sent_w))
+      .by = rep(seq_len(2), each = length(sent_w))
     )
   expect_equal(
-    unname(lp_sent_rep[1:length(sent_w)]),
+    unname(lp_sent_rep[seq_along(sent_w)]),
     unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))])
   )
-  lp_sent_rep_j <- causal_lp(x = rep(sent_w, 2))
+
+  tkns <- tokenize("This isn't it.")[[1]]
+  token_lp <- causal_tokens_lp_tbl("This isn't it.")
+  expect_equal(token_lp$token, tkns)
+
+  mat <- causal_lp_mats("This isn't it.")[[1]]
+  expect_equal(token_lp$lp,
+              tidytable::map_dbl(seq_along(tkns), ~ mat[token_lp$token[.x],.x]))
+
 })
 
 

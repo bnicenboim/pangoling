@@ -15,13 +15,13 @@ knitr::opts_chunk$set(
 
 Whereas [the introductory vignette](articles/intro-gpt2) presents the most popular way to calculate word probabilities using transformer models, masked models present an alternative, especially, when we just care about the final word following a certain context.
 
-A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also ].
+A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also @Devlinetal2018].
 
 
 
 ```{r setup, message = FALSE}
 library(pangoling)
-library(tidytable) #fast alternative to dplyr
+library(tidytable) # fast alternative to dplyr
 ```
 
 <!-- First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`. -->
@@ -50,14 +50,20 @@ df_masks |> filter(mask_n == 2)
 We can use BERT to examine the predictability of words assuming that both the left and right contexts are known:
 
 ```{r}
-(df_sent <- data.frame(left = c("The","The"),
-                      critical = c("apple","pear"),
-                      right = c("doesn't fall far from the tree.",
-                                "doesn't fall far from the tree.")))
-df_sent <- df_sent %>% 
-    mutate(lp = masked_lp(l_contexts = left,
-                          targets = critical,
-                          r_contexts = right))
+(df_sent <- data.frame(
+  left = c("The", "The"),
+  critical = c("apple", "pear"),
+  right = c(
+    "doesn't fall far from the tree.",
+    "doesn't fall far from the tree."
+  )
+))
+df_sent <- df_sent %>%
+  mutate(lp = masked_lp(
+    l_contexts = left,
+    targets = critical,
+    r_contexts = right
+  ))
 df_sent
 ```
 
@@ -137,4 +143,3 @@ df_sent
 <!-- In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it. -->
 
 # References
-

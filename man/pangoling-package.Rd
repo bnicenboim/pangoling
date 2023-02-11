@@ -15,7 +15,7 @@ Useful links:
 \itemize{
   \item \url{<https://bruno.nicenboim.me/pangoling>}
   \item \url{<https://github.com/bnicenboim/pangoling>}
-  \item Report bugs at \url{<https://github.com/bnicenboim/pangoling/issues>}
+  \item Report bugs at \url{https://github.com/bnicenboim/pangoling/issues}
 }
 
 }
