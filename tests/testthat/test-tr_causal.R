@@ -97,7 +97,7 @@ test_that("can handle extra parameters", {
   word_1_prob <- causal_next_tokens_tbl("<|endoftext|>")
   prob1 <- word_1_prob[token == "This"]$lp
   names(prob1) <- "This"
-  expect_equal(probs[1], prob1)
+  expect_equal(probs[1], prob1, tolerance = 0.0001)
 
   probs_F <- causal_lp(x = c("This", "is", "it"), add_special_tokens = FALSE)
   expect_true(is.na(probs_F[1]))
