@@ -4,6 +4,9 @@
     <loc>http://bruno.nicenboim.me/pangoling/404.html</loc>
   </url>
   <url>
+    <loc>http://bruno.nicenboim.me/pangoling/CONTRIBUTING.html</loc>
+  </url>
+  <url>
     <loc>http://bruno.nicenboim.me/pangoling/LICENSE-text.html</loc>
   </url>
   <url>
@@ -11,6 +14,9 @@
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/articles/intro-bert.html</loc>
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html</loc>
@@ -25,46 +31,37 @@
     <loc>http://bruno.nicenboim.me/pangoling/news/index.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_frank2013_et_fix.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_config.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_frank2013_et_rt.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_frank2013_spr.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp_mats.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_frank2013_spr_complete.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_next_tokens_tbl.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_frank2013_stimuli.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_preload.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/data_provo_cloze.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_log_prob.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_log_prob_mat.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_model_config.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_next_tokens_tbl.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_causal_tokens_log_prob_tbl.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_tokens.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/get_tr_vocab.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_tokens_lp_tbl.html</loc>
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_config.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_lp.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_preload.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_tokens_tbl.html</loc>
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/ntokens.html</loc>
@@ -76,6 +73,9 @@
     <loc>http://bruno.nicenboim.me/pangoling/reference/perplexity.html</loc>
   </url>
   <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/preload_causal.html</loc>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/tokenize.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/transformer_vocab.html</loc>
   </url>
 </urlset>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/intro-gpt2.html">Using a GPT2 transformer model to get word predictability</a>
+    <a class="dropdown-item" href="../articles/intro-gpt2.html">Introduction: Using a GPT2 transformer model to get word predictability</a>
+    <a class="dropdown-item" href="../articles/intro-bert.html">An alternative: Using a Bert transformer model to get the predictability of words in a context</a>
   </div>
 </li>
 <li class="nav-item">
@@ -50,7 +51,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a></h2>
       
       
 
@@ -62,86 +63,126 @@
 
       <dl><dt>
           
-          <code><a href="data_frank2013_et_fix.html">data_frank2013_et_fix</a></code> 
+          <code><a href="pangoling-package.html">pangoling</a></code> <code><a href="pangoling-package.html">pangoling-package</a></code> 
         </dt>
-        <dd>Fixation positions of the eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)</dd>
-      </dl><dl><dt>
+        <dd>pangoling: Access to Language Model Predictions</dd>
+      </dl></div><div class="section level2">
+      <h2 id="causal-or-gpt-like-modeling">Causal (or GPT-like) modeling<a class="anchor" aria-label="anchor" href="#causal-or-gpt-like-modeling"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="data_frank2013_et_rt.html">data_frank2013_et_rt</a></code> 
-        </dt>
-        <dd>Eye-tracking data of Frank, Fernandez Monsalve, Thompson et al. (2013)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="data_frank2013_spr.html">data_frank2013_spr</a></code> 
-        </dt>
-        <dd>Cleaned self-paced reading data of Frank, Fernandez Monsalve, Thompson et al. (2013)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="data_frank2013_spr_complete.html">data_frank2013_spr_complete</a></code> 
-        </dt>
-        <dd>Self-paced reading data of Frank, Fernandez Monsalve, Thompson et al. (2013)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="data_frank2013_stimuli.html">data_frank2013_stimuli</a></code> 
-        </dt>
-        <dd>Enriched  stimuli of Frank, Fernandez Monsalve, Thompson, and Vigliocco (2013) data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="data_provo_cloze.html">data_provo_cloze</a></code> 
-        </dt>
-        <dd>Cloze probabilities from the Provo Corpus (Luke and Christianson, 2018).</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_causal_log_prob.html">get_causal_log_prob()</a></code> 
-        </dt>
-        <dd>Get the log probability of each element of a vector of words (or phrases) using a causal transformer</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_causal_log_prob_mat.html">get_causal_log_prob_mat()</a></code> 
-        </dt>
-        <dd>Get a matrix with the log probabilities of possible word given its previous context using a causal transformer</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_causal_model_config.html">get_causal_model_config()</a></code> 
+          <code><a href="causal_config.html">causal_config()</a></code> 
         </dt>
         <dd>Returns the configuration of a causal model</dd>
       </dl><dl><dt>
           
-          <code><a href="get_causal_next_tokens_tbl.html">get_causal_next_tokens_tbl()</a></code> 
+          <code><a href="causal_lp.html">causal_lp()</a></code> 
+        </dt>
+        <dd>Get the log probability of each element of a vector of words (or phrases) using a causal transformer</dd>
+      </dl><dl><dt>
+          
+          <code><a href="causal_lp_mats.html">causal_lp_mats()</a></code> 
+        </dt>
+        <dd>Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer</dd>
+      </dl><dl><dt>
+          
+          <code><a href="causal_next_tokens_tbl.html">causal_next_tokens_tbl()</a></code> 
         </dt>
         <dd>Get the possible next tokens and their log probabilities its previous context using a causal transformer</dd>
       </dl><dl><dt>
           
-          <code><a href="get_causal_tokens_log_prob_tbl.html">get_causal_tokens_log_prob_tbl()</a></code> 
+          <code><a href="causal_preload.html">causal_preload()</a></code> 
+        </dt>
+        <dd>Preloads a causal language model</dd>
+      </dl><dl><dt>
+          
+          <code><a href="causal_tokens_lp_tbl.html">causal_tokens_lp_tbl()</a></code> 
         </dt>
         <dd>Get the log probability of each token in a sentence (or group of sentences) using a causal transformer</dd>
+      </dl></div><div class="section level2">
+      <h2 id="masked-or-bert-like-modeling">Masked (or BERT-like) modeling<a class="anchor" aria-label="anchor" href="#masked-or-bert-like-modeling"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="masked_config.html">masked_config()</a></code> 
+        </dt>
+        <dd>Returns the configuration of a masked model</dd>
       </dl><dl><dt>
           
-          <code><a href="get_tokens.html">get_tokens()</a></code> 
+          <code><a href="masked_lp.html">masked_lp()</a></code> 
         </dt>
-        <dd>Tokenize the input</dd>
+        <dd>Get the log probability of a target word (or phrase) given a left and right context</dd>
       </dl><dl><dt>
           
-          <code><a href="get_tr_vocab.html">get_tr_vocab()</a></code> 
+          <code><a href="masked_preload.html">masked_preload()</a></code> 
         </dt>
-        <dd>Returns the vocabulary of a model</dd>
+        <dd>Preloads a masked language model</dd>
       </dl><dl><dt>
+          
+          <code><a href="masked_tokens_tbl.html">masked_tokens_tbl()</a></code> 
+        </dt>
+        <dd>Get the possible tokens and their log probabilities for each mask in a sentence</dd>
+      </dl></div><div class="section level2">
+      <h2 id="vocabulary-and-tokenization">Vocabulary and tokenization<a class="anchor" aria-label="anchor" href="#vocabulary-and-tokenization"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="ntokens.html">ntokens()</a></code> 
         </dt>
         <dd>The number of tokens in a string or vector of strings</dd>
       </dl><dl><dt>
           
+          <code><a href="tokenize.html">tokenize()</a></code> 
+        </dt>
+        <dd>Tokenize an input</dd>
+      </dl><dl><dt>
+          
+          <code><a href="transformer_vocab.html">transformer_vocab()</a></code> 
+        </dt>
+        <dd>Returns the vocabulary of a model</dd>
+      </dl></div><div class="section level2">
+      <h2 id="others">Others<a class="anchor" aria-label="anchor" href="#others"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
           <code><a href="perplexity.html">perplexity()</a></code> 
         </dt>
         <dd>Calculates perplexity</dd>
-      </dl><dl><dt>
-          
-          <code><a href="preload_causal.html">preload_causal()</a></code> 
-        </dt>
-        <dd>Preloads a causal language model</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
