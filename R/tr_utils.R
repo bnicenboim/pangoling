@@ -220,15 +220,16 @@ create_tensor_lst <- function(texts,
     !is.null(tkzr$special_tokens_map$eos_token)) {
     tkzr$pad_token <- tkzr$eos_token
   }
+   max_length <- tkzr$model_max_length
   # If I runt the following line, some models such as
   # 'flax-community/gpt-2-spanish' give a weird error of
   # 'GPT2TokenizerFast' object has no attribute 'is_fast'
   # max_length <- tkzr$model_max_length
   # thus the ugly hack
-  max_length <- chr_match(utils::capture.output(tkzr),
-                          pattern = "model_max_len=([0-9]*)") |>
-    c() |>
-    (\(x) x[[2]])()
+  ## max_length <- chr_match(utils::capture.output(tkzr),
+  ##                         pattern = "model_max_len=([0-9]*)") |>
+  ##   c() |>
+    ## (\(x) x[[2]])()
   if (is.null(max_length) || is.na(max_length) || max_length < 1) {
     message_verbose("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
     max_length <- Inf
