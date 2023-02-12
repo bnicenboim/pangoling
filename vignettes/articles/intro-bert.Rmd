@@ -1,0 +1,77 @@
+---
+title: "An alternative: Using a Bert transformer model to get the predictability of words in a context"
+bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+<!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
+
+Whereas [the introductory vignette](articles/intro-gpt2) presents the most popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
+
+A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also @Devlinetal2018].
+
+
+
+```{r setup, message = FALSE}
+library(pangoling)
+library(tidytable) # fast alternative to dplyr
+```
+
+
+Notice the following potential pitfall. This would be a **bad** approach for making predictions in a masked model:
+
+```{r}
+masked_tokens_tbl("The apple doesn't fall far from the [MASK]")
+```
+
+The most common predictions are punctuation marks, because BERT uses the left *and* right context. In this case, the right context indicates that the mask is the final *token* of the sentence.
+More expected results are obtained in the following way:
+
+```{r}
+masked_tokens_tbl("The apple doesn't fall far from the [MASK].")
+```
+
+We can mask several tokens as well (but bear in mind that this type of models are trained with only 10-15% of masks):
+
+```{r}
+df_masks <- masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
+df_masks |> filter(mask_n == 1)
+df_masks |> filter(mask_n == 2)
+```
+
+We can also use BERT to examine the predictability of words assuming that both the left and right contexts are known:
+
+```{r}
+(df_sent <- data.frame(
+  left = c("The", "The"),
+  critical = c("apple", "pear"),
+  right = c(
+    "doesn't fall far from the tree.",
+    "doesn't fall far from the tree."
+  )
+))
+```
+
+The function `masked_lp()` will give us the log-probability of the target word (and will take care of summing the log-probabilities in case the target is composed by several tokens).
+
+```{r}
+df_sent <- df_sent %>%
+  mutate(lp = masked_lp(
+    l_contexts = left,
+    targets = critical,
+    r_contexts = right
+  ))
+df_sent
+```
+
+As expected (given the popularity of the proverb), "apple" is a more likely target word than "pear".
+
+
+# References

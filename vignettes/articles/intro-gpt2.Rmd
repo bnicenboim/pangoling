@@ -1,5 +1,5 @@
 ---
-title: "Using a GPT2 transformer model to get word predictability"
+title: "Introduction: Using a GPT2 transformer model to get word predictability"
 bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
 ---
 
@@ -16,46 +16,56 @@ Transformer models are a type of neural network architecture used for natural la
 
 Large Language Models (LLMs) are a specific type of pre-trained transformer models. These models have been trained on massive amounts of text data and can be fine-tuned to perform a variety of NLP tasks such as text classification, named entity recognition, question answering, etc.
 
-There are two types of [language modeling](https://huggingface.co/docs/transformers/tasks/language_modeling), causal and masked. Causal language modeling predicts the next word (or in fact [token]()) based on the preceeding words. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
+A causal language model (also called GPT-like, auto-regressive, or decoder model) is a type of large language model usually used for text-generation that can predict the next word (or more accurately, the next token) based on a preceding context. GPT-2 (Generative Pre-trained Transformer 2) developed by [OpenAI](https://openai.com/) is an example of a causal language model [see also @radford2019language].
 
-One interesting side-effect of the these models is that the (log) probability of a word given a certain context can be extracted. 
+One interesting side-effect of causal language models is that the (log) probability of a word given a certain context can be extracted from the models. 
 
+Load the following packages first:
 
 ```{r setup, message = FALSE}
 library(pangoling)
-library(tidytable) #fast alternative to dplyr
-library(tictoc) #measure time
+library(tidytable) # fast alternative to dplyr
+library(tictoc) # measure time
 ```
 
-First, let's see what words GPT-2 predicts given a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `get_causal_next_tokens_tbl()` will be default use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
+Then let's examine which continuation GPT-2 predicts following a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `causal_next_tokens_tbl()` will, by default, use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
 
+Let's see what GPT-2 predicts following "The apple doesn't fall far from the".
 
 ```{r}
 tic()
-(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
+(df_pred <- causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
 ```
 
-The first time will take some time, and it will download some files. Afterwards, it will be much faster.
+The most likely continuation is "tree", which makes sense.
+The first time a model is run, it will download some files that will be available for subsequent runs. However, every time we start a new R session and we run a model, it will take some time to store it in memory. Next runs in the same session are much faster. We can also preload a model with `causal_preload()`.
 
 ```{r}
 tic()
-(df_pred <- get_causal_next_tokens_tbl("The apple doesn't fall far from the"))
+(df_pred <- causal_next_tokens_tbl("The apple doesn't fall far from the"))
 toc()
 ```
 
-Notice that the tokens--that is the way GPT2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence.
+Notice that the tokens--that is, the way GPT-2 interprets words-- that are predicted start with `Ġ`, this indicates that they are not the first word of a sentence.
 
-In fact this is the way GPT2 interprets the sentence:
+In fact this is the way GPT-2 interprets our context:
 
 ```{r}
-get_tokens("The apple doesn't fall far from the")
+tokenize("The apple doesn't fall far from the")
 ```
 
-Because they are log probabilities if we exponentiate them and we sum them we should get 1:
+Also notice that GPT-2 tokenizer interprets differently initial tokens from tokens that follow a space. After a space, a token always starts with "Ġ".
 
 ```{r}
-sum(exp(df_pred$log_prob))
+tokenize("This is different from This")
+```
+
+
+Going back to the initial example, because `causal_next_tokens_tbl` returns log probabilities, if we exponentiate them and we sum them, we should get 1:
+
+```{r}
+sum(exp(df_pred$lp))
 ```
 
 Because of approximation errors, this is not exactly one.
@@ -64,65 +74,72 @@ Because of approximation errors, this is not exactly one.
 When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But notice that the predictions are quite bad.
 
 ```{r}
-preload_causal("sshleifer/tiny-gpt2")
+causal_preload("sshleifer/tiny-gpt2")
 tic()
-get_causal_next_tokens_tbl("The apple doesn't fall far from the", 
-                           model = "sshleifer/tiny-gpt2")
+causal_next_tokens_tbl("The apple doesn't fall far from the",
+  model = "sshleifer/tiny-gpt2"
+)
 toc()
 ```
 
-The intended use of this package is the following. Given a (toy) dataset like this.
 
+This package would be most useful int the following situation. Given a (toy) dataset where sentences are organized with one word or short phrase in each row:
 ```{r, cache = TRUE}
-sentences <- c("The apple doesn't fall far from the tree.", 
-               "Don't judge a book by its cover.")
-df_sent <- strsplit(x = sentences, split = " ") |> 
-  map_dfr(.f =  ~ data.frame(word = .x), .id = "sent_n")
+sentences <- c(
+  "The apple doesn't fall far from the tree.",
+  "Don't judge a book by its cover."
+)
+df_sent <- strsplit(x = sentences, split = " ") |>
+  map_dfr(.f = ~ data.frame(word = .x), .id = "sent_n")
 df_sent
 ```
 
-It's straight-forward to get the log-probability of each word based on GPT-2. (It' also possible to use `group_by()` rather than the argument `.by`, but it will be slower.)
+One can get the log-transformed probability of each word based on GPT-2 as follows:
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = get_causal_log_prob(word, .by = sent_n))
+  mutate(lp = causal_lp(word, .by = sent_n))
 df_sent
 ```
 
-The attentive reader might have notice that the log-probability of "tree" here is not the same as the one before. This is because the actual word is "tree.", which contains two tokens:
+Notice that the `.by` is inside the `causal_lp()` function. It' also possible to use `.by` in the mutate call, or `group_by()`, but it will be slower.
+
+
+The attentive reader might have noticed that the log-probability of "tree" here is not the same as the one presented before. This is because the actual word is `" tree."` (notice the space), which contains two tokens:
 
 ```{r}
-get_tokens("tree.")
+tokenize(" tree.")
 ```
 
-The log-probability of "tree." is the sum of the log-probability of "tree" given its context and `.` given its context.
+The log-probability of `" tree."` is the sum of the log-probability of `" tree"` given its context and `"."` given its context.
 
-We can verify it in the following way.
+We can verify this in the following way.
 
 ```{r}
-df_token_lp <- get_causal_tokens_log_prob_tbl("The apple doesn't fall far from the tree.")
+df_token_lp <- causal_tokens_lp_tbl("The apple doesn't fall far from the tree.")
 df_token_lp
 
 (tree_lp <- df_token_lp
   # requires a Ġ because there is a space before
-  |> filter(token =="Ġtree")
+  |> filter(token == "Ġtree")
   |> pull())
 
 (dot_lp <- df_token_lp |>
   # doesn't require a Ġ because there is no space before
-   filter(token ==".") |>
-   pull())
+  filter(token == ".") |>
+  pull())
 
-tree._lp <- df_sent |> 
+tree._lp <- df_sent |>
   filter(word == "tree.") |>
-          pull()
+  pull()
 
 # Test whether it is equal
-all.equal(tree_lp + dot_lp,
-          tree._lp)
+all.equal(
+  tree_lp + dot_lp,
+  tree._lp
+)
 ```
 
-In a scenario as the one below, when one has a word by word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `get_causal_log_prob()` takes care of it.
+In a scenario as the one above, when one has a word-by-word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `causal_lp()` takes care of it.
 
 # References
-

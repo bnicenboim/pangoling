@@ -1,4 +1,4 @@
-url: http://bruno.nicenboim.me/pangoling/
+url: http://bruno.nicenboim.me/pangoling
 authors:
   Bruno Nicenboim:
     href: https://bruno.nicenboim.me/
@@ -10,7 +10,36 @@ template:
       0){fetch("https://counter.dev/track?"+new URLSearchParams({referrer:document.referrer,screen:screen.width+"x"+screen.height,user:"bnicenboim",utcoffset:"1"}))};sessionStorage.setItem("_swa","1");</script>
     - <script data-goatcounter="https://bnicenboim.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
+home:
+  title: Access to Language Model Predictions in R
+  description: >
+    Access to word predictability using large language (transformer) models in R.
+
 navbar:
   structure:
     left:  [intro, reference, articles, tutorials, news]
     right: [search, github]
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - '`articles/intro-gpt2`'
+  - '`articles/intro-bert`'
+
+reference:
+- title: About
+  contents:
+  - '`pangoling`'
+- title: "Causal (or GPT-like) modeling"
+  contents:
+  - starts_with("causal")
+- title: "Masked (or BERT-like) modeling"
+  contents:
+  - starts_with("masked")
+- title: "Vocabulary and tokenization"
+  contents:
+  - has_concept("token-related functions")
+- title: "Others"
+  contents:
+  - has_concept("general functions")

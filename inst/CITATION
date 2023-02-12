@@ -1,0 +1,16 @@
+citHeader("Users are encouraged to not only cite pangoling, but also the python package transformers. To cite pangoling in publications use:")
+
+
+#year <- sub("-.*", "", meta$Date)
+year <- 2023
+note <- sprintf("R package version %s", meta$Version)
+bibentry(bibtype = "Manual",
+         title = "{pangoling}: {Access} to language model predictions in {R}",
+         author = c(person("Bruno", "Nicenboim")),
+         year = year,
+         note = note,
+     url = "https://github.com/bnicenboim/pangoling")
+ textVersion = paste0(" Bruno Nicenboim, (", year, ").",
+  " pangoling: Access to language model predictions in R. ",
+  note, ".",
+  " https://github.com/bnicenboim/pangoling")

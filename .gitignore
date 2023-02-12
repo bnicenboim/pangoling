@@ -6,3 +6,8 @@ _test
 .DS_Store
 inst/doc
 docs
+README_cache
+/inst/.auctex-auto/
+/inst/REFERENCES.bib.sav
+/pangoling.Rproj
+/vignettes/articles/intro-gpt2_cache/

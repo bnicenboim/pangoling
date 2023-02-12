@@ -4,16 +4,17 @@
 \name{pangoling-package}
 \alias{pangoling}
 \alias{pangoling-package}
-\title{pangoling: Access to language model predictions in R}
+\title{pangoling: Access to Language Model Predictions}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Access to large language model word predictability in R.
+Access to word predictability using large language (transformer) models.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/bnicenboim/pangoling}
+  \item \url{<https://bruno.nicenboim.me/pangoling>}
+  \item \url{<https://github.com/bnicenboim/pangoling>}
   \item Report bugs at \url{https://github.com/bnicenboim/pangoling/issues}
 }
 
