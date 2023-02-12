@@ -225,8 +225,10 @@ create_tensor_lst <- function(texts,
   # 'GPT2TokenizerFast' object has no attribute 'is_fast'
   # max_length <- tkzr$model_max_length
   # thus the ugly hack
-  max_length <- chr_match(utils::capture.output(tkzr), "model_max_len=([0-9]*)")[1, 2]
-
+  max_length <- chr_match(utils::capture.output(tkzr),
+                          pattern = "model_max_len=([0-9]*)") |>
+    c() |>
+    (\(x) x[[2]])()
   if (is.null(max_length) || is.na(max_length) || max_length < 1) {
     message_verbose("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
     max_length <- Inf

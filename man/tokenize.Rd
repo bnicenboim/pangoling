@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_utils.R
 \name{tokenize}
 \alias{tokenize}
-\title{Tokenize the input}
+\title{Tokenize an input}
 \usage{
 tokenize(
   x,
@@ -24,7 +24,7 @@ tokenize(
 A list with tokens
 }
 \description{
-Tokenize the input
+Tokenize a string or token ids.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

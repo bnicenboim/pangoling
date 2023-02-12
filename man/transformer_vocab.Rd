@@ -21,7 +21,7 @@ transformer_vocab(
 A vector with the vocabulary of a model.
 }
 \description{
-Returns the vocabulary of a model
+Returns the vocabulary of a model.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

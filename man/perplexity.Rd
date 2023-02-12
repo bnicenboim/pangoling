@@ -17,7 +17,7 @@ perplexity(x, na.rm = FALSE, log.p = TRUE)
 The perplexity.
 }
 \description{
-Calculates perplexity of a vector of (log-)probabilities.
+Calculates the perplexity of a vector of (log-)probabilities.
 }
 \details{
 If x are raw probabilities (NOT the default),

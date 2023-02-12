@@ -31,14 +31,14 @@ A masked language model (also called BERT-like, or encoder model) is a type
 of large language model  that can be used to predict the content of a mask
 in a sentence.
 
-If not specified, the causal model that will be used is the one set in
+If not specified, the masked model that will be used is the one set in
 specified in the global option \code{pangoling.masked.default}, this can be
 accessed via \code{getOption("pangoling.masked.default")} (by default
 "bert-base-uncased"). To change the default option
 use \code{options(pangoling.masked.default = "newmaskedmodel")}.
 
-A list of possible causal masked can be found in
-\href{https://huggingface.co/}{Hugging Face website}.
+A list of possible masked can be found in
+\href{https://huggingface.co/models?pipeline_tag=fill-mask}{Hugging Face website}.
 
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the

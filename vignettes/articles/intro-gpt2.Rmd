@@ -28,7 +28,7 @@ library(tidytable) # fast alternative to dplyr
 library(tictoc) # measure time
 ```
 
-Then let's examin which continuation GPT-2 predicts following a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `causal_next_tokens_tbl()` will, by default, use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
+Then let's examine which continuation GPT-2 predicts following a specific context. [Hugging Face](https://huggingface.co/) provide access to pre-trained models, including freely available versions of different sizes of  [GPT-2](https://huggingface.co/gpt2). The function `causal_next_tokens_tbl()` will, by default, use the smallest version of [GPT-2](https://huggingface.co/gpt2), but this can be modified with the argument `model`.
 
 Let's see what GPT-2 predicts following "The apple doesn't fall far from the".
 

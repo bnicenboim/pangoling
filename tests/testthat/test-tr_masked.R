@@ -51,7 +51,7 @@ test_that("bert masked works", {
   )
 })
 
-test_that("bert last word works", {
+test_that("bert lp for target words works", {
   skip_if_no_python_stuff()
   lw <- masked_lp(
     l_contexts = c("The", "The"),
