@@ -13,8 +13,8 @@ Access to word predictability using large language (transformer) models.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{<https://bruno.nicenboim.me/pangoling>}
-  \item \url{<https://github.com/bnicenboim/pangoling>}
+  \item \url{https://bruno.nicenboim.me/pangoling}
+  \item \url{https://github.com/bnicenboim/pangoling}
   \item Report bugs at \url{https://github.com/bnicenboim/pangoling/issues}
 }
 
