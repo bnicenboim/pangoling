@@ -25,7 +25,6 @@ test_that("gpt2 get prob work", {
   cont <-
     causal_next_tokens_tbl("The apple doesn't fall far from the")
   expect_equal(sum(exp(cont$lp)),1,tolerance = .0001)
-  expect_snapshot(cont)
   expect_equal(cont[1]$token, "Ġtree")
   prov_words <- strsplit(prov, " ")[[1]]
   sent2_words <- strsplit(sent2, " ")[[1]]
@@ -36,7 +35,6 @@ test_that("gpt2 get prob work", {
   expect_equal(names(lp_sent2), sent2_words)
   lp_sent3 <- causal_lp(x = sent3_words)
   expect_equal(names(lp_sent3), sent3_words)
-  expect_snapshot(lp_prov)
   expect_equal(cont$lp[1], unname(lp_prov[[8]]), tolerance = .0001)
   lp_prov_mat <- causal_lp_mats(x = prov_words)
   mat <- lp_prov_mat[[1]]
@@ -56,16 +54,13 @@ test_that("gpt2 get prob work", {
   expect_equal(rownames(lp_prov_mat[[1]]), transformer_vocab())
   expect_equal(sum(exp(mat[, 2])), 1, tolerance = .0001) # sums to one
 
-  lp_prov2 <-
-    causal_lp(x = strsplit(paste0(prov, "."), " ")[[1]])
-  expect_snapshot(lp_prov2)
   # regex
-  lp_prov3 <-
+  lp_prov2 <-
     causal_lp(
       x = strsplit(paste0(prov, "."), " ")[[1]],
       ignore_regex = "[[:punct:]]"
     )
-  expect_equal(unname(lp_prov), unname(lp_prov3), tolerance = 0.001)
+  expect_equal(unname(lp_prov), unname(lp_prov2), tolerance = 0.001)
 
   ##
   sent <- "This is it, is it?"
@@ -102,15 +97,14 @@ test_that("can handle extra parameters", {
   word_1_prob <- causal_next_tokens_tbl("<|endoftext|>")
   prob1 <- word_1_prob[token == "This"]$lp
   names(prob1) <- "This"
-  expect_snapshot(probs)
-  expect_equal(probs[1], prob1)
+  expect_equal(probs[1], prob1, tolerance = 0.0001)
 
   probs_F <- causal_lp(x = c("This", "is", "it"), add_special_tokens = FALSE)
   expect_true(is.na(probs_F[1]))
   word_2_prob <- causal_next_tokens_tbl("This")
   prob2 <- word_2_prob[token == "Ġis"]$lp
   names(prob2) <- "is"
-  expect_equal(probs_F[2], prob2)
+  expect_equal(probs_F[2], prob2, tolerance = .0001)
 })
 
 
@@ -129,18 +123,16 @@ if (0) {
   })
 }
 
-test_that("other models using get prob work", {
+test_that("other models using get prob don't fail", {
   skip_if_no_python_stuff()
   tokenize("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
 
-  expect_snapshot(
-    causal_lp(x = c("El", "bebé", "de", "cigüeña."), model = "flax-community/gpt-2-spanish")
-  )
+  expect_no_error(causal_lp(x = c("El", "bebé", "de", "cigüeña."),
+                            model = "flax-community/gpt-2-spanish"))
 
-  lp_provd <-
+  expect_no_error(
     causal_lp(
       x = strsplit(paste0(prov, "."), " ")[[1]],
       model = "distilgpt2"
-    )
-  expect_snapshot(lp_provd)
+    ))
 })

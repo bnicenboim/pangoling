@@ -122,7 +122,7 @@ df_sent
 ## How to cite
 
 > Nicenboim B (2023). *pangoling: Access to language model predictions
-> in R*. R package version 0.0.0.9000,
+> in R*. R package version 0.0.0.9001,
 > <https://github.com/bnicenboim/pangoling>.
 
 ## Code of conduct

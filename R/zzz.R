@@ -30,8 +30,9 @@ torch <- NULL
   lang_model <<- memoise::memoise(lang_model)
   transformer_vocab <<- memoise::memoise(transformer_vocab)
 
+  # avoid notes:
+  utils::globalVariables(c("mask_n"))
+
   invisible()
 }
 
-## avoid notes:
-utils::globalVariables(c("mask_n"))

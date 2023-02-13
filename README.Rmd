@@ -70,7 +70,7 @@ df_sent
 
 > Nicenboim B (2023). _pangoling: Access to
 >  language model predictions in R_. R package
->  version 0.0.0.9000,
+>  version `r packageVersion("pangoling")`,
 >  <https://github.com/bnicenboim/pangoling>.
 
 ## Code of conduct

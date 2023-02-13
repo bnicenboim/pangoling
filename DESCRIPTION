@@ -10,7 +10,7 @@ Authors@R: c(
     person("Chris", "Emmerly", role = "ctb"),
     person("Giovanni", "Cassani", role = "ctb"))
 Description: Access to word predictability using large language (transformer) models.
-URL: <https://bruno.nicenboim.me/pangoling>, <https://github.com/bnicenboim/pangoling>
+URL: https://bruno.nicenboim.me/pangoling, https://github.com/bnicenboim/pangoling
 BugReports: https://github.com/bnicenboim/pangoling/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
