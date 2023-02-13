@@ -13,13 +13,14 @@
 #'  use `options(pangoling.masked.default = "newmaskedmodel")`.
 #'
 #' A list of possible masked can be found in
-#'  [Hugging Face website](https://huggingface.co/models?pipeline_tag=fill-mask).
+#' [Hugging Face website](https://huggingface.co/models?pipeline_tag=fill-mask).
 #'
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to
 #'  control how the model and tokenizer from Hugging Face is accessed, see the
 #'  python method
 #'  [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors
-#'  check the status of [https://status.huggingface.co/](https://status.huggingface.co/)
+#'  check the status of
+#'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @inheritParams causal_preload
 #' @return Nothing.
@@ -76,7 +77,8 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #' @param masked_sentences Masked sentences.
 #' @inheritParams masked_preload
 #' @inherit masked_preload details
-#' @return A table with the masked sentences, the tokens (`token`), log probability (`lp`), and the respective mask number (`mask_n`).
+#' @return A table with the masked sentences, the tokens (`token`),
+#'         log probability (`lp`), and the respective mask number (`mask_n`).
 #' @examplesIf interactive()
 #' masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
 #'   model = "bert-base-uncased"
@@ -107,7 +109,9 @@ masked_tokens_tbl <- function(masked_sentences,
     outputs <- trf(masked_tensor)
     mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
     logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
-    lp <- reticulate::py_to_r(torch$log_softmax(logits_masks, dim = -1L)$tolist())
+    lp <- reticulate::py_to_r(
+      torch$log_softmax(logits_masks, dim = -1L)$tolist()
+    )
     if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
     # names(lp) <-  1:length(lp)
     if (length(mask_pos) == 0) {
@@ -131,10 +135,13 @@ masked_tokens_tbl <- function(masked_sentences,
 
 #' Get the log probability of a target word (or phrase) given a left and right context
 #'
-#' Get the log probability of a vector of target words (or phrase) given a vector of left and of right contexts using a masked transformer.
+#' Get the log probability of a vector of target words (or phrase) given a
+#' vector of left and of right contexts using a masked transformer.
 #'
 #' @section More examples:
-#' See the  [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html) in pangoling website for more examples.
+#' See the
+#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html)
+#' in pangoling website for more examples.
 #'
 #'
 #' @param l_contexts Left context of the target word.
@@ -179,15 +186,22 @@ masked_lp <- function(l_contexts,
 
   # word_by_word_texts <- get_word_by_word_texts(x, .by)
   target_tokens <- char_to_token(targets, tkzr)
-  masked_sentences <- tidytable::pmap_chr(list(l_contexts, target_tokens, r_contexts), function(l, target, r) {
-    paste0(
-      l,
-      " ",
-      paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
-      " ",
-      r
-    )
-  })
+  masked_sentences <- tidytable::pmap_chr(
+    list(
+      l_contexts,
+      target_tokens,
+      r_contexts
+    ),
+    function(l, target, r) {
+      paste0(
+        l,
+        " ",
+        paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
+        " ",
+        r
+      )
+    }
+  )
 
   # named tensor list:
   tensors_lst <- tidytable::map2(masked_sentences, targets, function(t, w) {
@@ -241,7 +255,13 @@ masked_lp_mat <- function(tensor_lst,
   words <- names(tensor_lst)
   tokens <- char_to_token(words, tkzr)
   n_masks <- sum(tensor_lst[[1]]$tolist()[[1]] == tkzr$mask_token_id)
-  message_verbose("Processing ", tensor$shape[0], " batch(es) of ", tensor$shape[1], " tokens.")
+  message_verbose(
+    "Processing ",
+    tensor$shape[0],
+    " batch(es) of ",
+    tensor$shape[1],
+    " tokens."
+  )
 
   out_lm <- trf(tensor)
   logits_b <- out_lm$logits

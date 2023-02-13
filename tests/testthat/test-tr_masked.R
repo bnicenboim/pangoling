@@ -17,8 +17,8 @@ test_that("bert masked works", {
     masked_tokens_tbl("The apple doesn't fall far from the [MASK].",
       model = "google/bert_uncased_L-2_H-128_A-2"
     )
-  expect_equal(colnames(mask_1),c("masked_sentence", "token", "lp", "mask_n"))
-  expect_equal(sum(exp(mask_1$lp)),1, tolerance = 0.0001)
+  expect_equal(colnames(mask_1), c("masked_sentence", "token", "lp", "mask_n"))
+  expect_equal(sum(exp(mask_1$lp)), 1, tolerance = 0.0001)
   mask_2 <-
     masked_tokens_tbl("The apple doesn't fall far from [MASK] [MASK].",
       model = "google/bert_uncased_L-2_H-128_A-2"
@@ -46,7 +46,8 @@ test_that("bert masked works", {
   expect_equal(
     mask_2,
     masks_2_nomask |>
-      tidytable::filter(masked_sentence == "The apple doesn't fall far from [MASK] [MASK].")
+      tidytable::filter(masked_sentence ==
+        "The apple doesn't fall far from [MASK] [MASK].")
   )
 })
 

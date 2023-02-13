@@ -17,9 +17,12 @@ causal_next_tokens_tbl(
 
 \item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\item{add_special_tokens}{Whether to include special tokens. It has the
+same default as the
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
+\item{config_model}{List with other arguments that control how the
+model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
@@ -27,12 +30,14 @@ causal_next_tokens_tbl(
 A table with possible next tokens and their log-probabilities.
 }
 \description{
-Get the possible next tokens and their log probabilities based on its previous context using a causal transformer model from \href{https://huggingface.co}{Hugging Face}.
+Get the possible next tokens and their log probabilities based on its
+previous context using a causal transformer model from \href{https://huggingface.co}{Hugging Face}.
 }
 \details{
 A causal language model (also called GPT-like, auto-regressive, or decoder
 model) is a type of large language model usually used for text-generation
-that can predict the next word (or more accurately in fact token) based on a preceding context.
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.
 
 If not specified, the causal model that will be used is the one set in
 specified in the global option \code{pangoling.causal.default}, this can be

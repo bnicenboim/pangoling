@@ -11,7 +11,7 @@ template:
     - <script data-goatcounter="https://bnicenboim.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 home:
-  title: Access to Language Model Predictions in R
+  title: Access to Large Language Model Predictions in R
   description: >
     Access to word predictability using large language (transformer) models in R.
 

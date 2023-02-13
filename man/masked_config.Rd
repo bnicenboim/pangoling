@@ -12,7 +12,8 @@ masked_config(
 \arguments{
 \item{model}{Name of a pre-trained model.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
+\item{config_model}{List with other arguments that control how the
+model from Hugging Face is accessed.}
 }
 \value{
 A list with the configuration of the model.
@@ -38,7 +39,8 @@ Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possi
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of \url{https://status.huggingface.co/}
+check the status of
+\url{https://status.huggingface.co/}
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

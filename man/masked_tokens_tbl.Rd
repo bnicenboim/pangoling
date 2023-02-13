@@ -17,14 +17,18 @@ masked_tokens_tbl(
 
 \item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\item{add_special_tokens}{Whether to include special tokens. It has the
+same default as the
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
+\item{config_model}{List with other arguments that control how the
+model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
 \value{
-A table with the masked sentences, the tokens (\code{token}), log probability (\code{lp}), and the respective mask number (\code{mask_n}).
+A table with the masked sentences, the tokens (\code{token}),
+log probability (\code{lp}), and the respective mask number (\code{mask_n}).
 }
 \description{
 For each mask in a sentence, get the possible tokens and their log
@@ -48,7 +52,8 @@ Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possi
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of \url{https://status.huggingface.co/}
+check the status of
+\url{https://status.huggingface.co/}
 }
 \section{More examples}{
 

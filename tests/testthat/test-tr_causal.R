@@ -10,8 +10,10 @@ test_that("gpt2 load and gets config", {
   expect_invisible(causal_preload())
   conf_lst <- causal_config()
   expect_true(is.list(conf_lst))
-  expect_equal(conf_lst$`_name_or_path`,
-               getOption("pangoling.causal.default"))
+  expect_equal(
+    conf_lst$`_name_or_path`,
+    getOption("pangoling.causal.default")
+  )
 })
 
 test_that("errors work", {
@@ -24,7 +26,7 @@ test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
     causal_next_tokens_tbl("The apple doesn't fall far from the")
-  expect_equal(sum(exp(cont$lp)),1,tolerance = .0001)
+  expect_equal(sum(exp(cont$lp)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
   prov_words <- strsplit(prov, " ")[[1]]
   sent2_words <- strsplit(sent2, " ")[[1]]
@@ -80,14 +82,15 @@ test_that("gpt2 get prob work", {
     unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))])
   )
 
-  tkns <- tokenize("This isn't it.")[[1]]
+  tkns <- tokenize_lst("This isn't it.")[[1]]
   token_lp <- causal_tokens_lp_tbl("This isn't it.")
   expect_equal(token_lp$token, tkns)
 
   mat <- causal_lp_mats("This isn't it.")[[1]]
-  expect_equal(token_lp$lp,
-              tidytable::map_dbl(seq_along(tkns), ~ mat[token_lp$token[.x],.x]))
-
+  expect_equal(
+    token_lp$lp,
+    tidytable::map_dbl(seq_along(tkns), ~ mat[token_lp$token[.x], .x])
+  )
 })
 
 
@@ -125,14 +128,17 @@ if (0) {
 
 test_that("other models using get prob don't fail", {
   skip_if_no_python_stuff()
-  tokenize("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
+  tokenize_lst("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
 
-  expect_no_error(causal_lp(x = c("El", "bebé", "de", "cigüeña."),
-                            model = "flax-community/gpt-2-spanish"))
+  expect_no_error(causal_lp(
+    x = c("El", "bebé", "de", "cigüeña."),
+    model = "flax-community/gpt-2-spanish"
+  ))
 
   expect_no_error(
     causal_lp(
       x = strsplit(paste0(prov, "."), " ")[[1]],
       model = "distilgpt2"
-    ))
+    )
+  )
 })

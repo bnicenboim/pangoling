@@ -12,7 +12,8 @@ causal_config(
 \arguments{
 \item{model}{Name of a pre-trained model.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
+\item{config_model}{List with other arguments that control how the
+model from Hugging Face is accessed.}
 }
 \value{
 A list with the configuration of the model.
@@ -23,7 +24,8 @@ Returns the configuration of a causal model
 \details{
 A causal language model (also called GPT-like, auto-regressive, or decoder
 model) is a type of large language model usually used for text-generation
-that can predict the next word (or more accurately in fact token) based on a preceding context.
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.
 
 If not specified, the causal model that will be used is the one set in
 specified in the global option \code{pangoling.causal.default}, this can be
