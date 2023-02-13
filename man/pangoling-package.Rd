@@ -4,7 +4,7 @@
 \name{pangoling-package}
 \alias{pangoling}
 \alias{pangoling-package}
-\title{pangoling: Access to Language Model Predictions}
+\title{pangoling: Access to Large Language Model Predictions}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

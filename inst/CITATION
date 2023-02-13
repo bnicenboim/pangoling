@@ -5,7 +5,7 @@ citHeader("Users are encouraged to not only cite pangoling, but also the python 
 year <- 2023
 note <- sprintf("R package version %s", meta$Version)
 bibentry(bibtype = "Manual",
-         title = "{pangoling}: {Access} to language model predictions in {R}",
+         title = "{pangoling}: {Access} to large language model predictions in {R}",
          author = c(person("Bruno", "Nicenboim")),
          year = year,
          note = note,
