@@ -133,6 +133,13 @@ Please note that this package is released with a [Contributor Code of
 Conduct](https://ropensci.org/code-of-conduct/). By contributing to this
 project, you agree to abide by its terms.
 
+## See also
+
+Another R package that act as a wrapper for
+[`transformers`](https://pypi.org/project/transformers/) is
+[`text`](https://r-text.org//) However, `text` is more general, and its
+focus is on Natural Language Processing and Machine Learning.
+
 [^1]: The logo of the package was created with [stable
     diffusion](https://huggingface.co/spaces/stabilityai/stable-diffusion)
     and the R package
