@@ -46,6 +46,8 @@ jobs:
 
 
       - name: Test coverage
+        env:
+          CODECOV_TOKEN: ${{secrets.codecov_token}}
         run: |
           covr::codecov(
             quiet = FALSE,
