@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,11 +73,14 @@
 
 
 <dt>add_special_tokens</dt>
-<dd><p>Whether to include special tokens. It has the same default as the <a href="https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer" class="external-link">AutoTokenizer</a> method in Python.</p></dd>
+<dd><p>Whether to include special tokens. It has the
+same default as the
+<a href="https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer" class="external-link">AutoTokenizer</a> method in Python.</p></dd>
 
 
 <dt>config_model</dt>
-<dd><p>List with other arguments that control how the model from Hugging Face is accessed.</p></dd>
+<dd><p>List with other arguments that control how the
+model from Hugging Face is accessed.</p></dd>
 
 
 <dt>config_tokenizer</dt>
@@ -94,7 +97,8 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A causal language model (also called GPT-like, auto-regressive, or decoder
 model) is a type of large language model usually used for text-generation
-that can predict the next word (or more accurately in fact token) based on a preceding context.</p>
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.</p>
 <p>If not specified, the causal model that will be used is the one set in
 specified in the global option <code>pangoling.causal.default</code>, this can be
 accessed via <code>getOption("pangoling.causal.default")</code> (by default

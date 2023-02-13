@@ -12,7 +12,7 @@ probabilities using a masked transformer."><meta property="og:image" content="ht
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,11 +81,14 @@ probabilities using a masked transformer.</p>
 
 
 <dt>add_special_tokens</dt>
-<dd><p>Whether to include special tokens. It has the same default as the <a href="https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer" class="external-link">AutoTokenizer</a> method in Python.</p></dd>
+<dd><p>Whether to include special tokens. It has the
+same default as the
+<a href="https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer" class="external-link">AutoTokenizer</a> method in Python.</p></dd>
 
 
 <dt>config_model</dt>
-<dd><p>List with other arguments that control how the model from Hugging Face is accessed.</p></dd>
+<dd><p>List with other arguments that control how the
+model from Hugging Face is accessed.</p></dd>
 
 
 <dt>config_tokenizer</dt>
@@ -96,7 +99,8 @@ probabilities using a masked transformer.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A table with the masked sentences, the tokens (<code>token</code>), log probability (<code>lp</code>), and the respective mask number (<code>mask_n</code>).</p>
+<p>A table with the masked sentences, the tokens (<code>token</code>),
+log probability (<code>lp</code>), and the respective mask number (<code>mask_n</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -114,7 +118,8 @@ use <code>options(pangoling.masked.default = "newmaskedmodel")</code>.</p>
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
 <a href="https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained" class="external-link"><code>from_pretrained</code></a> for details. In case of errors
-check the status of <a href="https://status.huggingface.co/" class="external-link">https://status.huggingface.co/</a></p>
+check the status of
+<a href="https://status.huggingface.co/" class="external-link">https://status.huggingface.co/</a></p>
     </div>
     <div class="section level2">
     <h2 id="more-examples">More examples<a class="anchor" aria-label="anchor" href="#more-examples"></a></h2>
