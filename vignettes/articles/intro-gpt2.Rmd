@@ -52,13 +52,13 @@ Notice that the tokens--that is, the way GPT-2 interprets words-- that are predi
 In fact this is the way GPT-2 interprets our context:
 
 ```{r}
-tokenize("The apple doesn't fall far from the")
+tokenize_lst("The apple doesn't fall far from the")
 ```
 
 Also notice that GPT-2 tokenizer interprets differently initial tokens from tokens that follow a space. After a space, a token always starts with "Ġ".
 
 ```{r}
-tokenize("This is different from This")
+tokenize_lst("This is different from This")
 ```
 
 
@@ -108,7 +108,7 @@ Notice that the `.by` is inside the `causal_lp()` function. It' also possible to
 The attentive reader might have noticed that the log-probability of "tree" here is not the same as the one presented before. This is because the actual word is `" tree."` (notice the space), which contains two tokens:
 
 ```{r}
-tokenize(" tree.")
+tokenize_lst(" tree.")
 ```
 
 The log-probability of `" tree."` is the sum of the log-probability of `" tree"` given its context and `"."` given its context.

@@ -11,7 +11,10 @@ torch <- NULL
   # as necessary.
   reticulate::configure_environment(pkgname)
   # use superassignment to update global reference
-  transformers <<- reticulate::import("transformers", delay_load = TRUE, convert = FALSE)
+  transformers <<- reticulate::import("transformers",
+    delay_load = TRUE,
+    convert = FALSE
+  )
   torch <<- reticulate::import("torch", delay_load = TRUE, convert = FALSE)
   # TODO message or something if it's not installed
   op <- options()
@@ -35,4 +38,3 @@ torch <- NULL
 
   invisible()
 }
-

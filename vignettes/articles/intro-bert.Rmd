@@ -41,7 +41,8 @@ masked_tokens_tbl("The apple doesn't fall far from the [MASK].")
 We can mask several tokens as well (but bear in mind that this type of models are trained with only 10-15% of masks):
 
 ```{r}
-df_masks <- masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
+df_masks <- 
+  masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
 df_masks |> filter(mask_n == 1)
 df_masks |> filter(mask_n == 2)
 ```

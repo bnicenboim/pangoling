@@ -4,7 +4,8 @@
 #'
 #' A causal language model (also called GPT-like, auto-regressive, or decoder
 #' model) is a type of large language model usually used for text-generation
-#' that can predict the next word (or more accurately in fact token) based on a preceding context.
+#' that can predict the next word (or more accurately in fact token) based
+#' on a preceding context.
 #'
 #' If not specified, the causal model that will be used is the one set in
 #' specified in the global option `pangoling.causal.default`, this can be
@@ -25,8 +26,11 @@
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @param model Name of a pre-trained model.
-#' @param add_special_tokens Whether to include special tokens. It has the same default as the [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer) method in Python.
-#' @param config_model List with other arguments that control how the model from Hugging Face is accessed.
+#' @param add_special_tokens Whether to include special tokens. It has the
+#'                           same default as the
+#'                           [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer) method in Python.
+#' @param config_model List with other arguments that control how the
+#'                      model from Hugging Face is accessed.
 #' @param config_tokenizer List with other arguments that control how the tokenizer from Hugging Face is accessed.
 #'
 #' @return Nothing.
@@ -66,7 +70,8 @@ causal_config <- function(model = getOption("pangoling.causal.default"), config_
 
 #' Get the possible next tokens and their log probabilities its previous context using a causal transformer
 #'
-#' Get the possible next tokens and their log probabilities based on its previous context using a causal transformer model from [Hugging Face](https://huggingface.co).
+#' Get the possible next tokens and their log probabilities based on its
+#' previous context using a causal transformer model from [Hugging Face](https://huggingface.co).
 #'
 #' @section More examples:
 #' See the
@@ -260,7 +265,7 @@ causal_tokens_lp_tbl <- function(texts,
   tidytable::map2_dfr.(lindex_vocab, ls_mat, function(vocab, mat) {
     tidytable::tidytable(
       token = vocab,
-      lp = tidytable::map2_dbl.(vocab, 1:ncol(mat), ~ mat[.x, .y])
+      lp = tidytable::map2_dbl.(vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
     )
   }, .id = .id)
 }
@@ -281,7 +286,7 @@ causal_mat <- function(tensor,
   logits_b <- trf(tensor)$logits
 
   if (logits_b$shape[0] > 1) {
-    stop2("Input is too long, exceeding")
+    stop2("Input is too long")
     # # if there is a sliding window, because
     # # max_tokens was exceeded:
     # final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
@@ -316,7 +321,8 @@ causal_mat <- function(tensor,
 
 #' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer
 #'
-#' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer model.
+#' Get a list of matrices with the log probabilities of possible word given
+#' its previous context using a causal transformer model.
 #'
 #' @inheritParams causal_lp
 #' @inheritParams causal_preload

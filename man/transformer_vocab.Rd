@@ -13,7 +13,9 @@ transformer_vocab(
 \arguments{
 \item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\item{add_special_tokens}{Whether to include special tokens. It has the
+same default as the
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
@@ -31,6 +33,6 @@ transformer_vocab(model = "gpt2")
 \seealso{
 Other token-related functions: 
 \code{\link{ntokens}()},
-\code{\link{tokenize}()}
+\code{\link{tokenize_lst}()}
 }
 \concept{token-related functions}

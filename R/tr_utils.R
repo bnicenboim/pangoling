@@ -29,18 +29,18 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' @return A list with tokens
 #'
 #' @examplesIf interactive()
-#' tokenize(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
+#' tokenize_lst(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 #' @family token-related functions
 #' @export
-tokenize <- function(x,
+tokenize_lst <- function(x,
                      model = getOption("pangoling.causal.default"),
                      add_special_tokens = NULL,
                      config_tokenizer = NULL) {
-  UseMethod("tokenize")
+  UseMethod("tokenize_lst")
 }
 
 #' @export
-tokenize.character <- function(x,
+tokenize_lst.character <- function(x,
                                model = getOption("pangoling.causal.default"),
                                add_special_tokens = NULL,
                                config_tokenizer = NULL) {
@@ -50,7 +50,7 @@ tokenize.character <- function(x,
     config_tokenizer = config_tokenizer
   )
   lapply(id, function(i) {
-    tokenize.numeric(i,
+    tokenize_lst.numeric(i,
       model = model,
       add_special_tokens = add_special_tokens,
       config_tokenizer = config_tokenizer
@@ -59,19 +59,22 @@ tokenize.character <- function(x,
 }
 
 #' @export
-tokenize.numeric <- function(x,
+tokenize_lst.numeric <- function(x,
                              model = getOption("pangoling.causal.default"),
                              add_special_tokens = NULL,
                              config_tokenizer = NULL) {
   tidytable::map_chr.(as.integer(x), function(x) {
-    tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)$convert_ids_to_tokens(x)
+    tokenizer(model,
+      add_special_tokens = add_special_tokens,
+      config_tokenizer = config_tokenizer
+    )$convert_ids_to_tokens(x)
   })
 }
 
 #' The number of tokens in a string or vector of strings
 #'
 #' @param x character input
-#' @inheritParams tokenize
+#' @inheritParams tokenize_lst
 #'
 #' @return The number of tokens in a string or vector of words.
 #'
@@ -84,7 +87,7 @@ ntokens <- function(x,
                     model = getOption("pangoling.causal.default"),
                     add_special_tokens = NULL,
                     config_tokenizer = NULL) {
-  lengths(tokenize(x,
+  lengths(tokenize_lst(x,
     model = model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
@@ -134,7 +137,9 @@ lst_to_kwargs <- function(x) {
 
 #' @noRd
 lang_model <- function(model = "gpt2", task = "causal", config_model = NULL) {
-  reticulate::py_run_string('import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"')
+  reticulate::py_run_string(
+    'import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"'
+  )
 
   # to prevent memory leaks:
   reticulate::py_run_string('there = "lm" in locals()')
@@ -154,8 +159,16 @@ gc.collect()")
     causal = "AutoModelForCausalLM",
     masked = "AutoModelForMaskedLM"
   )
-  lst_to_kwargs(c(pretrained_model_name_or_path = model, return_dict_in_generate = TRUE, config_model))
-  reticulate::py_run_string(paste0("lm = transformers.", automodel, ".from_pretrained(**r.kwargs)"))
+  lst_to_kwargs(c(
+    pretrained_model_name_or_path = model,
+    return_dict_in_generate = TRUE,
+    config_model
+  ))
+  reticulate::py_run_string(paste0(
+    "lm = transformers.",
+    automodel,
+    ".from_pretrained(**r.kwargs)"
+  ))
 
   lm <- reticulate::py$lm
   lm$eval()
@@ -171,14 +184,28 @@ gc.collect()")
 
 #' https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer
 #' @noRd
-tokenizer <- function(model = "gpt2", add_special_tokens = NULL, config_tokenizer = NULL) {
+tokenizer <- function(model = "gpt2",
+                      add_special_tokens = NULL,
+                      config_tokenizer = NULL) {
   reticulate::py_run_string("import transformers")
   if (chr_detect(model, "gpt2") && !is.null(add_special_tokens)) {
-    lst_to_kwargs(c(pretrained_model_name_or_path = model, add_bos_token = add_special_tokens, config_tokenizer))
-    reticulate::py_to_r(reticulate::py_run_string("tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"))
+    lst_to_kwargs(c(
+      pretrained_model_name_or_path = model,
+      add_bos_token = add_special_tokens,
+      config_tokenizer
+    ))
+    reticulate::py_to_r(
+      reticulate::py_run_string(
+        "tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"
+      )
+    )
   } else {
     lst_to_kwargs(c(pretrained_model_name_or_path = model, config_tokenizer))
-    reticulate::py_to_r(reticulate::py_run_string("tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"))
+    reticulate::py_to_r(
+      reticulate::py_run_string(
+        "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
+      )
+    )
   }
 
   tkzr <- reticulate::py$tkzr
@@ -196,7 +223,12 @@ get_id <- function(x,
                    add_special_tokens = NULL,
                    config_tokenizer = NULL,
                    tkzr = NULL) {
-  if (is.null(tkzr)) tkzr <- tokenizer(model, add_special_tokens, config_tokenizer)
+  if (is.null(tkzr)) {
+    tkzr <- tokenizer(model,
+      add_special_tokens = add_special_tokens,
+      config_tokenizer = config_tokenizer
+    )
+  }
   if (!is.null(add_special_tokens) && add_special_tokens) {
     x[1] <- paste0(
       tkzr$special_tokens_map$bos_token,
@@ -230,7 +262,8 @@ create_tensor_lst <- function(texts,
   #   c() |>
   # (\(x) x[[2]])()
   # if (is.null(max_length) || is.na(max_length) || max_length < 1) {
-  #   message_verbose("Unknown maximum length of input. This might cause a problem for long inputs exceeding the maximum length.")
+  #   message_verbose("Unknown maximum length of input.
+  # This might cause a problem for long inputs exceeding the maximum length.")
   #   max_length <- Inf
   # }
   lapply(texts, function(text) {
@@ -238,9 +271,9 @@ create_tensor_lst <- function(texts,
       tkzr,
       add_special_tokens = add_special_tokens,
       stride = as.integer(stride),
-      truncation = TRUE, #is.finite(max_length),
-      return_overflowing_tokens = TRUE, #is.finite(max_length),
-      padding = TRUE #is.finite(max_length)
+      truncation = TRUE, # is.finite(max_length),
+      return_overflowing_tokens = TRUE, # is.finite(max_length),
+      padding = TRUE # is.finite(max_length)
     )
     tensor
   })
@@ -263,7 +296,7 @@ word_lp <- function(words,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
   ),
-  tokenize.numeric,
+  tokenize_lst.numeric,
   model = model,
   add_special_tokens = add_special_tokens,
   config_tokenizer = config_tokenizer
@@ -272,7 +305,7 @@ word_lp <- function(words,
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 
 
-  token_lp <- tidytable::map2_dbl.(index_vocab, 1:ncol(mat), ~ mat[.x, .y])
+  token_lp <- tidytable::map2_dbl.(index_vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
 
   if (options()$pangoling.debug) {
     print("******")

@@ -26,9 +26,12 @@ masked_lp(
 
 \item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\item{add_special_tokens}{Whether to include special tokens. It has the
+same default as the
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
-\item{config_model}{List with other arguments that control how the model from Hugging Face is accessed.}
+\item{config_model}{List with other arguments that control how the
+model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
@@ -36,7 +39,8 @@ masked_lp(
 A named vector of log probabilities.
 }
 \description{
-Get the log probability of a vector of target words (or phrase) given a vector of left and of right contexts using a masked transformer.
+Get the log probability of a vector of target words (or phrase) given a
+vector of left and of right contexts using a masked transformer.
 }
 \details{
 A masked language model (also called BERT-like, or encoder model) is a type
@@ -56,11 +60,14 @@ Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possi
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of \url{https://status.huggingface.co/}
+check the status of
+\url{https://status.huggingface.co/}
 }
 \section{More examples}{
 
-See the  \href{https://bruno.nicenboim.me/pangoling/articles/intro-bert.html}{online article} in pangoling website for more examples.
+See the
+\href{https://bruno.nicenboim.me/pangoling/articles/intro-bert.html}{online article}
+in pangoling website for more examples.
 }
 
 \examples{

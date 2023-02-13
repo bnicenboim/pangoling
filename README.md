@@ -11,6 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![Project Status: WIP – Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![DOI](https://zenodo.org/badge/497831295.svg)](https://zenodo.org/badge/latestdoi/497831295)
 <!-- badges: end -->
 
 `pangoling`[^1] is an R package for estimating the log-probabilities of
@@ -122,7 +123,8 @@ df_sent
 ## How to cite
 
 > Nicenboim B (2023). *pangoling: Access to language model predictions
-> in R*. R package version 0.0.0.9001,
+> in R*. R package version 0.0.0.9001, DOI:
+> [10.5281/zenodo.7637526](https://zenodo.org/badge/latestdoi/497831295),
 > <https://github.com/bnicenboim/pangoling>.
 
 ## Code of conduct

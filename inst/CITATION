@@ -9,6 +9,7 @@ bibentry(bibtype = "Manual",
          author = c(person("Bruno", "Nicenboim")),
          year = year,
          note = note,
+         doi = "10.5281/zenodo.7637526",
      url = "https://github.com/bnicenboim/pangoling")
  textVersion = paste0(" Bruno Nicenboim, (", year, ").",
   " pangoling: Access to language model predictions in R. ",

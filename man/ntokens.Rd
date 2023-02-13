@@ -16,7 +16,9 @@ ntokens(
 
 \item{model}{Name of a pre-trained model.}
 
-\item{add_special_tokens}{Whether to include special tokens. It has the same default as the \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\item{add_special_tokens}{Whether to include special tokens. It has the
+same default as the
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
@@ -33,7 +35,7 @@ ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 }
 \seealso{
 Other token-related functions: 
-\code{\link{tokenize}()},
+\code{\link{tokenize_lst}()},
 \code{\link{transformer_vocab}()}
 }
 \concept{token-related functions}
