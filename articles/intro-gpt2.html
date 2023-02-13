@@ -111,7 +111,7 @@ Radford et al. 2019)</span>.</p>
 from the models.</p>
 <p>Load the following packages first:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">pangoling</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bruno.nicenboim.me/pangoling" class="external-link">pangoling</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/markfairbanks/tidytable" class="external-link">tidytable</a></span><span class="op">)</span> <span class="co"># fast alternative to dplyr</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jabiru/tictoc" class="external-link">tictoc</a></span><span class="op">)</span> <span class="co"># measure time</span></span></code></pre></div>
 <p>Then let’s examine which continuation GPT-2 predicts following a
@@ -142,7 +142,7 @@ from the”.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 17.13 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 11.717 sec elapsed</span></span></code></pre></div>
 <p>The most likely continuation is “tree”, which makes sense. The first
 time a model is run, it will download some files that will be available
 for subsequent runs. However, every time we start a new R session and we
@@ -168,7 +168,7 @@ the same session are much faster. We can also preload a model with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.503 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.312 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is, the way GPT-2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -189,7 +189,7 @@ starts with “Ġ”.</p>
 exponentiate them and we sum them, we should get 1:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">df_pred</span><span class="op">$</span><span class="va">lp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.000017</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.000018</span></span></code></pre></div>
 <p>Because of approximation errors, this is not exactly one.</p>
 <p>When doing tests, <code>sshleifer/tiny-gpt2</code> is quite useful
 since it’s tiny. But notice that the predictions are quite bad.</p>
@@ -216,7 +216,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh           -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.182 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.119 sec elapsed</span></span></code></pre></div>
 <p>This package would be most useful int the following situation. Given
 a (toy) dataset where sentences are organized with one word or short
 phrase in each row:</p>
@@ -316,13 +316,13 @@ log-probability of <code>" tree"</code> given its context and
 <span>  <span class="co"># requires a Ġ because there is a space before</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span> <span class="st">"Ġtree"</span><span class="op">)</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.2808047</span></span>
+<span><span class="co">#&gt; [1] -0.2808022</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">dot_lp</span> <span class="op">&lt;-</span> <span class="va">df_token_lp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># doesn't require a Ġ because there is no space before</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span> <span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -1.300928</span></span>
+<span><span class="co">#&gt; [1] -1.300912</span></span>
 <span></span>
 <span><span class="va">tree._lp</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">word</span> <span class="op">==</span> <span class="st">"tree."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
