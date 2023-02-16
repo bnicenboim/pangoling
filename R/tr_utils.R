@@ -341,7 +341,7 @@ word_lp <- function(words,
 char_to_token <- function(x, tkzr = NULL) {
   tokenizer <- tkzr
   id <- get_id(x, tkzr = tokenizer)
-  lapply(id, function(i) num_to_token(i, tkzr))
+  lapply(id, function(i) num_to_token(i, tokenizer))
 }
 
 num_to_token <- function(x, tkzr) {

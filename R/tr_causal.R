@@ -260,12 +260,11 @@ causal_tokens_lp_tbl <- function(texts,
       stride = stride
     )
   })
-  lindex_vocab <- char_to_token(unlist(texts, recursive = TRUE), tkzr)
 
-  tidytable::map2_dfr.(lindex_vocab, ls_mat, function(vocab, mat) {
+  tidytable::map_dfr.(ls_mat, function( mat) {
     tidytable::tidytable(
-      token = vocab,
-      lp = tidytable::map2_dbl.(vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
+      token = colnames(mat),
+      lp = tidytable::map2_dbl.(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
     )
   }, .id = .id)
 }

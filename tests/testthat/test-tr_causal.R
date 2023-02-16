@@ -82,9 +82,19 @@ test_that("gpt2 get prob work", {
     unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))])
   )
 
+
+})
+
+test_that("can handle extra parameters", {
+  skip_if_no_python_stuff()
+
   tkns <- tokenize_lst("This isn't it.")[[1]]
   token_lp <- causal_tokens_lp_tbl("This isn't it.")
+  token_lp2 <- causal_tokens_lp_tbl(texts = "This isn't it.", add_special_tokens = TRUE)
+  token_lp3 <- causal_tokens_lp_tbl(texts = "<|endoftext|>This isn't it.")
   expect_equal(token_lp$token, tkns)
+  expect_equal(token_lp$token, token_lp2$token[-1])
+  expect_equal(token_lp2, token_lp3)
 
   mat <- causal_lp_mats("This isn't it.")[[1]]
   expect_equal(
@@ -92,7 +102,6 @@ test_that("gpt2 get prob work", {
     tidytable::map_dbl(seq_along(tkns), ~ mat[token_lp$token[.x], .x])
   )
 })
-
 
 test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
