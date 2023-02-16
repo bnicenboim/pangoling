@@ -8,3 +8,5 @@
 
 # pangoling 0.0.0.9001
 * minor function names to avoid conflict with other packages
+
+* bug in causal_tokens_lp_tbl fixed
