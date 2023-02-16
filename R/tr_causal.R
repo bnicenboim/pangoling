@@ -234,6 +234,7 @@ causal_tokens_lp_tbl <- function(texts,
                                  add_special_tokens = NULL,
                                  config_model = NULL,
                                  config_tokenizer = NULL,
+                                 batch_size = 1,
                                  .id = NULL) {
   stride <- 1
   message_verbose("Processing using causal model '", model, "'...")
@@ -249,7 +250,8 @@ causal_tokens_lp_tbl <- function(texts,
   tensors <- create_tensor_lst(ltexts,
     tkzr,
     add_special_tokens = add_special_tokens,
-    stride = stride
+    stride = stride,
+    batch_size = batch_size
   )
 
   ls_mat <- tidytable::map.(tensors, function(tensor) {

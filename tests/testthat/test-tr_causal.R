@@ -85,6 +85,12 @@ test_that("gpt2 get prob work", {
 
 })
 
+test_that("batches work", {
+  skip_if_no_python_stuff()
+  lp <- causal_tokens_lp_tbl(rep(c("This is not it.","This is it."),30),
+                             batch_size =10)
+})
+
 test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
 

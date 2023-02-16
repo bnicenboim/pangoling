@@ -247,7 +247,8 @@ get_id <- function(x,
 create_tensor_lst <- function(texts,
                               tkzr,
                               add_special_tokens = NULL,
-                              stride = 1) {
+                              stride = 1,
+                              batch_size = 1) {
   if (is.null(tkzr$special_tokens_map$pad_token) &&
     !is.null(tkzr$special_tokens_map$eos_token)) {
     tkzr$pad_token <- tkzr$eos_token
@@ -266,9 +267,14 @@ create_tensor_lst <- function(texts,
   # This might cause a problem for long inputs exceeding the maximum length.")
   #   max_length <- Inf
   # }
-  lapply(texts, function(text) {
-    tensor <- encode(text,
-      tkzr,
+
+  g_batches <- c(rep(batch_size, floor(length(texts) / batch_size)), length(texts) %% batch_size)
+  g_batches <- g_batches[g_batches> 0]
+  text_ids <- tidytable::map2(c(1,cumsum(g_batches)[-length(g_batches)]), cumsum(g_batches),
+                  ~ seq(.x,.y))
+  lapply(text_ids, function(text_id) {
+    tensor <- encode(x = texts[text_id],
+                     tkzr = tkzr,
       add_special_tokens = add_special_tokens,
       stride = as.integer(stride),
       truncation = TRUE, # is.finite(max_length),

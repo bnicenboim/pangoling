@@ -6,7 +6,8 @@
 # pangoling 0.0.0.9001
 * Tons of stuff. Fully functional package now.
 
-# pangoling 0.0.0.9001
+# pangoling 0.0.0.9002
 * minor function names to avoid conflict with other packages
 
+# pangoling 0.0.0.9002
 * bug in causal_tokens_lp_tbl fixed
