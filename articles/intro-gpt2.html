@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,7 +142,7 @@ from the”.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 15.406 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 9.895 sec elapsed</span></span></code></pre></div>
 <p>The most likely continuation is “tree”, which makes sense. The first
 time a model is run, it will download some files that will be available
 for subsequent runs. However, every time we start a new R session and we
@@ -168,7 +168,7 @@ the same session are much faster. We can also preload a model with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.404 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.447 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is, the way GPT-2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -216,7 +216,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh           -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.158 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.274 sec elapsed</span></span></code></pre></div>
 <p>This package would be most useful int the following situation. Given
 a (toy) dataset where sentences are organized with one word or short
 phrase in each row:</p>
