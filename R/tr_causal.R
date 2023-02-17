@@ -261,7 +261,8 @@ causal_tokens_lp_tbl <- function(texts,
       add_special_tokens = add_special_tokens,
       stride = stride
     )
-  })
+  }) |>
+    unlist(recursive = FALSE)
 
   tidytable::map_dfr.(ls_mat, function( mat) {
     tidytable::tidytable(
@@ -278,16 +279,19 @@ causal_mat <- function(tensor,
                        tkzr,
                        add_special_tokens = NULL,
                        stride = 1) {
-  message_verbose(
-    "Processing ",
-    tensor$shape[0],
-    " batch(es) of ",
-    tensor$shape[1], " tokens."
-  )
-  logits_b <- trf(tensor)$logits
 
-  if (logits_b$shape[0] > 1) {
-    stop2("Input is too long")
+  message_verbose(
+    "Processing a batch of size ",
+    tensor$input_ids$shape[0],
+    " with ",
+    tensor$input_ids$shape[1], " tokens."
+  )
+ #logits_b <- trf(tensor)$logits
+
+  logits_b <- trf$forward(input_ids = tensor$input_ids,
+              attention_mask = tensor$attention_mask)$logits
+  # if (logits_b$shape[0] > 1) {
+    # stop2("Input is too long")
     # # if there is a sliding window, because
     # # max_tokens was exceeded:
     # final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
@@ -303,21 +307,24 @@ causal_mat <- function(tensor,
     #   unlist()
     #
     # tokens <- c(first_tokens, final_tokens)
-  }
-  logits <- logits_b[0]
-  tokens <- tkzr$convert_ids_to_tokens(tensor[0])
-
+  # }
+  lmat <- lapply(seq_len(logits_b$shape[0])-1, function(i){
+    logits <- logits_b[i][real_token_pos]
+    tokens <- tkzr$convert_ids_to_tokens(tensor$input_ids[i][real_token_pos])
   lp <- reticulate::py_to_r(torch$log_softmax(logits, dim = -1L))$tolist()
   rm(logits)
-  rm(logits_b)
-  gc(full = TRUE)
+  # gc(full = TRUE)
   mat <- do.call("cbind", lp)
   # remove the last prediction, and the first is NA
   mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
   rownames(mat) <- get_vocab(tkzr)
   colnames(mat) <- unlist(tokens)
   mat
+  })
+  rm(logits_b)
+  lmat
 }
+
 
 
 #' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer
