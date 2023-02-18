@@ -14,7 +14,8 @@ test_that("masked load and gets config", {
 test_that("bert masked works", {
   skip_if_no_python_stuff()
   mask_1 <-
-    masked_tokens_tbl("The apple doesn't fall far from the [MASK].",
+    masked_tokens_tbl(
+      masked_sentences = "The apple doesn't fall far from the [MASK].",
       model = "google/bert_uncased_L-2_H-128_A-2"
     )
   expect_equal(colnames(mask_1), c("masked_sentence", "token", "lp", "mask_n"))

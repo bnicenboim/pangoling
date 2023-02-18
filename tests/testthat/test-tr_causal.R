@@ -4,6 +4,9 @@ prov <- "The apple doesn't fall far from the tree"
 # realizes is differently encoded at the beginning or end
 sent2 <- "He realizes something."
 sent3 <- "realizes something."
+prov_words <- strsplit(prov, " ")[[1]]
+sent2_words <- strsplit(sent2, " ")[[1]]
+sent3_words <- strsplit(sent3, " ")[[1]]
 
 test_that("gpt2 load and gets config", {
   skip_if_no_python_stuff()
@@ -25,12 +28,9 @@ test_that("errors work", {
 test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
-    causal_next_tokens_tbl("The apple doesn't fall far from the")
+    causal_next_tokens_tbl(context = "The apple doesn't fall far from the")
   expect_equal(sum(exp(cont$lp)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
-  prov_words <- strsplit(prov, " ")[[1]]
-  sent2_words <- strsplit(sent2, " ")[[1]]
-  sent3_words <- strsplit(sent3, " ")[[1]]
   lp_prov <- causal_lp(x = prov_words)
   expect_equal(names(lp_prov), prov_words)
   lp_sent2 <- causal_lp(x = sent2_words)
@@ -82,6 +82,29 @@ test_that("gpt2 get prob work", {
     unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))])
   )
 
+
+})
+
+test_that("batches work", {
+  skip_if_no_python_stuff()
+  texts <- rep(c("This is not it.","This is it."),5)
+  lp_batch <- causal_tokens_lp_tbl(texts,
+                             batch_size =3, .id = ".id")
+
+  lp_nobatch <- causal_tokens_lp_tbl(texts,
+                             batch_size =1, .id = ".id")
+  expect_equal(lp_batch, lp_nobatch)
+  df <- data.frame(x = rep(c(prov_words, sent2_words),3),
+                   .id = c(rep(1, length(prov_words)),
+                           rep(2, length(sent2_words)),
+                           rep(3, length(prov_words)),
+                           rep(4, length(sent2_words)),
+                           rep(5, length(prov_words)),
+                           rep(6, length(sent2_words))
+                           ))
+  lp_2_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 4)
+  lp_2_no_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 1)
+  expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
 
 })
 
