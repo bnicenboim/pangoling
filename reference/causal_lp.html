@@ -14,7 +14,7 @@ in pangoling website for more examples."><meta property="og:image" content="http
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,8 @@ in pangoling website for more examples.</p>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"pangoling.causal.default"</span><span class="op">)</span>,</span>
 <span>  add_special_tokens <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  config_tokenizer <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  config_tokenizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  batch_size <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,7 +87,9 @@ in pangoling website for more examples.</p>
 
 
 <dt>ignore_regex</dt>
-<dd><p>Can ignore certain characters when calculates the log probabilities. For example <code>^[[:punct:]]$</code> will ignore all punctuation  that stands alone in a token.</p></dd>
+<dd><p>Can ignore certain characters when calculates the log
+probabilities. For example <code>^[[:punct:]]$</code> will ignore
+all punctuation  that stands alone in a token.</p></dd>
 
 
 <dt>model</dt>
@@ -106,6 +109,11 @@ model from Hugging Face is accessed.</p></dd>
 
 <dt>config_tokenizer</dt>
 <dd><p>List with other arguments that control how the tokenizer from Hugging Face is accessed.</p></dd>
+
+
+<dt>batch_size</dt>
+<dd><p>Maximum size of the batch. Larges batches speedup
+processing but take more memory.</p></dd>
 
 </dl></div>
     <div class="section level2">

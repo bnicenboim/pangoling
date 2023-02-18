@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,7 @@
 <span>  add_special_tokens <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_tokenizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  batch_size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  .id <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -91,6 +92,11 @@ model from Hugging Face is accessed.</p></dd>
 
 <dt>config_tokenizer</dt>
 <dd><p>List with other arguments that control how the tokenizer from Hugging Face is accessed.</p></dd>
+
+
+<dt>batch_size</dt>
+<dd><p>Maximum size of the batch. Larges batches speedup
+processing but take more memory.</p></dd>
 
 
 <dt>.id</dt>
