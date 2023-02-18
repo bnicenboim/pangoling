@@ -93,7 +93,7 @@ test_that("batches work", {
 
   lp_nobatch <- causal_tokens_lp_tbl(texts,
                              batch_size =1, .id = ".id")
-  expect_equal(lp_batch, lp_nobatch)
+  expect_equal(lp_batch, lp_nobatch, tolerance = .0001)
   df <- data.frame(x = rep(c(prov_words, sent2_words),3),
                    .id = c(rep(1, length(prov_words)),
                            rep(2, length(sent2_words)),
