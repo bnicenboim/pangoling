@@ -10,7 +10,8 @@ causal_lp_mats(
   model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
   config_model = NULL,
-  config_tokenizer = NULL
+  config_tokenizer = NULL,
+  batch_size = 1
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ same default as the
 model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+
+\item{batch_size}{Maximum size of the batch. Larges batches speedup
+processing but take more memory.}
 }
 \value{
 A list of matrices with tokens in their columns and the vocabulary of the model in their rows
