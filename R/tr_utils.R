@@ -271,7 +271,7 @@ create_tensor_lst <- function(texts,
 
   g_batches <- c(rep(batch_size, floor(length(texts) / batch_size)), length(texts) %% batch_size)
   g_batches <- g_batches[g_batches> 0]
-  text_ids <- tidytable::map2(c(1,cumsum(g_batches)[-length(g_batches)]), cumsum(g_batches),
+  text_ids <- tidytable::map2(c(1,cumsum(g_batches)[-length(g_batches)]+1), cumsum(g_batches),
                   ~ seq(.x,.y))
   lapply(text_ids, function(text_id) {
     tensor <- encode(x = as.list(texts[text_id]),

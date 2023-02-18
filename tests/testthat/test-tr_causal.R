@@ -89,10 +89,10 @@ test_that("batches work", {
   skip_if_no_python_stuff()
   texts <- rep(c("This is not it.","This is it."),5)
   lp_batch <- causal_tokens_lp_tbl(texts,
-                             batch_size =3)
+                             batch_size =3, .id = ".id")
 
   lp_nobatch <- causal_tokens_lp_tbl(texts,
-                             batch_size =1)
+                             batch_size =1, .id = ".id")
   expect_equal(lp_batch, lp_nobatch)
 })
 

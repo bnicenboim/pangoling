@@ -309,6 +309,7 @@ causal_mat <- function(tensor,
     # tokens <- c(first_tokens, final_tokens)
   # }
   lmat <- lapply(seq_len(logits_b$shape[0])-1, function(i){
+    real_token_pos <- seq_len(sum(tensor$attention_mask[i]$tolist()))-1
     logits <- logits_b[i][real_token_pos]
     tokens <- tkzr$convert_ids_to_tokens(tensor$input_ids[i][real_token_pos])
   lp <- reticulate::py_to_r(torch$log_softmax(logits, dim = -1L))$tolist()
