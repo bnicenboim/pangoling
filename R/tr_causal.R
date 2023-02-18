@@ -95,6 +95,7 @@ causal_next_tokens_tbl <- function(context,
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
+  if(length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
   message_verbose("Processing using causal model '", model, "'...")
   trf <- lang_model(model,
     task = "causal",
@@ -106,10 +107,11 @@ causal_next_tokens_tbl <- function(context,
   )
 
   lang_model(model, task = "causal", config_model = config_model)
-  context_tensor <- encode(context,
+  #no batches allowed
+  context_tensor <- encode(list(unlist(context)),
     tkzr,
     add_special_tokens = add_special_tokens
-  )
+  )$input_ids
   generated_outputs <- trf(context_tensor)
   n_tokens <- length(context_tensor$tolist()[0])
   logits_next_word <- generated_outputs$logits[0][n_tokens - 1]
@@ -132,7 +134,11 @@ causal_next_tokens_tbl <- function(context,
 #' @param x Vector of words, phrases or texts.
 #' @param .by Vector that indicates how the text should be split.
 #' @inheritParams causal_preload
-#' @param ignore_regex Can ignore certain characters when calculates the log probabilities. For example `^[[:punct:]]$` will ignore all punctuation  that stands alone in a token.
+#' @param ignore_regex Can ignore certain characters when calculates the log
+#'                      probabilities. For example `^[[:punct:]]$` will ignore
+#'                      all punctuation  that stands alone in a token.
+#' @param batch_size Maximum size of the batch. Larges batches speedup
+#'                   processing but take more memory.
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
 #' @return A named vector of log probabilities.
@@ -151,7 +157,8 @@ causal_lp <- function(x,
                       model = getOption("pangoling.causal.default"),
                       add_special_tokens = NULL,
                       config_model = NULL,
-                      config_tokenizer = NULL) {
+                      config_tokenizer = NULL,
+                      batch_size = 1) {
   stride <- 1 # fixed for now
   if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
   message_verbose("Processing using causal model '", model, "'...")
@@ -170,26 +177,31 @@ causal_lp <- function(x,
     config_model = config_model
   )
   tensors <- create_tensor_lst(
-    texts = pasted_texts,
+    texts = unname(pasted_texts),
     tkzr = tkzr,
     add_special_tokens = add_special_tokens,
-    stride = stride
+    stride = stride,
+    batch_size = batch_size
   )
-  out <- tidytable::pmap.(
+
+  lmats <- lapply(tensors, function(tensor) causal_mat(tensor,
+                     trf,
+                     tkzr,
+                     add_special_tokens = add_special_tokens,
+                     stride = stride
+  )) |>
+    unlist(recursive = FALSE)
+    out <- tidytable::pmap.(
     list(
       word_by_word_texts,
-      names(word_by_word_texts), tensors
+      names(word_by_word_texts),
+      lmats
     ),
-    function(words, item, tensor) {
+    function(words, item, mat) {
       # words <- word_by_word_texts[[1]]
       # item <- names(texts[1])
-      # tensor <- tensors[[1]]
-      mat <- causal_mat(tensor,
-        trf,
-        tkzr,
-        add_special_tokens = add_special_tokens,
-        stride = stride
-      )
+      # mat <- lmats[[1]]
+
       message_verbose(
         "Text id: ", item, "\n`",
         paste(words, collapse = " "),
@@ -234,6 +246,7 @@ causal_tokens_lp_tbl <- function(texts,
                                  add_special_tokens = NULL,
                                  config_model = NULL,
                                  config_tokenizer = NULL,
+                                 batch_size = 1,
                                  .id = NULL) {
   stride <- 1
   message_verbose("Processing using causal model '", model, "'...")
@@ -249,7 +262,8 @@ causal_tokens_lp_tbl <- function(texts,
   tensors <- create_tensor_lst(ltexts,
     tkzr,
     add_special_tokens = add_special_tokens,
-    stride = stride
+    stride = stride,
+    batch_size = batch_size
   )
 
   ls_mat <- tidytable::map.(tensors, function(tensor) {
@@ -259,7 +273,8 @@ causal_tokens_lp_tbl <- function(texts,
       add_special_tokens = add_special_tokens,
       stride = stride
     )
-  })
+  }) |>
+    unlist(recursive = FALSE)
 
   tidytable::map_dfr.(ls_mat, function( mat) {
     tidytable::tidytable(
@@ -276,16 +291,19 @@ causal_mat <- function(tensor,
                        tkzr,
                        add_special_tokens = NULL,
                        stride = 1) {
-  message_verbose(
-    "Processing ",
-    tensor$shape[0],
-    " batch(es) of ",
-    tensor$shape[1], " tokens."
-  )
-  logits_b <- trf(tensor)$logits
 
-  if (logits_b$shape[0] > 1) {
-    stop2("Input is too long")
+  message_verbose(
+    "Processing a batch of size ",
+    tensor$input_ids$shape[0],
+    " with ",
+    tensor$input_ids$shape[1], " tokens."
+  )
+ #logits_b <- trf(tensor)$logits
+
+  logits_b <- trf$forward(input_ids = tensor$input_ids,
+              attention_mask = tensor$attention_mask)$logits
+  # if (logits_b$shape[0] > 1) {
+    # stop2("Input is too long")
     # # if there is a sliding window, because
     # # max_tokens was exceeded:
     # final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
@@ -301,21 +319,25 @@ causal_mat <- function(tensor,
     #   unlist()
     #
     # tokens <- c(first_tokens, final_tokens)
-  }
-  logits <- logits_b[0]
-  tokens <- tkzr$convert_ids_to_tokens(tensor[0])
-
+  # }
+  lmat <- lapply(seq_len(logits_b$shape[0])-1, function(i){
+    real_token_pos <- seq_len(sum(tensor$attention_mask[i]$tolist()))-1
+    logits <- logits_b[i][real_token_pos]
+    tokens <- tkzr$convert_ids_to_tokens(tensor$input_ids[i][real_token_pos])
   lp <- reticulate::py_to_r(torch$log_softmax(logits, dim = -1L))$tolist()
   rm(logits)
-  rm(logits_b)
-  gc(full = TRUE)
+  # gc(full = TRUE)
   mat <- do.call("cbind", lp)
   # remove the last prediction, and the first is NA
   mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
   rownames(mat) <- get_vocab(tkzr)
   colnames(mat) <- unlist(tokens)
   mat
+  })
+  rm(logits_b)
+  lmat
 }
+
 
 
 #' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer
@@ -343,7 +365,8 @@ causal_lp_mats <- function(x,
                            model = getOption("pangoling.causal.default"),
                            add_special_tokens = NULL,
                            config_model = NULL,
-                           config_tokenizer = NULL) {
+                           config_tokenizer = NULL,
+                           batch_size = 1) {
   stride <- 1
   message_verbose("Processing using causal model '", model, "'...")
   tkzr <- tokenizer(model,
@@ -360,14 +383,14 @@ causal_lp_mats <- function(x,
     word_by_word_texts,
     function(word) paste0(word, collapse = " ")
   )
-  tensors <- create_tensor_lst(pasted_texts,
+  tensors <- create_tensor_lst(unname(pasted_texts),
     tkzr,
     add_special_tokens = add_special_tokens,
-    stride = stride
+    stride = stride,
+    batch_size = batch_size
   )
-  lmat <- tidytable::pmap.(
-    list(word_by_word_texts, names(word_by_word_texts), tensors),
-    function(words, item, tensor) {
+  lmat <- tidytable::map(tensors,
+    function(tensor) {
       causal_mat(tensor,
         trf,
         tkzr,
@@ -376,5 +399,6 @@ causal_lp_mats <- function(x,
       )
     }
   )
-  lmat
+  lmat |>
+    unlist(recursive = FALSE)
 }

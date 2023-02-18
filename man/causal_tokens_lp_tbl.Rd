@@ -10,6 +10,7 @@ causal_tokens_lp_tbl(
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL,
+  batch_size = 1,
   .id = NULL
 )
 }
@@ -26,6 +27,9 @@ same default as the
 model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+
+\item{batch_size}{Maximum size of the batch. Larges batches speedup
+processing but take more memory.}
 
 \item{.id}{Name of the column with the sentence id.}
 }

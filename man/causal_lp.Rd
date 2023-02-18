@@ -11,7 +11,8 @@ causal_lp(
   model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
   config_model = NULL,
-  config_tokenizer = NULL
+  config_tokenizer = NULL,
+  batch_size = 1
 )
 }
 \arguments{
@@ -19,7 +20,9 @@ causal_lp(
 
 \item{.by}{Vector that indicates how the text should be split.}
 
-\item{ignore_regex}{Can ignore certain characters when calculates the log probabilities. For example \verb{^[[:punct:]]$} will ignore all punctuation  that stands alone in a token.}
+\item{ignore_regex}{Can ignore certain characters when calculates the log
+probabilities. For example \verb{^[[:punct:]]$} will ignore
+all punctuation  that stands alone in a token.}
 
 \item{model}{Name of a pre-trained model.}
 
@@ -31,6 +34,9 @@ same default as the
 model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+
+\item{batch_size}{Maximum size of the batch. Larges batches speedup
+processing but take more memory.}
 }
 \value{
 A named vector of log probabilities.

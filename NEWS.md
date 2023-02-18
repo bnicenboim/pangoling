@@ -11,3 +11,6 @@
 
 # pangoling 0.0.0.9003
 * bug in causal_tokens_lp_tbl fixed
+
+# pangoling 0.0.0.9004
+* Causal models accept batches. 

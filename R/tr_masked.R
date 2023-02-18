@@ -102,10 +102,11 @@ masked_tokens_tbl <- function(masked_sentences,
   )
   vocab <- get_vocab(tkzr)
   # non_batched:
+  # TODO: speedup using batches
   tidytable::map_dfr(masked_sentences, function(masked_sentence) {
-    masked_tensor <- encode(masked_sentence, tkzr,
+    masked_tensor <- encode(list(masked_sentence), tkzr,
       add_special_tokens = add_special_tokens
-    )
+    )$input_ids
     outputs <- trf(masked_tensor)
     mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
     logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
@@ -217,7 +218,8 @@ masked_lp <- function(l_contexts,
   out <- tidytable::pmap.(
     list(targets, l_contexts, r_contexts, tensors_lst),
     function(words, l, r, tensor_lst) {
-      ls_mat <- masked_lp_mat(tensor_lst,
+        #TODO: make it by batches
+          ls_mat <- masked_lp_mat(lapply(tensor_lst, function(t) t$input_ids),
         trf = trf,
         tkzr = tkzr,
         add_special_tokens = add_special_tokens,

@@ -22,7 +22,9 @@ masked_lp(
 
 \item{r_contexts}{Right context of the target word.}
 
-\item{ignore_regex}{Can ignore certain characters when calculates the log probabilities. For example \verb{^[[:punct:]]$} will ignore all punctuation  that stands alone in a token.}
+\item{ignore_regex}{Can ignore certain characters when calculates the log
+probabilities. For example \verb{^[[:punct:]]$} will ignore
+all punctuation  that stands alone in a token.}
 
 \item{model}{Name of a pre-trained model.}
 
