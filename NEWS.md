@@ -14,3 +14,6 @@
 
 # pangoling 0.0.0.9004
 * Causal models accept batches. 
+
+# pangoling 0.0.0.9005
+* Strings with no tokens no longer throw errors. 
