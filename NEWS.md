@@ -17,3 +17,4 @@
 
 # pangoling 0.0.0.9005
 * Strings with no tokens no longer throw errors. 
+* Requires correct version of R. 
