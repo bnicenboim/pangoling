@@ -297,6 +297,7 @@ word_lp <- function(words,
                     model,
                     add_special_tokens,
                     config_tokenizer) {
+  if(length(words) == 1 && words == "") return(NA_real_)
   if (length(words) > 1) {
     words_lm <- c(words[1], paste0(" ", words[-1]))
   } else {

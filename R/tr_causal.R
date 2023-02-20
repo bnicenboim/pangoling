@@ -200,7 +200,7 @@ causal_lp <- function(x,
     ),
     function(words, item, mat) {
       # words <- word_by_word_texts[[1]]
-      # item <- names(texts[1])
+      # item <- names(word_by_word_texts)
       # mat <- lmats[[1]]
 
       message_verbose(
