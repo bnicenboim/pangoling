@@ -276,13 +276,14 @@ create_tensor_lst <- function(texts,
     ~ seq(.x, .y)
   )
   lapply(text_ids, function(text_id) {
+    #message(paste(text_id, " "))
     tensor <- encode(
       x = as.list(texts[text_id]),
       tkzr = tkzr,
       add_special_tokens = add_special_tokens,
       stride = as.integer(stride),
       truncation = TRUE, # is.finite(max_length),
-      return_overflowing_tokens = TRUE, # is.finite(max_length),
+      return_overflowing_tokens = FALSE, # is.finite(max_length),
       padding = TRUE # is.finite(max_length)
     )
     tensor
