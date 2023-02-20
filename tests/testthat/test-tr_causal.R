@@ -33,6 +33,16 @@ test_that("empty or small strings", {
 })
 
 
+test_that("long input work", {
+  skip_if_no_python_stuff()
+  long0 <- paste(rep("x",1022), collapse =" ")
+  long <- paste(rep("x",1024), collapse =" ")
+  longer <- paste(rep("x",1025), collapse =" ")
+  lp_long0 <- causal_tokens_lp_tbl(c(long0, long, longer),add_special_tokens = TRUE, batch_size = 3, model = "sshleifer/tiny-gpt2")
+  lp_long1 <- causal_tokens_lp_tbl(c(long0, long, longer),add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
+  expect_equal(lp_long0, lp_long1)
+})
+
 test_that("errors work", {
   skip_if_no_python_stuff()
   expect_error(causal_lp(c("It", "is."), .by = 3))
