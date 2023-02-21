@@ -218,8 +218,8 @@ masked_lp <- function(l_contexts,
   out <- tidytable::pmap.(
     list(targets, l_contexts, r_contexts, tensors_lst),
     function(words, l, r, tensor_lst) {
-        #TODO: make it by batches
-          ls_mat <- masked_lp_mat(lapply(tensor_lst, function(t) t$input_ids),
+      # TODO: make it by batches
+      ls_mat <- masked_lp_mat(lapply(tensor_lst, function(t) t$input_ids),
         trf = trf,
         tkzr = tkzr,
         add_special_tokens = add_special_tokens,

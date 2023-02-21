@@ -19,9 +19,32 @@ test_that("gpt2 load and gets config", {
   )
 })
 
+test_that("empty or small strings", {
+  skip_if_no_python_stuff()
+  lp_it <- causal_tokens_lp_tbl(texts = "It")
+  expect_equal(as.data.frame(lp_it), data.frame(token = "It", lp = NA_real_))
+  expect_warning(lp_NA <- causal_tokens_lp_tbl(texts = ""))
+  expect_equal(as.data.frame(lp_NA), data.frame(token = "", lp = NA_real_))
+  small_str <- c("It", "It","is")
+  lp_small <- causal_lp(x =small_str ,.by = c(1,2,2))
+  expect_equal(lp_small[1:2], c(It = NA_real_, It = NA_real_))
+  expect_warning(lp_small <- causal_lp(x =c("","It"), .by = c(1,2)))
+  expect_equal(lp_small, c(NA_real_, "It" = NA_real_))
+})
+
+
+test_that("long input work", {
+  skip_if_no_python_stuff()
+  long0 <- paste(rep("x",1022), collapse =" ")
+  long <- paste(rep("x",1024), collapse =" ")
+  longer <- paste(rep("x",1025), collapse =" ")
+  lp_long0 <- causal_tokens_lp_tbl(c(long0, long, longer),add_special_tokens = TRUE, batch_size = 3, model = "sshleifer/tiny-gpt2")
+  lp_long1 <- causal_tokens_lp_tbl(c(long0, long, longer),add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
+  expect_equal(lp_long0, lp_long1)
+})
+
 test_that("errors work", {
   skip_if_no_python_stuff()
-  expect_error(causal_lp("It"))
   expect_error(causal_lp(c("It", "is."), .by = 3))
 })
 
@@ -81,31 +104,33 @@ test_that("gpt2 get prob work", {
     unname(lp_sent_rep[seq_along(sent_w)]),
     unname(lp_sent_rep[(length(sent_w) + 1):(2 * length(sent_w))])
   )
-
-
 })
 
 test_that("batches work", {
   skip_if_no_python_stuff()
-  texts <- rep(c("This is not it.","This is it."),5)
+  texts <- rep(c("This is not it.", "This is it."), 5)
   lp_batch <- causal_tokens_lp_tbl(texts,
-                             batch_size =3, .id = ".id")
+    batch_size = 3, .id = ".id"
+  )
 
   lp_nobatch <- causal_tokens_lp_tbl(texts,
-                             batch_size =1, .id = ".id")
+    batch_size = 1, .id = ".id"
+  )
   expect_equal(lp_batch, lp_nobatch, tolerance = .0001)
-  df <- data.frame(x = rep(c(prov_words, sent2_words),3),
-                   .id = c(rep(1, length(prov_words)),
-                           rep(2, length(sent2_words)),
-                           rep(3, length(prov_words)),
-                           rep(4, length(sent2_words)),
-                           rep(5, length(prov_words)),
-                           rep(6, length(sent2_words))
-                           ))
+  df <- data.frame(
+    x = rep(c(prov_words, sent2_words), 3),
+    .id = c(
+      rep(1, length(prov_words)),
+      rep(2, length(sent2_words)),
+      rep(3, length(prov_words)),
+      rep(4, length(sent2_words)),
+      rep(5, length(prov_words)),
+      rep(6, length(sent2_words))
+    )
+  )
   lp_2_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 4)
   lp_2_no_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 1)
   expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
-
 })
 
 test_that("can handle extra parameters", {

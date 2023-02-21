@@ -95,7 +95,7 @@ causal_next_tokens_tbl <- function(context,
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
-  if(length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
+  if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
   message_verbose("Processing using causal model '", model, "'...")
   trf <- lang_model(model,
     task = "causal",
@@ -107,7 +107,7 @@ causal_next_tokens_tbl <- function(context,
   )
 
   lang_model(model, task = "causal", config_model = config_model)
-  #no batches allowed
+  # no batches allowed
   context_tensor <- encode(list(unlist(context)),
     tkzr,
     add_special_tokens = add_special_tokens
@@ -160,7 +160,6 @@ causal_lp <- function(x,
                       config_tokenizer = NULL,
                       batch_size = 1) {
   stride <- 1 # fixed for now
-  if (length(x) <= 1) stop2("The argument `x` needs at least two elements.")
   message_verbose("Processing using causal model '", model, "'...")
   word_by_word_texts <- get_word_by_word_texts(x, .by)
 
@@ -184,14 +183,16 @@ causal_lp <- function(x,
     batch_size = batch_size
   )
 
-  lmats <- lapply(tensors, function(tensor) causal_mat(tensor,
-                     trf,
-                     tkzr,
-                     add_special_tokens = add_special_tokens,
-                     stride = stride
-  )) |>
+  lmats <- lapply(tensors, function(tensor) {
+    causal_mat(tensor,
+      trf,
+      tkzr,
+      add_special_tokens = add_special_tokens,
+      stride = stride
+    )
+  }) |>
     unlist(recursive = FALSE)
-    out <- tidytable::pmap.(
+  out <- tidytable::pmap.(
     list(
       word_by_word_texts,
       names(word_by_word_texts),
@@ -199,7 +200,7 @@ causal_lp <- function(x,
     ),
     function(words, item, mat) {
       # words <- word_by_word_texts[[1]]
-      # item <- names(texts[1])
+      # item <- names(word_by_word_texts)
       # mat <- lmats[[1]]
 
       message_verbose(
@@ -276,11 +277,18 @@ causal_tokens_lp_tbl <- function(texts,
   }) |>
     unlist(recursive = FALSE)
 
-  tidytable::map_dfr.(ls_mat, function( mat) {
-    tidytable::tidytable(
-      token = colnames(mat),
-      lp = tidytable::map2_dbl.(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
-    )
+  tidytable::map_dfr.(ls_mat, function(mat) {
+    if (ncol(mat) ==1 && colnames(mat) == "") {
+      tidytable::tidytable(
+        token = "",
+        lp = NA_real_
+      )
+    } else {
+      tidytable::tidytable(
+        token = colnames(mat),
+        lp = tidytable::map2_dbl.(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
+      )
+    }
   }, .id = .id)
 }
 
@@ -291,48 +299,64 @@ causal_mat <- function(tensor,
                        tkzr,
                        add_special_tokens = NULL,
                        stride = 1) {
-
   message_verbose(
     "Processing a batch of size ",
     tensor$input_ids$shape[0],
     " with ",
     tensor$input_ids$shape[1], " tokens."
   )
- #logits_b <- trf(tensor)$logits
 
-  logits_b <- trf$forward(input_ids = tensor$input_ids,
-              attention_mask = tensor$attention_mask)$logits
+  if (tensor$input_ids$shape[1] == 0) {
+    warning("No tokens found.", call. = FALSE)
+    vocab <- get_vocab(tkzr)
+    mat <- matrix(rep(NA, length(vocab)), ncol = 1)
+    rownames(mat) <- vocab
+    colnames(mat) <- ""
+    return(list(mat))
+  }
+
+  logits_b <- trf$forward(
+    input_ids = tensor$input_ids,
+    attention_mask = tensor$attention_mask
+  )$logits
   # if (logits_b$shape[0] > 1) {
-    # stop2("Input is too long")
-    # # if there is a sliding window, because
-    # # max_tokens was exceeded:
-    # final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
-    # logits <- torch$row_stack(c(logits_b[0], final_words))
-    #
-    # first_tokens <- tkzr$convert_ids_to_tokens(tensor[0])
-    # final_tokens <- tidytable::map(0:(logits_b$shape[0] - 1), function(n) {
-    #   t <- tensor[n][seq(stride, max_length - 1)]
-    #   # in case the tensor is of size 1 and lost a dimension:
-    #   if (t$shape$numel() == 1L) t <- t$reshape(1L)
-    #   tkzr$convert_ids_to_tokens(t)
-    # }) |>
-    #   unlist()
-    #
-    # tokens <- c(first_tokens, final_tokens)
+  # stop2("Input is too long")
+  # # if there is a sliding window, because
+  # # max_tokens was exceeded:
+  # final_words <- lapply(1:(logits_b$shape[0] - 1), function(x) logits_b[x][seq(stride, max_length - 1)])
+  # logits <- torch$row_stack(c(logits_b[0], final_words))
+  #
+  # first_tokens <- tkzr$convert_ids_to_tokens(tensor[0])
+  # final_tokens <- tidytable::map(0:(logits_b$shape[0] - 1), function(n) {
+  #   t <- tensor[n][seq(stride, max_length - 1)]
+  #   # in case the tensor is of size 1 and lost a dimension:
+  #   if (t$shape$numel() == 1L) t <- t$reshape(1L)
+  #   tkzr$convert_ids_to_tokens(t)
+  # }) |>
+  #   unlist()
+  #
+  # tokens <- c(first_tokens, final_tokens)
   # }
-  lmat <- lapply(seq_len(logits_b$shape[0])-1, function(i){
-    real_token_pos <- seq_len(sum(tensor$attention_mask[i]$tolist()))-1
+  lmat <- lapply(seq_len(logits_b$shape[0]) - 1, function(i) {
+    real_token_pos <- seq_len(sum(tensor$attention_mask[i]$tolist())) - 1
     logits <- logits_b[i][real_token_pos]
-    tokens <- tkzr$convert_ids_to_tokens(tensor$input_ids[i][real_token_pos])
-  lp <- reticulate::py_to_r(torch$log_softmax(logits, dim = -1L))$tolist()
-  rm(logits)
-  # gc(full = TRUE)
-  mat <- do.call("cbind", lp)
-  # remove the last prediction, and the first is NA
-  mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
-  rownames(mat) <- get_vocab(tkzr)
-  colnames(mat) <- unlist(tokens)
-  mat
+    # in case it's only one token, it needs to be unsqueezed
+    ids <- tensor$input_ids[i]$unsqueeze(1L)
+    tokens <- tkzr$convert_ids_to_tokens(ids[real_token_pos])
+    lp <- reticulate::py_to_r(torch$log_softmax(logits, dim = -1L))$tolist()
+    rm(logits)
+    gc(full = TRUE)
+    if (is.list(lp)) {
+      mat <- do.call("cbind", lp)
+    } else {
+      # In case it's only one token, lp won't be a list
+      mat <- matrix(lp, ncol = 1)
+    }
+    # remove the last prediction, and the first is NA
+    mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
+    rownames(mat) <- get_vocab(tkzr)
+    colnames(mat) <- unlist(tokens)
+    mat
   })
   rm(logits_b)
   lmat
@@ -389,7 +413,8 @@ causal_lp_mats <- function(x,
     stride = stride,
     batch_size = batch_size
   )
-  lmat <- tidytable::map(tensors,
+  lmat <- tidytable::map(
+    tensors,
     function(tensor) {
       causal_mat(tensor,
         trf,

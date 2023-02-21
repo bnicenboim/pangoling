@@ -33,17 +33,17 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' @family token-related functions
 #' @export
 tokenize_lst <- function(x,
-                     model = getOption("pangoling.causal.default"),
-                     add_special_tokens = NULL,
-                     config_tokenizer = NULL) {
+                         model = getOption("pangoling.causal.default"),
+                         add_special_tokens = NULL,
+                         config_tokenizer = NULL) {
   UseMethod("tokenize_lst")
 }
 
 #' @export
 tokenize_lst.character <- function(x,
-                               model = getOption("pangoling.causal.default"),
-                               add_special_tokens = NULL,
-                               config_tokenizer = NULL) {
+                                   model = getOption("pangoling.causal.default"),
+                                   add_special_tokens = NULL,
+                                   config_tokenizer = NULL) {
   id <- get_id(x,
     model = model,
     add_special_tokens = add_special_tokens,
@@ -60,9 +60,9 @@ tokenize_lst.character <- function(x,
 
 #' @export
 tokenize_lst.numeric <- function(x,
-                             model = getOption("pangoling.causal.default"),
-                             add_special_tokens = NULL,
-                             config_tokenizer = NULL) {
+                                 model = getOption("pangoling.causal.default"),
+                                 add_special_tokens = NULL,
+                                 config_tokenizer = NULL) {
   tidytable::map_chr.(as.integer(x), function(x) {
     tokenizer(model,
       add_special_tokens = add_special_tokens,
@@ -96,18 +96,18 @@ ntokens <- function(x,
 
 
 get_vocab <- function(tkzr) {
-  vocab <- sort(unlist(tkzr$get_vocab())) |> names()
+  sort(unlist(tkzr$get_vocab())) |> names()
 }
 
 encode <- function(x, tkzr, add_special_tokens = NULL, ...) {
-    if (!is.null(add_special_tokens)) {
-      tkzr$batch_encode_plus(x,
-                             return_tensors = "pt",
-                             add_special_tokens = add_special_tokens, ...
-      )
-    } else {
-      tkzr$batch_encode_plus(x, return_tensors = "pt", ...)
-    }
+  if (!is.null(add_special_tokens)) {
+    tkzr$batch_encode_plus(x,
+      return_tensors = "pt",
+      add_special_tokens = add_special_tokens, ...
+    )
+  } else {
+    tkzr$batch_encode_plus(x, return_tensors = "pt", ...)
+  }
 }
 
 get_word_by_word_texts <- function(x, .by) {
@@ -270,16 +270,20 @@ create_tensor_lst <- function(texts,
   # }
 
   g_batches <- c(rep(batch_size, floor(length(texts) / batch_size)), length(texts) %% batch_size)
-  g_batches <- g_batches[g_batches> 0]
-  text_ids <- tidytable::map2(c(1,cumsum(g_batches)[-length(g_batches)]+1), cumsum(g_batches),
-                  ~ seq(.x,.y))
+  g_batches <- g_batches[g_batches > 0]
+  text_ids <- tidytable::map2(
+    c(1, cumsum(g_batches)[-length(g_batches)] + 1), cumsum(g_batches),
+    ~ seq(.x, .y)
+  )
   lapply(text_ids, function(text_id) {
-    tensor <- encode(x = as.list(texts[text_id]),
-                     tkzr = tkzr,
+    #message(paste(text_id, " "))
+    tensor <- encode(
+      x = as.list(texts[text_id]),
+      tkzr = tkzr,
       add_special_tokens = add_special_tokens,
       stride = as.integer(stride),
       truncation = TRUE, # is.finite(max_length),
-      return_overflowing_tokens = TRUE, # is.finite(max_length),
+      return_overflowing_tokens = FALSE, # is.finite(max_length),
       padding = TRUE # is.finite(max_length)
     )
     tensor
@@ -293,6 +297,7 @@ word_lp <- function(words,
                     model,
                     add_special_tokens,
                     config_tokenizer) {
+  if(length(words) == 1 && words == "") return(NA_real_)
   if (length(words) > 1) {
     words_lm <- c(words[1], paste0(" ", words[-1]))
   } else {

@@ -1,7 +1,7 @@
 Package: pangoling
 Type: Package
 Title: Access to Large Language Model Predictions
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: c(
     person("Bruno", "Nicenboim",
     email = "bruno.nicenboim@gmail.com",
@@ -41,7 +41,7 @@ Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1.0)
 VignetteBuilder: knitr
 StagedInstall: yes
 Language: en-US
