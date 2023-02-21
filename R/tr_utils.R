@@ -276,7 +276,7 @@ create_tensor_lst <- function(texts,
     ~ seq(.x, .y)
   )
   lapply(text_ids, function(text_id) {
-    #message(paste(text_id, " "))
+    # message(paste(text_id, " "))
     tensor <- encode(
       x = as.list(texts[text_id]),
       tkzr = tkzr,
@@ -297,7 +297,9 @@ word_lp <- function(words,
                     model,
                     add_special_tokens,
                     config_tokenizer) {
-  if(length(words) == 1 && words == "") return(NA_real_)
+  if (length(words) == 1 && words == "") {
+    return(NA_real_)
+  }
   if (length(words) > 1) {
     words_lm <- c(words[1], paste0(" ", words[-1]))
   } else {
