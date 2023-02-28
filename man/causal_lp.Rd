@@ -7,6 +7,7 @@
 causal_lp(
   x,
   .by = rep(1, length(x)),
+  l_contexts = NULL,
   ignore_regex = "",
   model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
@@ -19,6 +20,9 @@ causal_lp(
 \item{x}{Vector of words, phrases or texts.}
 
 \item{.by}{Vector that indicates how the text should be split.}
+
+\item{l_contexts}{Left context for each word in \code{x}. If \code{l_contexts} is used,
+\code{.by} is ignored. Set \code{.by = NULL} to avoid a message notifying that.}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
@@ -81,6 +85,13 @@ in pangoling website for more examples.
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_lp(
   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+  model = "gpt2"
+)
+
+causal_lp(
+  x = "tree.",
+  l_contexts = "The apple doesn't fall far from the tree.",
+  .by = NULL, # it's ignored anyways
   model = "gpt2"
 )
 \dontshow{\}) # examplesIf}

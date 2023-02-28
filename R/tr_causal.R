@@ -133,6 +133,8 @@ causal_next_tokens_tbl <- function(context,
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param .by Vector that indicates how the text should be split.
+#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
+#'        `.by` is ignored. Set `.by = NULL` to avoid a message notifying that.
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
@@ -149,10 +151,18 @@ causal_next_tokens_tbl <- function(context,
 #'   model = "gpt2"
 #' )
 #'
+#'causal_lp(
+#'   x = "tree.",
+#'   l_contexts = "The apple doesn't fall far from the tree.",
+#'   .by = NULL, # it's ignored anyways
+#'   model = "gpt2"
+#' )
+
 #' @family causal model functions
 #' @export
 causal_lp <- function(x,
                       .by = rep(1, length(x)),
+                      l_contexts = NULL,
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
                       add_special_tokens = NULL,
@@ -161,6 +171,11 @@ causal_lp <- function(x,
                       batch_size = 1) {
   stride <- 1 # fixed for now
   message_verbose("Processing using causal model '", model, "'...")
+  if(!is.null(l_contexts)){
+    if(all(!is.null(.by))) message_verbose("Ignoring `.by` argument")
+    x <- c(rbind(l_contexts, x))
+    .by <- rep(seq_len(length(x)/2), each = 2)
+  }
   word_by_word_texts <- get_word_by_word_texts(x, .by)
 
   pasted_texts <- lapply(
@@ -217,7 +232,13 @@ causal_lp <- function(x,
       )
     }
   )
-  unlist(out, recursive = FALSE)
+  if(!is.null(l_contexts)) {
+    # remove the contexts
+    keep <- c(FALSE, TRUE)
+  } else {
+    keep <- TRUE
+  }
+    unlist(out, recursive = FALSE)[keep]
 }
 
 
