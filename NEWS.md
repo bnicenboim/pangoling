@@ -18,3 +18,6 @@
 # pangoling 0.0.0.9005
 * Strings with no tokens no longer throw errors. 
 * Requires correct version of R. 
+
+# pangoling 0.0.0.9005
+* `causal_lp` get a `l_contexts` argument
