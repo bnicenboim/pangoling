@@ -7,6 +7,7 @@
 causal_tokens_lp_tbl(
   texts,
   model = getOption("pangoling.causal.default"),
+  checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL,
@@ -17,7 +18,9 @@ causal_tokens_lp_tbl(
 \arguments{
 \item{texts}{Vector or list of texts.}
 
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

@@ -6,13 +6,16 @@
 \usage{
 causal_preload(
   model = getOption("pangoling.causal.default"),
+  checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

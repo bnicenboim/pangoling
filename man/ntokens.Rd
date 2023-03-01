@@ -14,7 +14,7 @@ ntokens(
 \arguments{
 \item{x}{character input}
 
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

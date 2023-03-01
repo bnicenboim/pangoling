@@ -136,11 +136,13 @@ lst_to_kwargs <- function(x) {
 }
 
 #' @noRd
-lang_model <- function(model = "gpt2", task = "causal", config_model = NULL) {
+lang_model <- function(model = "gpt2", checkpoint = NULL, task = "causal", config_model = NULL) {
   reticulate::py_run_string(
     'import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"'
   )
-
+  if(length(checkpoint)>0 && checkpoint != ""){
+    model <- file.path(model, checkpoint)
+  }
   # to prevent memory leaks:
   reticulate::py_run_string('there = "lm" in locals()')
   if (reticulate::py$there) reticulate::py_run_string("del lm")

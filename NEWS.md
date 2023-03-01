@@ -21,3 +21,4 @@
 
 # pangoling 0.0.0.9005
 * `causal_lp` get a `l_contexts` argument
+* checkpoints work for causal models (not yet for masked models)
