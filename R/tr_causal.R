@@ -26,7 +26,7 @@
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @param model Name of a pre-trained model or folder.
-#' @param checkpoint folder of a checkpoint.
+#' @param checkpoint Folder of a checkpoint.
 #' @param add_special_tokens Whether to include special tokens. It has the
 #'                           same default as the
 #'                           [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer) method in Python.
@@ -170,6 +170,7 @@ causal_lp <- function(x,
                       l_contexts = NULL,
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
+                      checkpoint = NULL,
                       add_special_tokens = NULL,
                       config_model = NULL,
                       config_tokenizer = NULL,
