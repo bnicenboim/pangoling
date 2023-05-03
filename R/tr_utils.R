@@ -63,7 +63,7 @@ tokenize_lst.numeric <- function(x,
                                  model = getOption("pangoling.causal.default"),
                                  add_special_tokens = NULL,
                                  config_tokenizer = NULL) {
-  tidytable::map_chr.(as.integer(x), function(x) {
+  tidytable::map_chr(as.integer(x), function(x) {
     tokenizer(model,
       add_special_tokens = add_special_tokens,
       config_tokenizer = config_tokenizer
@@ -317,7 +317,7 @@ word_lp <- function(words,
   add_special_tokens = add_special_tokens,
   config_tokenizer = config_tokenizer
   )
-  token_n <- tidytable::map_dbl.(tokens, length)
+  token_n <- tidytable::map_dbl(tokens, length)
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 
 
@@ -325,7 +325,7 @@ word_lp <- function(words,
 
   if (options()$pangoling.debug) {
     print("******")
-    sent <- tidytable::map_chr.(tokens, function(x) paste0(x, collapse = "|"))
+    sent <- tidytable::map_chr(tokens, function(x) paste0(x, collapse = "|"))
     print(paste0("[", sent, "]", collapse = " "))
     print(token_lp)
   }
@@ -361,7 +361,7 @@ char_to_token <- function(x, tkzr = NULL) {
 }
 
 num_to_token <- function(x, tkzr) {
-  tidytable::map_chr.(as.integer(x), function(x) {
+  tidytable::map_chr(as.integer(x), function(x) {
     tkzr$convert_ids_to_tokens(x)
   })
 }

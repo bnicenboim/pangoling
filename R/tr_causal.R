@@ -307,7 +307,7 @@ causal_tokens_lp_tbl <- function(texts,
   }) |>
     unlist(recursive = FALSE)
 
-  tidytable::map_dfr.(ls_mat, function(mat) {
+  tidytable::map_dfr(ls_mat, function(mat) {
     if (ncol(mat) == 1 && colnames(mat) == "") {
       tidytable::tidytable(
         token = "",

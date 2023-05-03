@@ -123,7 +123,7 @@ masked_tokens_tbl <- function(masked_sentences,
         mask_n = NA
       )
     } else {
-      lp |> tidytable::map_dfr.(~
+      lp |> tidytable::map_dfr(~
         tidytable::tidytable(
           masked_sentence = masked_sentence,
           token = vocab, lp = .x
