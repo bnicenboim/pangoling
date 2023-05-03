@@ -321,7 +321,7 @@ word_lp <- function(words,
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 
 
-  token_lp <- tidytable::map2_dbl.(index_vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
+  token_lp <- tidytable::map2_dbl(index_vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
 
   if (options()$pangoling.debug) {
     print("******")

@@ -128,7 +128,7 @@ masked_tokens_tbl <- function(masked_sentences,
           masked_sentence = masked_sentence,
           token = vocab, lp = .x
         ) |>
-          tidytable::arrange.(-lp), .id = "mask_n")
+          tidytable::arrange(-lp), .id = "mask_n")
     }
   }) |>
     tidytable::relocate(mask_n, .after = tidyselect::everything())
@@ -215,7 +215,7 @@ masked_lp <- function(l_contexts,
     l
   })
 
-  out <- tidytable::pmap.(
+  out <- tidytable::pmap(
     list(targets, l_contexts, r_contexts, tensors_lst),
     function(words, l, r, tensor_lst) {
       # TODO: make it by batches

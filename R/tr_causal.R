@@ -125,7 +125,7 @@ causal_next_tokens_tbl <- function(context,
     unlist()
   vocab <- get_vocab(tkzr)
   tidytable::tidytable(token = vocab, lp = lp) |>
-    tidytable::arrange.(-lp)
+    tidytable::arrange(-lp)
 }
 
 
@@ -214,7 +214,7 @@ causal_lp <- function(x,
     )
   }) |>
     unlist(recursive = FALSE)
-  out <- tidytable::pmap.(
+  out <- tidytable::pmap(
     list(
       word_by_word_texts,
       names(word_by_word_texts),
@@ -316,7 +316,7 @@ causal_tokens_lp_tbl <- function(texts,
     } else {
       tidytable::tidytable(
         token = colnames(mat),
-        lp = tidytable::map2_dbl.(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
+        lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
       )
     }
   }, .id = .id)
