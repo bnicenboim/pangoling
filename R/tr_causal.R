@@ -297,7 +297,7 @@ causal_tokens_lp_tbl <- function(texts,
     batch_size = batch_size
   )
 
-  ls_mat <- tidytable::map.(tensors, function(tensor) {
+  ls_mat <- tidytable::map(tensors, function(tensor) {
     causal_mat(tensor,
       trf,
       tkzr,
