@@ -26,7 +26,7 @@ masked_lp(
 probabilities. For example \verb{^[[:punct:]]$} will ignore
 all punctuation  that stands alone in a token.}
 
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

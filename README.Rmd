@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
  [![R-CMD-check](https://github.com/bnicenboim/pangoling/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bnicenboim/pangoling/actions/workflows/R-CMD-check.yaml)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![DOI](https://zenodo.org/badge/497831295.svg)](https://zenodo.org/badge/latestdoi/497831295)
+[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/575_status.svg)](https://github.com/ropensci/software-review/issues/575)
 <!-- badges: end -->
 
 

@@ -6,11 +6,14 @@
 \usage{
 causal_config(
   model = getOption("pangoling.causal.default"),
+  checkpoint = NULL,
   config_model = NULL
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{folder of a checkpoint.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}

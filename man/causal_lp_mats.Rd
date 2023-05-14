@@ -8,6 +8,7 @@ causal_lp_mats(
   x,
   .by = rep(1, length(x)),
   model = getOption("pangoling.causal.default"),
+  checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL,
@@ -19,7 +20,9 @@ causal_lp_mats(
 
 \item{.by}{Vector that indicates how the text should be split.}
 
-\item{model}{Name of a pre-trained model.}
+\item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

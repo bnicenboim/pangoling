@@ -12,6 +12,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![DOI](https://zenodo.org/badge/497831295.svg)](https://zenodo.org/badge/latestdoi/497831295)
+[![Status at rOpenSci Software Peer
+Review](https://badges.ropensci.org/575_status.svg)](https://github.com/ropensci/software-review/issues/575)
 <!-- badges: end -->
 
 `pangoling`[^1] is an R package for estimating the log-probabilities of

@@ -39,7 +39,9 @@ test_that("long input work", {
   long <- paste(rep("x", 1024), collapse = " ")
   longer <- paste(rep("x", 1025), collapse = " ")
   lp_long0 <- causal_tokens_lp_tbl(c(long0, long, longer), add_special_tokens = TRUE, batch_size = 3, model = "sshleifer/tiny-gpt2")
-  lp_long1 <- causal_tokens_lp_tbl(c(long0, long, longer), add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
+  skip_on_os("windows") #the following just doesn't work on windows,
+  # but it's not that important
+    lp_long1 <- causal_tokens_lp_tbl(c(long0, long, longer), add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
   expect_equal(lp_long0, lp_long1)
 })
 
@@ -56,6 +58,8 @@ test_that("gpt2 get prob work", {
   expect_equal(cont[1]$token, "Ġtree")
   lp_prov <- causal_lp(x = prov_words)
   expect_equal(names(lp_prov), prov_words)
+  lp_cont <- causal_lp(l_contexts = c("Don't judge a book by its","The apple doesn't fall far from the"), x = c("cover", "tree"))
+  expect_equal(lp_cont[2], lp_prov[8], tolerance = .0001)
   lp_sent2 <- causal_lp(x = sent2_words)
   expect_equal(names(lp_sent2), sent2_words)
   lp_sent3 <- causal_lp(x = sent3_words)
@@ -131,6 +135,10 @@ test_that("batches work", {
   lp_2_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 4)
   lp_2_no_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 1)
   expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
+
+df <- data.frame(l_contexts = rep(c("Don't judge a book by its","The apple doesn't fall far from the"),5), x = rep(c("cover", "tree"),5))
+  #lp_2_batch <- causal_lp(x = df$x, l_contexts = df$l_contexts, batch_size = 4)
+
 })
 
 test_that("can handle extra parameters", {

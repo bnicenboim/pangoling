@@ -25,7 +25,8 @@
 #'  In case of errors when a new model is run, check the status of
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
-#' @param model Name of a pre-trained model.
+#' @param model Name of a pre-trained model or folder.
+#' @param checkpoint Folder of a checkpoint.
 #' @param add_special_tokens Whether to include special tokens. It has the
 #'                           same default as the
 #'                           [AutoTokenizer](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer) method in Python.
@@ -42,10 +43,11 @@
 #' @export
 #'
 causal_preload <- function(model = getOption("pangoling.causal.default"),
+                           checkpoint = NULL,
                            add_special_tokens = NULL,
                            config_model = NULL, config_tokenizer = NULL) {
   message_verbose("Preloading causal model ", model, "...")
-  lang_model(model, task = "causal", config_model)
+  lang_model(model, checkpoint = checkpoint, task = "causal", config_model)
   tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer)
   invisible()
 }
@@ -60,9 +62,11 @@ causal_preload <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @family causal model functions
 #' @export
-causal_config <- function(model = getOption("pangoling.causal.default"), config_model = NULL) {
+causal_config <- function(model = getOption("pangoling.causal.default"),
+                          checkpoint = NULL, config_model = NULL) {
   lang_model(
     model = model,
+    checkpoint = checkpoint,
     task = "causal",
     config_model = config_model
   )$config$to_dict()
@@ -92,12 +96,14 @@ causal_config <- function(model = getOption("pangoling.causal.default"), config_
 #' @export
 causal_next_tokens_tbl <- function(context,
                                    model = getOption("pangoling.causal.default"),
+                                   checkpoint = NULL,
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
   if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
-  message_verbose("Processing using causal model '", model, "'...")
+  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   trf <- lang_model(model,
+                    checkpoint = checkpoint,
     task = "causal",
     config_model = config_model
   )
@@ -106,7 +112,6 @@ causal_next_tokens_tbl <- function(context,
     config_tokenizer = config_tokenizer
   )
 
-  lang_model(model, task = "causal", config_model = config_model)
   # no batches allowed
   context_tensor <- encode(list(unlist(context)),
     tkzr,
@@ -120,7 +125,7 @@ causal_next_tokens_tbl <- function(context,
     unlist()
   vocab <- get_vocab(tkzr)
   tidytable::tidytable(token = vocab, lp = lp) |>
-    tidytable::arrange.(-lp)
+    tidytable::arrange(-lp)
 }
 
 
@@ -133,6 +138,8 @@ causal_next_tokens_tbl <- function(context,
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param .by Vector that indicates how the text should be split.
+#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
+#'        `.by` is ignored. Set `.by = NULL` to avoid a message notifying that.
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
@@ -149,18 +156,32 @@ causal_next_tokens_tbl <- function(context,
 #'   model = "gpt2"
 #' )
 #'
+#'causal_lp(
+#'   x = "tree.",
+#'   l_contexts = "The apple doesn't fall far from the tree.",
+#'   .by = NULL, # it's ignored anyways
+#'   model = "gpt2"
+#' )
+
 #' @family causal model functions
 #' @export
 causal_lp <- function(x,
                       .by = rep(1, length(x)),
+                      l_contexts = NULL,
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
+                      checkpoint = NULL,
                       add_special_tokens = NULL,
                       config_model = NULL,
                       config_tokenizer = NULL,
                       batch_size = 1) {
   stride <- 1 # fixed for now
-  message_verbose("Processing using causal model '", model, "'...")
+  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  if(!is.null(l_contexts)){
+    if(all(!is.null(.by))) message_verbose("Ignoring `.by` argument")
+    x <- c(rbind(l_contexts, x))
+    .by <- rep(seq_len(length(x)/2), each = 2)
+  }
   word_by_word_texts <- get_word_by_word_texts(x, .by)
 
   pasted_texts <- lapply(
@@ -172,8 +193,9 @@ causal_lp <- function(x,
     config_tokenizer = config_tokenizer
   )
   trf <- lang_model(model,
-    task = "causal",
-    config_model = config_model
+                    checkpoint = checkpoint,
+                    task = "causal",
+                    config_model = config_model
   )
   tensors <- create_tensor_lst(
     texts = unname(pasted_texts),
@@ -192,7 +214,7 @@ causal_lp <- function(x,
     )
   }) |>
     unlist(recursive = FALSE)
-  out <- tidytable::pmap.(
+  out <- tidytable::pmap(
     list(
       word_by_word_texts,
       names(word_by_word_texts),
@@ -217,7 +239,13 @@ causal_lp <- function(x,
       )
     }
   )
-  unlist(out, recursive = FALSE)
+  if(!is.null(l_contexts)) {
+    # remove the contexts
+    keep <- c(FALSE, TRUE)
+  } else {
+    keep <- TRUE
+  }
+    unlist(out, recursive = FALSE)[keep]
 }
 
 
@@ -244,22 +272,24 @@ causal_lp <- function(x,
 #' @export
 causal_tokens_lp_tbl <- function(texts,
                                  model = getOption("pangoling.causal.default"),
+                                 checkpoint = NULL,
                                  add_special_tokens = NULL,
                                  config_model = NULL,
                                  config_tokenizer = NULL,
                                  batch_size = 1,
                                  .id = NULL) {
   stride <- 1
-  message_verbose("Processing using causal model '", model, "'...")
+  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   ltexts <- as.list(unlist(texts, recursive = TRUE))
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
   )
   trf <- lang_model(model,
-    task = "causal",
-    config_model = config_model
-  )
+                    checkpoint = checkpoint,
+                    task = "causal",
+                    config_model = config_model
+    )
   tensors <- create_tensor_lst(ltexts,
     tkzr,
     add_special_tokens = add_special_tokens,
@@ -267,7 +297,7 @@ causal_tokens_lp_tbl <- function(texts,
     batch_size = batch_size
   )
 
-  ls_mat <- tidytable::map.(tensors, function(tensor) {
+  ls_mat <- tidytable::map(tensors, function(tensor) {
     causal_mat(tensor,
       trf,
       tkzr,
@@ -277,7 +307,7 @@ causal_tokens_lp_tbl <- function(texts,
   }) |>
     unlist(recursive = FALSE)
 
-  tidytable::map_dfr.(ls_mat, function(mat) {
+  tidytable::map_dfr(ls_mat, function(mat) {
     if (ncol(mat) == 1 && colnames(mat) == "") {
       tidytable::tidytable(
         token = "",
@@ -286,7 +316,7 @@ causal_tokens_lp_tbl <- function(texts,
     } else {
       tidytable::tidytable(
         token = colnames(mat),
-        lp = tidytable::map2_dbl.(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
+        lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
       )
     }
   }, .id = .id)
@@ -387,18 +417,20 @@ causal_mat <- function(tensor,
 causal_lp_mats <- function(x,
                            .by = rep(1, length(x)),
                            model = getOption("pangoling.causal.default"),
+                           checkpoint = NULL,
                            add_special_tokens = NULL,
                            config_model = NULL,
                            config_tokenizer = NULL,
                            batch_size = 1) {
   stride <- 1
-  message_verbose("Processing using causal model '", model, "'...")
+  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
   )
   trf <- lang_model(model,
-    task = "causal",
+                    checkpoint = checkpoint,
+                        task = "causal",
     config_model = config_model
   )
   x <- trimws(x, whitespace = "[ \t]")
