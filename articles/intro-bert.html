@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ of a mask in a sentence. BERT is an example of a masked language model
 <span class="citation">(see also Devlin et al. 2018)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bruno.nicenboim.me/pangoling" class="external-link">pangoling</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/markfairbanks/tidytable" class="external-link">tidytable</a></span><span class="op">)</span> <span class="co"># fast alternative to dplyr</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://markfairbanks.github.io/tidytable/" class="external-link">tidytable</a></span><span class="op">)</span> <span class="co"># fast alternative to dplyr</span></span></code></pre></div>
 <p>Notice the following potential pitfall. This would be a
 <strong>bad</strong> approach for making predictions in a masked
 model:</p>
@@ -120,7 +120,7 @@ model:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> The apple doesn't fall far from the [MASK] -      -<span style="color: #BB0000;">9.69</span>        1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> The apple doesn't fall far from the [MASK] '      -<span style="color: #BB0000;">9.87</span>        1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> The apple doesn't fall far from the [MASK] :     -<span style="color: #BB0000;">10.5</span>         1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 30,512 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30,512 more rows</span></span></span></code></pre></div>
 <p>The most common predictions are punctuation marks, because BERT uses
 the left <em>and</em> right context. In this case, the right context
 indicates that the mask is the final <em>token</em> of the sentence.
@@ -141,14 +141,14 @@ More expected results are obtained in the following way:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> The apple doesn't fall far from the [MASK]. window  -<span style="color: #BB0000;">4.87</span>       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> The apple doesn't fall far from the [MASK]. trees   -<span style="color: #BB0000;">4.94</span>       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> The apple doesn't fall far from the [MASK]. apple   -<span style="color: #BB0000;">4.95</span>       1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 30,512 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30,512 more rows</span></span></span></code></pre></div>
 <p>We can mask several tokens as well (but bear in mind that this type
 of models are trained with only 10-15% of masks):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_masks</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="../reference/masked_tokens_tbl.html">masked_tokens_tbl</a></span><span class="op">(</span><span class="st">"The apple doesn't fall far from the [MASK][MASK]"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Processing using masked model 'bert-base-uncased'...</span></span>
-<span><span class="va">df_masks</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mask_n</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">df_masks</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mask_n</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 30,522 × 4</span></span></span>
 <span><span class="co">#&gt;    masked_sentence                                  token       lp mask_n</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -162,8 +162,8 @@ of models are trained with only 10-15% of masks):</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> The apple doesn't fall far from the [MASK][MASK] window  -<span style="color: #BB0000;">5.02</span>       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> The apple doesn't fall far from the [MASK][MASK] bush    -<span style="color: #BB0000;">5.02</span>       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> The apple doesn't fall far from the [MASK][MASK] vine    -<span style="color: #BB0000;">5.03</span>       1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 30,512 more rows</span></span></span>
-<span><span class="va">df_masks</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mask_n</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30,512 more rows</span></span></span>
+<span><span class="va">df_masks</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mask_n</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tidytable: 30,522 × 4</span></span></span>
 <span><span class="co">#&gt;    masked_sentence                                  token       lp mask_n</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -177,7 +177,7 @@ of models are trained with only 10-15% of masks):</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> The apple doesn't fall far from the [MASK][MASK] |     -<span style="color: #BB0000;">13.3</span>         2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> The apple doesn't fall far from the [MASK][MASK] so    -<span style="color: #BB0000;">13.4</span>         2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> The apple doesn't fall far from the [MASK][MASK] :     -<span style="color: #BB0000;">13.9</span>         2</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 30,512 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 30,512 more rows</span></span></span></code></pre></div>
 <p>We can also use BERT to examine the predictability of words assuming
 that both the left and right contexts are known:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -197,7 +197,7 @@ log-probability of the target word (and will take care of summing the
 log-probabilities in case the target is composed by several tokens).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_sent</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/tidytable/man/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lp <span class="op">=</span> <span class="fu"><a href="../reference/masked_lp.html">masked_lp</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lp <span class="op">=</span> <span class="fu"><a href="../reference/masked_lp.html">masked_lp</a></span><span class="op">(</span></span>
 <span>    l_contexts <span class="op">=</span> <span class="va">left</span>,</span>
 <span>    targets <span class="op">=</span> <span class="va">critical</span>,</span>
 <span>    r_contexts <span class="op">=</span> <span class="va">right</span></span>
