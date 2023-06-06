@@ -41,15 +41,8 @@ torch <- NULL
 }
 
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage(pkgname, " version ", packageVersion(pkgname),"\n Pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used. For changing the cache folder use:\n
-                         set_cache_folder(my_new_path)")
+    packageStartupMessage(pkgname, " version ", packageVersion(pkgname),"A detailed introduction to the package can be found in <https://bruno.nicenboim.me/pangoling/articles/>\n Notice that pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used. For changing the cache folder use:\n
+set_cache_folder(my_new_path)")
 }
-## .onAttach <- function(libname, pkgname) {
-##    #only once per session
-##   if (env_has(inform_env, id)) {
-##     return(invisible(NULL))
-##   }
-##   inform_env[[id]] <- TRUE
-##  ()
-## }
+
 

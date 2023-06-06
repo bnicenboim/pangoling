@@ -38,6 +38,8 @@ tic()
 toc()
 ```
 
+(The pretrained models and tokenizers will be downloaded from https://huggingface.co/ the first time they are used.)
+
 The most likely continuation is "tree", which makes sense.
 The first time a model is run, it will download some files that will be available for subsequent runs. However, every time we start a new R session and we run a model, it will take some time to store it in memory. Next runs in the same session are much faster. We can also preload a model with `causal_preload()`.
 
