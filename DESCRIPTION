@@ -1,7 +1,7 @@
 Package: pangoling
 Type: Package
 Title: Access to Large Language Model Predictions
-Version: 0.0.0.9006
+Version: 0.0.0.9007
 Authors@R: c(
     person("Bruno", "Nicenboim",
     email = "bruno.nicenboim@gmail.com",
