@@ -125,9 +125,13 @@ df_sent
 ## How to cite
 
 > Nicenboim B (2023). *pangoling: Access to language model predictions
-> in R*. R package version 0.0.0.9005, DOI:
+> in R*. R package version 0.0.0.9006, DOI:
 > [10.5281/zenodo.7637526](https://zenodo.org/badge/latestdoi/497831295),
 > <https://github.com/bnicenboim/pangoling>.
+
+## How to contribute
+
+See the [Contributing guidelines](.github/CONTRIBUTING.md).
 
 ## Code of conduct
 
