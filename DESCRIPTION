@@ -15,7 +15,7 @@ BugReports: https://github.com/bnicenboim/pangoling/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-Config/reticulate:
+Config/reticulate/autoconfigure:
   list(
     packages = list(
       list(package = "torch"),
