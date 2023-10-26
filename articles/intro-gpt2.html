@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/intro-gpt2.html">Introduction: Using a GPT2 transformer model to get word predictability</a>
     <a class="dropdown-item" href="../articles/intro-bert.html">An alternative: Using a Bert transformer model to get the predictability of words in a context</a>
+    <a class="dropdown-item" href="../articles/troubleshooting.html">Troubleshooting the use of Python in R</a>
   </div>
 </li>
 <li class="nav-item">
@@ -142,7 +143,9 @@ from the”.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 9.339 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 10.583 sec elapsed</span></span></code></pre></div>
+<p>(The pretrained models and tokenizers will be downloaded from <a href="https://huggingface.co/" class="external-link uri">https://huggingface.co/</a>
+the first time they are used.)</p>
 <p>The most likely continuation is “tree”, which makes sense. The first
 time a model is run, it will download some files that will be available
 for subsequent runs. However, every time we start a new R session and we
@@ -168,7 +171,7 @@ the same session are much faster. We can also preload a model with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.374 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.513 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is, the way GPT-2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -189,7 +192,7 @@ starts with “Ġ”.</p>
 exponentiate them and we sum them, we should get 1:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">df_pred</span><span class="op">$</span><span class="va">lp</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.000009</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1.000017</span></span></code></pre></div>
 <p>Because of approximation errors, this is not exactly one.</p>
 <p>When doing tests, <code>sshleifer/tiny-gpt2</code> is quite useful
 since it’s tiny. But notice that the predictions are quite bad.</p>
@@ -216,7 +219,7 @@ since it’s tiny. But notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh           -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.123 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.15 sec elapsed</span></span></code></pre></div>
 <p>This package would be most useful int the following situation. Given
 a (toy) dataset where sentences are organized with one word or short
 phrase in each row:</p>
@@ -304,7 +307,7 @@ log-probability of <code>" tree"</code> given its context and
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> The     <span style="color: #BB0000;">NA</span>       </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Ġapple -<span style="color: #BB0000;">10.9</span>     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Ġdoesn  -<span style="color: #BB0000;">5.50</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 't      -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">829</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 't      -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">828</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Ġfall   -<span style="color: #BB0000;">3.60</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Ġfar    -<span style="color: #BB0000;">2.91</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Ġfrom   -<span style="color: #BB0000;">0.745</span>   </span></span>
@@ -316,13 +319,13 @@ log-probability of <code>" tree"</code> given its context and
 <span>  <span class="co"># requires a Ġ because there is a space before</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span> <span class="st">"Ġtree"</span><span class="op">)</span></span>
 <span>  <span class="op">|&gt;</span> <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.2808123</span></span>
+<span><span class="co">#&gt; [1] -0.280805</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">dot_lp</span> <span class="op">&lt;-</span> <span class="va">df_token_lp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># doesn't require a Ġ because there is no space before</span></span>
 <span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">token</span> <span class="op">==</span> <span class="st">"."</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -1.300941</span></span>
+<span><span class="co">#&gt; [1] -1.300931</span></span>
 <span></span>
 <span><span class="va">tree._lp</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">word</span> <span class="op">==</span> <span class="st">"tree."</span><span class="op">)</span> <span class="op">|&gt;</span></span>

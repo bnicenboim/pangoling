@@ -22,6 +22,9 @@
     <loc>http://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html</loc>
   </url>
   <url>
+    <loc>http://bruno.nicenboim.me/pangoling/articles/troubleshooting.html</loc>
+  </url>
+  <url>
     <loc>http://bruno.nicenboim.me/pangoling/authors.html</loc>
   </url>
   <url>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/perplexity_calc.html</loc>
+  </url>
+  <url>
+    <loc>http://bruno.nicenboim.me/pangoling/reference/set_cache_folder.html</loc>
   </url>
   <url>
     <loc>http://bruno.nicenboim.me/pangoling/reference/tokenize_lst.html</loc>
