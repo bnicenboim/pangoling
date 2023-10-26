@@ -383,6 +383,7 @@ num_to_token <- function(x, tkzr) {
 #' }
 #' @seealso \url{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}
 #' @references HuggingFace Transformers: \url{https://huggingface.co/transformers/index.html}
+#' @family general functions
 set_cache_folder <- function(path = NULL){
   if(!is.null(path)){
     if(!dir.exists(path)) stop2("Folder '", path, "' doesn't exist.")

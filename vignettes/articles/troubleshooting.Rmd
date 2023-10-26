@@ -1,5 +1,5 @@
 ---
-title: "Troubleshooting the use of Python in RStudio"
+title: "Troubleshooting the use of Python in R"
 bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
 ---
 

@@ -20,11 +20,12 @@
 * Requires correct version of R. 
 
 # pangoling 0.0.0.9006
-* `causal_lp` get a `l_contexts` argument
-* Checkpoints work for causal models (not yet for masked models)
+* `causal_lp` get a `l_contexts` argument.
+* Checkpoints work for causal models (not yet for masked models).
 * Ropensci badge added.
 
 
-# pangoling 0.0.0.9006
-* `set_cache_folder()` function added
+# pangoling 0.0.0.9007
+* `set_cache_folder()` function added.
 * Message when the package loads.
+* New troubleshooting vignette.

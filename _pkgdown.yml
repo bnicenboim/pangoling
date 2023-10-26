@@ -26,6 +26,7 @@ articles:
   contents:
   - '`articles/intro-gpt2`'
   - '`articles/intro-bert`'
+  - '`articles/troubleshooting`'
 
 reference:
 - title: About

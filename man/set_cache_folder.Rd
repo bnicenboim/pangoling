@@ -27,4 +27,8 @@ HuggingFace Transformers: \url{https://huggingface.co/transformers/index.html}
 }
 \seealso{
 \url{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}
+
+Other general functions: 
+\code{\link{perplexity_calc}()}
 }
+\concept{general functions}
