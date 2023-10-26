@@ -1,14 +1,17 @@
 Package: pangoling
 Type: Package
 Title: Access to Large Language Model Predictions
-Version: 0.0.0.9006
+Version: 0.0.0.9007
 Authors@R: c(
     person("Bruno", "Nicenboim",
     email = "bruno.nicenboim@gmail.com",
     role = c( "aut","cre"),
     comment = c(ORCID = "0000-0002-5176-3943")),
     person("Chris", "Emmerly", role = "ctb"),
-    person("Giovanni", "Cassani", role = "ctb"))
+    person("Giovanni", "Cassani", role = "ctb"),
+    person("Lisa", "Levinson", role = "rev"),
+    person("Utku", "Turk", role = "rev")
+    )
 Description: Access to word predictability using large language (transformer) models.
 URL: https://bruno.nicenboim.me/pangoling, https://github.com/bnicenboim/pangoling
 BugReports: https://github.com/bnicenboim/pangoling/issues

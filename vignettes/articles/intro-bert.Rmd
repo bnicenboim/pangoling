@@ -30,6 +30,8 @@ Notice the following potential pitfall. This would be a **bad** approach for mak
 ```{r}
 masked_tokens_tbl("The apple doesn't fall far from the [MASK]")
 ```
+(The pretrained models and tokenizers will be downloaded from https://huggingface.co/ the first time they are used.)
+
 
 The most common predictions are punctuation marks, because BERT uses the left *and* right context. In this case, the right context indicates that the mask is the final *token* of the sentence.
 More expected results are obtained in the following way:

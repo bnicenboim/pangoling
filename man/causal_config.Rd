@@ -13,7 +13,7 @@ causal_config(
 \arguments{
 \item{model}{Name of a pre-trained model or folder.}
 
-\item{checkpoint}{folder of a checkpoint.}
+\item{checkpoint}{Folder of a checkpoint.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}

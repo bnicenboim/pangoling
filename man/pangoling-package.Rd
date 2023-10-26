@@ -26,6 +26,8 @@ Other contributors:
 \itemize{
   \item Chris Emmerly [contributor]
   \item Giovanni Cassani [contributor]
+  \item Lisa Levinson [reviewer]
+  \item Utku Turk [reviewer]
 }
 
 }

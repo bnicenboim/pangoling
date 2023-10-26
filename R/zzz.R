@@ -6,6 +6,7 @@ torch <- NULL
 
 #' @noRd
 .onLoad <- function(libname, pkgname) {
+
   # This will instruct reticulate to immediately try to configure the
   # active Python environment, installing any required Python packages
   # as necessary.
@@ -38,3 +39,10 @@ torch <- NULL
 
   invisible()
 }
+
+.onAttach <- function(libname, pkgname) {
+    packageStartupMessage(pkgname, " version ", packageVersion(pkgname),"\nAn introduction to the package can be found in <https://bruno.nicenboim.me/pangoling/articles/>\n Notice that pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used. For changing the cache folder use:\n
+set_cache_folder(my_new_path)")
+}
+
+

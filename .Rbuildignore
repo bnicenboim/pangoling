@@ -16,3 +16,4 @@ _test
 ^inst/.auctex-auto$
 README_cache
 ^.covrignore$
+REVIEW.md

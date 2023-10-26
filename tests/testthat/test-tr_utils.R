@@ -19,3 +19,5 @@ test_that("messages work", {
   options(pangoling.verbose = FALSE)
   expect_no_message(causal_preload())
 })
+
+message("TEST cache")

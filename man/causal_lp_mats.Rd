@@ -22,7 +22,7 @@ causal_lp_mats(
 
 \item{model}{Name of a pre-trained model or folder.}
 
-\item{checkpoint}{folder of a checkpoint.}
+\item{checkpoint}{Folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

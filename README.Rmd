@@ -76,6 +76,11 @@ df_sent
 >  DOI: [10.5281/zenodo.7637526](https://zenodo.org/badge/latestdoi/497831295),
 >  <https://github.com/bnicenboim/pangoling>.
 
+## How to contribute
+
+See the [Contributing guidelines](.github/CONTRIBUTING.md). 
+
+
 ## Code of conduct
 
 Please note that this package is released with a [Contributor
