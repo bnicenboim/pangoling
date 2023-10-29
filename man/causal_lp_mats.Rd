@@ -7,6 +7,7 @@
 causal_lp_mats(
   x,
   .by = rep(1, length(x)),
+  sorted = FALSE,
   model = getOption("pangoling.causal.default"),
   checkpoint = NULL,
   add_special_tokens = NULL,
@@ -19,6 +20,8 @@ causal_lp_mats(
 \item{x}{Vector of words, phrases or texts.}
 
 \item{.by}{Vector that indicates how the text should be split.}
+
+\item{sorted}{When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to \code{.by}) list(s) are returned.}
 
 \item{model}{Name of a pre-trained model or folder.}
 

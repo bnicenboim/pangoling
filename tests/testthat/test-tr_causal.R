@@ -119,7 +119,11 @@ test_that("gpt2 get prob work", {
                           item = c(rep(2, each = length(sent2_words)),
                                    rep(1, each= length(prov_words))))
  expect_equal(causal_lp(df_order1$word, .by = df_order1$item),
-  causal_lp(x = df_order2$word, .by = df_order2$item))
+              causal_lp(x = df_order2$word, .by = df_order2$item))
+ expect_equal(causal_lp_mats(x = df_order1$word, .by = df_order1$item),
+              causal_lp_mats(x = df_order2$word, .by = df_order2$item) |>
+                setNames(c("1","2")))
+ 
 })
 
 test_that("batches work", {

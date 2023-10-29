@@ -41,7 +41,10 @@ torch <- NULL
 }
 
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage(pkgname, " version ", utils::packageVersion(pkgname),"\nAn introduction to the package can be found in <https://bruno.nicenboim.me/pangoling/articles/>\n Notice that pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used. For changing the cache folder use:\n
+    packageStartupMessage(pkgname, 
+    " version ", 
+    utils::packageVersion(pkgname),
+    "\nAn introduction to the package can be found in https://bruno.nicenboim.me/pangoling/articles/\n Notice that pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used.\n For changing the cache folder use:\n
 set_cache_folder(my_new_path)")
 }
 

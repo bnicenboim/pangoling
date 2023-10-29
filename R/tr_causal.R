@@ -248,10 +248,10 @@ causal_lp <- function(x,
   # split(x, .by) |> unsplit(.by)
   #   tidytable::map2_dfr(, ~ tidytable::tidytable(x = .x))
   out <- out |> lapply(function(x) x[keep])
-   lps <- out |> unsplit(.by, drop = TRUE)
+   lps <- out |> unsplit(.by[keep], drop = TRUE)
   
    names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |> 
-     unsplit(.by, drop = TRUE)
+     unsplit(.by[keep], drop = TRUE)
    lps
   }
 
@@ -409,6 +409,7 @@ causal_mat <- function(tensor,
 #'
 #' @inheritParams causal_lp
 #' @inheritParams causal_preload
+#' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `.by`) list(s) are returned. 
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
 #' @return A list of matrices with tokens in their columns and the vocabulary of the model in their rows
@@ -424,6 +425,7 @@ causal_mat <- function(tensor,
 #'
 causal_lp_mats <- function(x,
                            .by = rep(1, length(x)),
+                           sorted = FALSE,
                            model = getOption("pangoling.causal.default"),
                            checkpoint = NULL,
                            add_special_tokens = NULL,
@@ -464,6 +466,8 @@ causal_lp_mats <- function(x,
       )
     }
   )
+  names(lmat) <- levels(as.factor(.by))
+  if(!sorted) lmat <- lmat[unique(as.factor(.by))]
   lmat |>
     unlist(recursive = FALSE)
 }
