@@ -222,9 +222,9 @@ causal_lp <- function(x,
     ),
     function(words, item, mat) {
       # words <- word_by_word_texts[[1]]
-      # item <- names(word_by_word_texts)
+      # item <- names(word_by_word_texts)[[1]]
       # mat <- lmats[[1]]
-
+        
       message_verbose(
         "Text id: ", item, "\n`",
         paste(words, collapse = " "),
@@ -245,8 +245,16 @@ causal_lp <- function(x,
   } else {
     keep <- TRUE
   }
-    unlist(out, recursive = FALSE)[keep]
-}
+  # split(x, .by) |> unsplit(.by)
+  #   tidytable::map2_dfr(, ~ tidytable::tidytable(x = .x))
+  out <- out |> lapply(function(x) x[keep])
+   lps <- out |> unsplit(.by, drop = TRUE)
+  
+   names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |> 
+     unsplit(.by, drop = TRUE)
+   lps
+  }
+
 
 
 #' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer

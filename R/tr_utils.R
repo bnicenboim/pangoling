@@ -116,7 +116,7 @@ get_word_by_word_texts <- function(x, .by) {
   }
   x <- trimws(x, whitespace = "[ \t]")
   split(x, .by)
-}
+  }
 
 #' Sends a var to python
 #' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r

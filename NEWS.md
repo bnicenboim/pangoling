@@ -29,3 +29,6 @@
 * `set_cache_folder()` function added.
 * Message when the package loads.
 * New troubleshooting vignette.
+
+# pangoling 0.0.0.9008
+* Fix a bug when  `.by` is unordered
