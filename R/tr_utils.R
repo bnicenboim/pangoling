@@ -110,13 +110,13 @@ encode <- function(x, tkzr, add_special_tokens = NULL, ...) {
   }
 }
 
-get_word_by_word_texts <- function(x, .by) {
-  if (length(x) != length(.by)) {
-    stop2("The argument `.by` has an incorrect length.")
+get_word_by_word_texts <- function(x, by) {
+  if (length(x) != length(by)) {
+    stop2("The argument `by` has an incorrect length.")
   }
   x <- trimws(x, whitespace = "[ \t]")
-  split(x, .by)
-}
+  split(x, by)
+  }
 
 #' Sends a var to python
 #' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r

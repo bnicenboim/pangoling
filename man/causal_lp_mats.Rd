@@ -6,19 +6,23 @@
 \usage{
 causal_lp_mats(
   x,
-  .by = rep(1, length(x)),
+  by = rep(1, length(x)),
+  sorted = FALSE,
   model = getOption("pangoling.causal.default"),
   checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL,
-  batch_size = 1
+  batch_size = 1,
+  ...
 )
 }
 \arguments{
 \item{x}{Vector of words, phrases or texts.}
 
-\item{.by}{Vector that indicates how the text should be split.}
+\item{by}{Vector that indicates how the text should be split.}
+
+\item{sorted}{When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to \code{by}) list(s) are returned.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -35,6 +39,8 @@ model from Hugging Face is accessed.}
 
 \item{batch_size}{Maximum size of the batch. Larges batches speedup
 processing but take more memory.}
+
+\item{...}{not in use.}
 }
 \value{
 A list of matrices with tokens in their columns and the vocabulary of the model in their rows

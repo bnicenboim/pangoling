@@ -100,11 +100,11 @@ One can get the log-transformed probability of each word based on GPT-2 as follo
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = causal_lp(word, .by = sent_n))
+  mutate(lp = causal_lp(word, by = sent_n))
 df_sent
 ```
 
-Notice that the `.by` is inside the `causal_lp()` function. It' also possible to use `.by` in the mutate call, or `group_by()`, but it will be slower.
+Notice that the `by` is inside the `causal_lp()` function. It' also possible to use `by` in the mutate call, or `group_by()`, but it will be slower.
 
 
 The attentive reader might have noticed that the log-probability of "tree" here is not the same as the one presented before. This is because the actual word is `" tree."` (notice the space), which contains two tokens:
