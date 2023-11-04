@@ -12,7 +12,7 @@ its previous context using a causal transformer model."><meta property="og:image
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,13 +64,15 @@ its previous context using a causal transformer model.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">causal_lp_mats</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  sorted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"pangoling.causal.default"</span><span class="op">)</span>,</span>
 <span>  checkpoint <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  add_special_tokens <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_tokenizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  batch_size <span class="op">=</span> <span class="fl">1</span></span>
+<span>  batch_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,8 +82,12 @@ its previous context using a causal transformer model.</p>
 <dd><p>Vector of words, phrases or texts.</p></dd>
 
 
-<dt>.by</dt>
+<dt>by</dt>
 <dd><p>Vector that indicates how the text should be split.</p></dd>
+
+
+<dt>sorted</dt>
+<dd><p>When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to <code>by</code>) list(s) are returned.</p></dd>
 
 
 <dt>model</dt>
@@ -110,6 +116,10 @@ model from Hugging Face is accessed.</p></dd>
 <dt>batch_size</dt>
 <dd><p>Maximum size of the batch. Larges batches speedup
 processing but take more memory.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>not in use.</p></dd>
 
 </dl></div>
     <div class="section level2">

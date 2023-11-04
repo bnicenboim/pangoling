@@ -36,7 +36,7 @@
     
     <a class="navbar-brand me-2" href="index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@
 </div>
 <!-- badges: start -->
 
-<p><code>pangoling</code>[1] is an R package for estimating the log-probabilities of words in a given context using transformer models. The package provides an interface for utilizing pre-trained transformer models (such as GPT-2 or BERT) to obtain word probabilities. These log-probabilities are often utilized as predictors in psycholinguistic studies. This package can be useful for researchers in the field of psycholinguistics who want to leverage the power of transformer models in their work.</p>
+<p><code>pangoling</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;The logo of the package was created with &lt;a href="https://huggingface.co/spaces/stabilityai/stable-diffusion" class="external-link"&gt;stable diffusion&lt;/a&gt; and the R package &lt;a href="https://github.com/GuangchuangYu/hexSticker" class="external-link"&gt;hexSticker&lt;/a&gt;.&lt;/p&gt;'><sup>1</sup></a> is an R package for estimating the log-probabilities of words in a given context using transformer models. The package provides an interface for utilizing pre-trained transformer models (such as GPT-2 or BERT) to obtain word probabilities. These log-probabilities are often utilized as predictors in psycholinguistic studies. This package can be useful for researchers in the field of psycholinguistics who want to leverage the power of transformer models in their work.</p>
 <p>The package is mostly a wrapper of the python package <a href="https://pypi.org/project/transformers/" class="external-link"><code>transformers</code></a> to process data in a convenient format.</p>
 <div class="section level2">
 <h2 id="important-limitations-and-bias">Important! Limitations and bias<a class="anchor" aria-label="anchor" href="#important-limitations-and-bias"></a>
@@ -135,7 +135,7 @@
 <p>One can get the log-transformed probability of each word based on GPT-2 as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_sent</span> <span class="op">&lt;-</span> <span class="va">df_sent</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lp <span class="op">=</span> <span class="fu"><a href="reference/causal_lp.html">causal_lp</a></span><span class="op">(</span><span class="va">word</span>, .by <span class="op">=</span> <span class="va">sent_n</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://markfairbanks.github.io/tidytable/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lp <span class="op">=</span> <span class="fu"><a href="reference/causal_lp.html">causal_lp</a></span><span class="op">(</span><span class="va">word</span>, by <span class="op">=</span> <span class="va">sent_n</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Processing using causal model ''...</span></span>
 <span><span class="co">#&gt; Processing a batch of size 1 with 10 tokens.</span></span>
 <span><span class="co">#&gt; Processing a batch of size 1 with 9 tokens.</span></span>
@@ -167,7 +167,7 @@
 <h2 id="how-to-cite">How to cite<a class="anchor" aria-label="anchor" href="#how-to-cite"></a>
 </h2>
 <blockquote>
-<p>Nicenboim B (2023). <em>pangoling: Access to language model predictions in R</em>. R package version 0.0.0.9007, DOI: <a href="https://zenodo.org/badge/latestdoi/497831295" class="external-link">10.5281/zenodo.7637526</a>, <a href="https://github.com/bnicenboim/pangoling" class="external-link uri">https://github.com/bnicenboim/pangoling</a>.</p>
+<p>Nicenboim B (2023). <em>pangoling: Access to language model predictions in R</em>. R package version 0.0.0.9008, DOI: <a href="https://zenodo.org/badge/latestdoi/497831295" class="external-link">10.5281/zenodo.7637526</a>, <a href="https://github.com/bnicenboim/pangoling" class="external-link uri">https://github.com/bnicenboim/pangoling</a>.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -184,11 +184,10 @@
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
 <p>Another R package that act as a wrapper for <a href="https://pypi.org/project/transformers/" class="external-link"><code>transformers</code></a> is <a href="https://r-text.org//" class="external-link"><code>text</code></a> However, <code>text</code> is more general, and its focus is on Natural Language Processing and Machine Learning.</p>
-<ol style="list-style-type: decimal">
-<li>The logo of the package was created with <a href="https://huggingface.co/spaces/stabilityai/stable-diffusion" class="external-link">stable diffusion</a> and the R package <a href="https://github.com/GuangchuangYu/hexSticker" class="external-link">hexSticker</a>.</li>
-</ol>
 </div>
 </div>
+
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

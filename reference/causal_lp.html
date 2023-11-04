@@ -14,7 +14,7 @@ in pangoling website for more examples."><meta property="og:image" content="http
     
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9007</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@ in pangoling website for more examples.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">causal_lp</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  l_contexts <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_regex <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"pangoling.causal.default"</span><span class="op">)</span>,</span>
@@ -75,7 +75,8 @@ in pangoling website for more examples.</p>
 <span>  add_special_tokens <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_model <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  config_tokenizer <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  batch_size <span class="op">=</span> <span class="fl">1</span></span>
+<span>  batch_size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,13 +86,13 @@ in pangoling website for more examples.</p>
 <dd><p>Vector of words, phrases or texts.</p></dd>
 
 
-<dt>.by</dt>
+<dt>by</dt>
 <dd><p>Vector that indicates how the text should be split.</p></dd>
 
 
 <dt>l_contexts</dt>
 <dd><p>Left context for each word in <code>x</code>. If <code>l_contexts</code> is used,
-<code>.by</code> is ignored. Set <code>.by = NULL</code> to avoid a message notifying that.</p></dd>
+<code>by</code> is ignored. Set <code>by = NULL</code> to avoid a message notifying that.</p></dd>
 
 
 <dt>ignore_regex</dt>
@@ -126,6 +127,10 @@ model from Hugging Face is accessed.</p></dd>
 <dt>batch_size</dt>
 <dd><p>Maximum size of the batch. Larges batches speedup
 processing but take more memory.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>not in use.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -184,7 +189,7 @@ in pangoling website for more examples.</p>
 <span class="r-in"><span><span class="fu">causal_lp</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="st">"tree."</span>,</span></span>
 <span class="r-in"><span>  l_contexts <span class="op">=</span> <span class="st">"The apple doesn't fall far from the tree."</span>,</span></span>
-<span class="r-in"><span>  .by <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># it's ignored anyways</span></span></span>
+<span class="r-in"><span>  by <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># it's ignored anyways</span></span></span>
 <span class="r-in"><span>  model <span class="op">=</span> <span class="st">"gpt2"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
