@@ -137,9 +137,10 @@ causal_next_tokens_tbl <- function(context,
 #'
 #'
 #' @param x Vector of words, phrases or texts.
-#' @param .by Vector that indicates how the text should be split.
+#' @param by Vector that indicates how the text should be split.
 #' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
-#'        `.by` is ignored. Set `.by = NULL` to avoid a message notifying that.
+#'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
+#' @param ... not in use.        
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
@@ -159,14 +160,14 @@ causal_next_tokens_tbl <- function(context,
 #'causal_lp(
 #'   x = "tree.",
 #'   l_contexts = "The apple doesn't fall far from the tree.",
-#'   .by = NULL, # it's ignored anyways
+#'   by = NULL, # it's ignored anyways
 #'   model = "gpt2"
 #' )
 
 #' @family causal model functions
 #' @export
 causal_lp <- function(x,
-                      .by = rep(1, length(x)),
+                      by = rep(1, length(x)),
                       l_contexts = NULL,
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
@@ -174,15 +175,30 @@ causal_lp <- function(x,
                       add_special_tokens = NULL,
                       config_model = NULL,
                       config_tokenizer = NULL,
-                      batch_size = 1) {
+                      batch_size = 1,
+                      ...) {
+  dots <- list(...)
+  # Check for the deprecated .by argument
+  if (!is.null(dots$.by)) {
+    warning("The '.by' argument is deprecated. Please use 'by' instead.")
+    by <- dots$.by # Assume that if .by is supplied, it takes precedence
+  }
+  # Check for unknown arguments
+  if (length(dots) > 0) {
+    unknown_args <- setdiff(names(dots), ".by")
+    if (length(unknown_args) > 0) {
+      stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
+    }
+  }
+  
   stride <- 1 # fixed for now
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   if(!is.null(l_contexts)){
-    if(all(!is.null(.by))) message_verbose("Ignoring `.by` argument")
+    if(all(!is.null(by))) message_verbose("Ignoring `by` argument")
     x <- c(rbind(l_contexts, x))
-    .by <- rep(seq_len(length(x)/2), each = 2)
+    by <- rep(seq_len(length(x)/2), each = 2)
   }
-  word_by_word_texts <- get_word_by_word_texts(x, .by)
+  word_by_word_texts <- get_word_by_word_texts(x, by)
 
   pasted_texts <- lapply(
     word_by_word_texts,
@@ -245,13 +261,13 @@ causal_lp <- function(x,
   } else {
     keep <- TRUE
   }
-  # split(x, .by) |> unsplit(.by)
+  # split(x, by) |> unsplit(by)
   #   tidytable::map2_dfr(, ~ tidytable::tidytable(x = .x))
   out <- out |> lapply(function(x) x[keep])
-   lps <- out |> unsplit(.by[keep], drop = TRUE)
+   lps <- out |> unsplit(by[keep], drop = TRUE)
   
    names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |> 
-     unsplit(.by[keep], drop = TRUE)
+     unsplit(by[keep], drop = TRUE)
    lps
   }
 
@@ -409,7 +425,7 @@ causal_mat <- function(tensor,
 #'
 #' @inheritParams causal_lp
 #' @inheritParams causal_preload
-#' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `.by`) list(s) are returned. 
+#' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `by`) list(s) are returned. 
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
 #' @return A list of matrices with tokens in their columns and the vocabulary of the model in their rows
@@ -424,14 +440,28 @@ causal_mat <- function(tensor,
 #' @export
 #'
 causal_lp_mats <- function(x,
-                           .by = rep(1, length(x)),
+                           by = rep(1, length(x)),
                            sorted = FALSE,
                            model = getOption("pangoling.causal.default"),
                            checkpoint = NULL,
                            add_special_tokens = NULL,
                            config_model = NULL,
                            config_tokenizer = NULL,
-                           batch_size = 1) {
+                           batch_size = 1,
+                           ...) {
+  dots <- list(...)
+  # Check for the deprecated .by argument
+  if (!is.null(dots$.by)) {
+    warning("The '.by' argument is deprecated. Please use 'by' instead.")
+    by <- dots$.by # Assume that if .by is supplied, it takes precedence
+  }
+  # Check for unknown arguments
+  if (length(dots) > 0) {
+    unknown_args <- setdiff(names(dots), ".by")
+    if (length(unknown_args) > 0) {
+      stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
+    }
+  }
   stride <- 1
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   tkzr <- tokenizer(model,
@@ -444,7 +474,7 @@ causal_lp_mats <- function(x,
     config_model = config_model
   )
   x <- trimws(x, whitespace = "[ \t]")
-  word_by_word_texts <- split(x, .by)
+  word_by_word_texts <- split(x, by)
   pasted_texts <- lapply(
     word_by_word_texts,
     function(word) paste0(word, collapse = " ")
@@ -466,8 +496,8 @@ causal_lp_mats <- function(x,
       )
     }
   )
-  names(lmat) <- levels(as.factor(.by))
-  if(!sorted) lmat <- lmat[unique(as.factor(.by))]
+  names(lmat) <- levels(as.factor(by))
+  if(!sorted) lmat <- lmat[unique(as.factor(by))]
   lmat |>
     unlist(recursive = FALSE)
 }

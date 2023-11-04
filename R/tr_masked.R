@@ -185,7 +185,6 @@ masked_lp <- function(l_contexts,
 
   message_verbose("Processing using masked model '", model, "'...")
 
-  # word_by_word_texts <- get_word_by_word_texts(x, .by)
   target_tokens <- char_to_token(targets, tkzr)
   masked_sentences <- tidytable::pmap_chr(
     list(

@@ -6,7 +6,7 @@
 \usage{
 causal_lp(
   x,
-  .by = rep(1, length(x)),
+  by = rep(1, length(x)),
   l_contexts = NULL,
   ignore_regex = "",
   model = getOption("pangoling.causal.default"),
@@ -14,16 +14,17 @@ causal_lp(
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL,
-  batch_size = 1
+  batch_size = 1,
+  ...
 )
 }
 \arguments{
 \item{x}{Vector of words, phrases or texts.}
 
-\item{.by}{Vector that indicates how the text should be split.}
+\item{by}{Vector that indicates how the text should be split.}
 
 \item{l_contexts}{Left context for each word in \code{x}. If \code{l_contexts} is used,
-\code{.by} is ignored. Set \code{.by = NULL} to avoid a message notifying that.}
+\code{by} is ignored. Set \code{by = NULL} to avoid a message notifying that.}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
@@ -44,6 +45,8 @@ model from Hugging Face is accessed.}
 
 \item{batch_size}{Maximum size of the batch. Larges batches speedup
 processing but take more memory.}
+
+\item{...}{not in use.}
 }
 \value{
 A named vector of log probabilities.
@@ -94,7 +97,7 @@ causal_lp(
 causal_lp(
   x = "tree.",
   l_contexts = "The apple doesn't fall far from the tree.",
-  .by = NULL, # it's ignored anyways
+  by = NULL, # it's ignored anyways
   model = "gpt2"
 )
 \dontshow{\}) # examplesIf}

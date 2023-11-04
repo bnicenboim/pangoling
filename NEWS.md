@@ -32,3 +32,7 @@
 
 # pangoling 0.0.0.9008
 * Fix a bug when  `.by` is unordered
+
+# pangoling 0.0.0.9009
+* Deprecated `.by` in favor of `by`.
+

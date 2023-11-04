@@ -26,9 +26,9 @@ test_that("empty or small strings", {
   expect_warning(lp_NA <- causal_tokens_lp_tbl(texts = ""))
   expect_equal(as.data.frame(lp_NA), data.frame(token = "", lp = NA_real_))
   small_str <- c("It", "It", "is")
-  lp_small <- causal_lp(x = small_str, .by = c(1, 2, 2))
+  lp_small <- causal_lp(x = small_str, by = c(1, 2, 2))
   expect_equal(lp_small[1:2], c(It = NA_real_, It = NA_real_))
-  expect_warning(lp_small_ <- causal_lp(x = c("", "It"), .by = c(1, 2)))
+  expect_warning(lp_small_ <- causal_lp(x = c("", "It"), by = c(1, 2)))
   expect_equal(lp_small_, c(NA_real_, "It" = NA_real_))
 })
 
@@ -49,7 +49,7 @@ test_that("long input work", {
 
 test_that("errors work", {
   skip_if_no_python_stuff()
-  expect_error(causal_lp(c("It", "is."), .by = 3))
+  expect_error(causal_lp(c("It", "is."), by = 3))
 })
 
 test_that("gpt2 get prob work", {
@@ -106,7 +106,7 @@ test_that("gpt2 get prob work", {
   lp_sent_rep <-
     causal_lp(
       x = rep(sent_w, 2),
-      .by = rep(seq_len(2), each = length(sent_w))
+      by = rep(seq_len(2), each = length(sent_w))
     )
   expect_equal(
     unname(lp_sent_rep[seq_along(sent_w)]),
@@ -118,10 +118,10 @@ test_that("gpt2 get prob work", {
  df_order2 <-  data.frame(word = c(sent2_words,prov_words),
                           item = c(rep(2, each = length(sent2_words)),
                                    rep(1, each= length(prov_words))))
- expect_equal(causal_lp(df_order1$word, .by = df_order1$item),
-              causal_lp(x = df_order2$word, .by = df_order2$item))
- expect_equal(causal_lp_mats(x = df_order1$word, .by = df_order1$item),
-              causal_lp_mats(x = df_order2$word, .by = df_order2$item) |>
+ expect_equal(causal_lp(df_order1$word, by = df_order1$item),
+              causal_lp(x = df_order2$word, by = df_order2$item))
+ expect_equal(causal_lp_mats(x = df_order1$word, by = df_order1$item),
+              causal_lp_mats(x = df_order2$word, by = df_order2$item) |>
                 setNames(c("1","2")))
  
 })
@@ -148,8 +148,8 @@ test_that("batches work", {
       rep(6, length(sent2_words))
     )
   )
-  lp_2_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 4)
-  lp_2_no_batch <- causal_lp(x = df$x, .by = df$.id, batch_size = 1)
+  lp_2_batch <- causal_lp(x = df$x, by = df$.id, batch_size = 4)
+  lp_2_no_batch <- causal_lp(x = df$x, by = df$.id, batch_size = 1)
   expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
 
 df <- data.frame(l_contexts = rep(c("Don't judge a book by its","The apple doesn't fall far from the"),5), x = rep(c("cover", "tree"),5))
