@@ -1,7 +1,7 @@
 Package: pangoling
 Type: Package
 Title: Access to Large Language Model Predictions
-Version: 0.0.0.9009
+Version: 0.0.0.9010
 Authors@R: c(
     person("Bruno", "Nicenboim",
     email = "bruno.nicenboim@gmail.com",
@@ -18,14 +18,7 @@ BugReports: https://github.com/bnicenboim/pangoling/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
-Config/reticulate/autoconfigure:
-  list(
-    packages = list(
-      list(package = "torch"),
-      list(package = "transformers")
-    )
-  )
-Imports: 
+Imports:
     data.table,
     memoise,
     reticulate,
