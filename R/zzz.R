@@ -15,8 +15,8 @@ torch <- NULL
     convert = FALSE
   )
   torch <<- reticulate::import("torch", delay_load = TRUE, convert = FALSE)
-   TODO message or something if it's not installed
-   ask about the env
+  # TODO message or something if it's not installed
+  # ask about the env
   op <- options()
   op.pangoling <- list(
     pangoling.debug = FALSE,
