@@ -76,7 +76,7 @@ install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"),
       reticulate::virtualenv_remove(envname = envname, confirm = FALSE)
     
     if (method %in% c("auto", "conda")) {
-      if (!is.null(tryCatch(conda_python(envname, conda = conda),
+      if (!is.null(tryCatch(reticulate::conda_python(envname, conda = conda),
                             error = function(e) NULL)))
         reticulate::conda_remove(envname, conda = conda)
     }
