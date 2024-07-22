@@ -50,6 +50,15 @@ changes. To install the latest version from github use:
 remotes::install_github("bnicenboim/pangoling")
 ```
 
+`install_py_pangoling` function facilitates the installation of Python
+packages needed for using pangoling within an R environment, using the
+`reticulate` package for managing Python environments. This needs to be
+done once.
+
+``` r
+install_py_pangoling()
+```
+
 ## Example
 
 This is a basic example which shows you how to get log-probabilities of
@@ -101,6 +110,9 @@ df_sent <- df_sent |>
 #> `The apple doesn't fall far from the tree.`
 #> Text id: 2
 #> `Don't judge a book by its cover.`
+```
+
+``` r
 df_sent
 #> # A tidytable: 15 × 3
 #>    sent_n word         lp
@@ -125,7 +137,7 @@ df_sent
 ## How to cite
 
 > Nicenboim B (2023). *pangoling: Access to language model predictions
-> in R*. R package version 0.0.0.9008, DOI:
+> in R*. R package version 0.0.0.9010, DOI:
 > [10.5281/zenodo.7637526](https://zenodo.org/badge/latestdoi/497831295),
 > <https://github.com/bnicenboim/pangoling>.
 

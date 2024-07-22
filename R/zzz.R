@@ -7,10 +7,8 @@ torch <- NULL
 #' @noRd
 .onLoad <- function(libname, pkgname) {
 
-  # This will instruct reticulate to immediately try to configure the
-  # active Python environment, installing any required Python packages
-  # as necessary.
-  reticulate::configure_environment(pkgname)
+  reticulate::use_virtualenv("r-pangoling", required = FALSE)
+
   # use superassignment to update global reference
   transformers <<- reticulate::import("transformers",
     delay_load = TRUE,
@@ -18,6 +16,7 @@ torch <- NULL
   )
   torch <<- reticulate::import("torch", delay_load = TRUE, convert = FALSE)
   # TODO message or something if it's not installed
+  # ask about the env
   op <- options()
   op.pangoling <- list(
     pangoling.debug = FALSE,
@@ -47,5 +46,3 @@ torch <- NULL
     "\nAn introduction to the package can be found in https://bruno.nicenboim.me/pangoling/articles/\n Notice that pretrained models and tokenizers are downloaded from https://huggingface.co/ the first time they are used.\n For changing the cache folder use:\n
 set_cache_folder(my_new_path)")
 }
-
-

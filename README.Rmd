@@ -41,6 +41,12 @@ There is still no released version of `pangoling`. The package is in the ** earl
 remotes::install_github("bnicenboim/pangoling")
 ```
 
+`install_py_pangoling` function facilitates the installation of Python packages needed for using pangoling within an R environment, using the `reticulate` package for managing Python environments. This needs to be done once.
+
+```{r, eval = FALSE}
+install_py_pangoling()
+```
+
 ## Example
 
 This is a basic example which shows you how to get log-probabilities of words in a dataset:
