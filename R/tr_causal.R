@@ -129,17 +129,19 @@ causal_next_tokens_tbl <- function(context,
 }
 
 
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer
+#' Get the predictability of each element of a vector of words (or phrases) using a causal transformer
 #'
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See the
+#' Get the predictability (default natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param by Vector that indicates how the text should be split.
-#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
-#'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
+#' @param log.p If TRUE (default),  x are assumed to be log-transformed
+#'                probabilities with base e, if FALSE x are assumed to be
+#'                raw probabilities, alternatively log.p can be the base of
+#'                other logarithmic transformations.
 #' @param ... not in use.        
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
@@ -157,18 +159,12 @@ causal_next_tokens_tbl <- function(context,
 #'   model = "gpt2"
 #' )
 #'
-#'causal_lp(
-#'   x = "tree.",
-#'   l_contexts = "The apple doesn't fall far from the tree.",
-#'   by = NULL, # it's ignored anyways
-#'   model = "gpt2"
-#' )
 
 #' @family causal model functions
 #' @export
-causal_lp <- function(x,
+causal_each_pred <- function(x,
                       by = rep(1, length(x)),
-                      l_contexts = NULL,
+                      log.p = getOption("pangoling.causal.log.p")
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
                       checkpoint = NULL,
@@ -178,11 +174,6 @@ causal_lp <- function(x,
                       batch_size = 1,
                       ...) {
   dots <- list(...)
-  # Check for the deprecated .by argument
-  if (!is.null(dots$.by)) {
-    warning("The '.by' argument is deprecated. Please use 'by' instead.")
-    by <- dots$.by # Assume that if .by is supplied, it takes precedence
-  }
   # Check for unknown arguments
   if (length(dots) > 0) {
     unknown_args <- setdiff(names(dots), ".by")
@@ -193,11 +184,7 @@ causal_lp <- function(x,
   
   stride <- 1 # fixed for now
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
-  if(!is.null(l_contexts)){
-    if(all(!is.null(by))) message_verbose("Ignoring `by` argument")
-    x <- c(rbind(l_contexts, x))
-    by <- rep(seq_len(length(x)/2), each = 2)
-  }
+
   word_by_word_texts <- get_word_by_word_texts(x, by)
 
   pasted_texts <- lapply(
@@ -230,6 +217,7 @@ causal_lp <- function(x,
     )
   }) |>
     unlist(recursive = FALSE)
+
   out <- tidytable::pmap(
     list(
       word_by_word_texts,
@@ -255,20 +243,11 @@ causal_lp <- function(x,
       )
     }
   )
-  if(!is.null(l_contexts)) {
-    # remove the contexts
-    keep <- c(FALSE, TRUE)
-  } else {
-    keep <- TRUE
-  }
-  # split(x, by) |> unsplit(by)
-  #   tidytable::map2_dfr(, ~ tidytable::tidytable(x = .x))
-  out <- out |> lapply(function(x) x[keep])
-   lps <- out |> unsplit(by[keep], drop = TRUE)
-  
-   names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |> 
+
+  lps <- out |> unsplit(by, drop = TRUE)
+     names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
      unsplit(by[keep], drop = TRUE)
-   lps
+  lps |> ln_change(log.p = log.p)
   }
 
 

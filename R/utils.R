@@ -144,3 +144,19 @@ chr_detect <- function(string, pattern, ignore.case = FALSE) {
 
 #' @noRd
 "%||%" <- function(x, y) if (is.null(x)) y else x
+
+
+#' @param log.p If TRUE (default),  x are assumed to be log-transformed
+#'                probabilities with base e, if FALSE x are assumed to be
+#'                raw probabilities, alternatively log.p can be the base of
+#'                other logarithmic transformations.
+#' @noRd
+ln_p_change <- function(x, log.p = TRUE) {
+  if(log.p == TRUE) {
+    x
+  } else if(log.p == FALSE) {
+    exp(x)
+  } else {
+   x/log(log.p)
+  }
+}

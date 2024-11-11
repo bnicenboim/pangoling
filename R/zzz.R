@@ -21,6 +21,7 @@ torch <- NULL
   op.pangoling <- list(
     pangoling.debug = FALSE,
     pangoling.verbose = 2,
+    pangoling.log.p = TRUE,
     pangoling.cache = cachem::cache_mem(max_size = 1024 * 1024^2),
     pangoling.causal.default = "gpt2",
     pangoling.masked.default = "bert-base-uncased"
