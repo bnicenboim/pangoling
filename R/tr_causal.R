@@ -47,8 +47,8 @@ causal_preload <- function(model = getOption("pangoling.causal.default"),
                            add_special_tokens = NULL,
                            config_model = NULL, config_tokenizer = NULL) {
   message_verbose("Preloading causal model ", model, "...")
-  lang_model(model, checkpoint = checkpoint, task = "causal", config_model)
-  tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer)
+  lang_model(model, checkpoint = checkpoint, task = "causal", config_model = config_model)
+  tokenizer(model, add_special_tokens = add_special_tokens, config_tokenizer = config_tokenizer)
   invisible()
 }
 
@@ -87,19 +87,20 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
 #' @examplesIf interactive()
-#' causal_next_tokens_tbl(
+#' causal_next_tokens_pred_tbl(
 #'   context = "The apple doesn't fall far from the",
 #'   model = "gpt2"
 #' )
 #'
 #' @family causal model functions
 #' @export
-causal_next_tokens_tbl <- function(context,
-                                   model = getOption("pangoling.causal.default"),
-                                   checkpoint = NULL,
-                                   add_special_tokens = NULL,
-                                   config_model = NULL,
-                                   config_tokenizer = NULL) {
+causal_next_tokens_pred_tbl <- function(context,
+                                        log.p = getOption("pangoling.log.p"),
+                                        model = getOption("pangoling.causal.default"),
+                                        checkpoint = NULL,
+                                        add_special_tokens = NULL,
+                                        config_model = NULL,
+                                        config_tokenizer = NULL) {
   if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   trf <- lang_model(model,
@@ -124,8 +125,9 @@ causal_next_tokens_tbl <- function(context,
   lp <- reticulate::py_to_r(l_softmax) |>
     unlist()
   vocab <- get_vocab(tkzr)
-  tidytable::tidytable(token = vocab, lp = lp) |>
-    tidytable::arrange(-lp)
+  tidytable::tidytable(token = vocab,
+                       pred = lp |> ln_p_change(log.p = log.p)) |>
+    tidytable::arrange(-pred)
 }
 
 
@@ -138,11 +140,12 @@ causal_next_tokens_tbl <- function(context,
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param by Vector that indicates how the text should be split.
-#' @param log.p If TRUE (default),  x are assumed to be log-transformed
-#'                probabilities with base e, if FALSE x are assumed to be
-#'                raw probabilities, alternatively log.p can be the base of
-#'                other logarithmic transformations.
-#' @param ... not in use.        
+#' @param log.p Base of the logarithm used for the output predictability values.
+#'              If `TRUE` (default), the natural logarithm (base *e*) is used.
+#'              If `FALSE`, the raw probabilities are returned.
+#'              Alternatively, `log.p` can be set to a numeric value specifying
+#'              the base of the logarithm (e.g., `2` for base-2 logarithms).
+#' @param ... not in use.
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
@@ -150,7 +153,7 @@ causal_next_tokens_tbl <- function(context,
 #' @param batch_size Maximum size of the batch. Larges batches speedup
 #'                   processing but take more memory.
 #' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
+#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A named vector of log probabilities.
 #'
 #' @examplesIf interactive()
@@ -266,8 +269,8 @@ causal_words_pred <- function(x,
 #' @inheritParams causal_preload
 #' @inheritParams causal_words_pred
 #' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
-#' @return A table with token names (`token`), log-probability (`lp`) and optionally sentence id.
+#' @inheritSection causal_next_tokens_pred_tbl More examples
+#' @return A table with token names (`token`), predictability (`pred`) and optionally sentence id.
 #'
 #' @examplesIf interactive()
 #' causal_tokens_pred_tbl(
@@ -324,7 +327,7 @@ causal_tokens_pred_tbl <- function(texts,
     } else {
       tidytable::tidytable(
                    token = colnames(mat),
-                   lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y]) |>
+                   pred = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y]) |>
                      ln_p_change(log.p = log.p)
                  )
     }
@@ -412,7 +415,7 @@ causal_mat <- function(tensor,
 #' @inheritParams causal_preload
 #' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `by`) list(s) are returned. 
 #' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
+#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A list of matrices with tokens in their columns and the vocabulary of the model in their rows
 #'
 #' @examplesIf interactive()
@@ -503,14 +506,13 @@ causal_pred_mats <- function(x,
 #' @param ... not in use.
 #' @inheritParams causal_preload
 #' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
+#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A named vector of predictability values (by default the natural logarithm of the word probability).
 #'
 #' @examplesIf interactive()
-#'causal_targets_pred(
-#'   x = "tree.",
+#' causal_targets_pred(
+#'   targets = "tree.",
 #'   l_contexts = "The apple doesn't fall far from the tree.",
-#'   by = NULL, # it's ignored anyways
 #'   model = "gpt2"
 #' )
 

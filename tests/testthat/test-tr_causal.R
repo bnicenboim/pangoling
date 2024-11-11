@@ -22,9 +22,9 @@ test_that("gpt2 load and gets config", {
 test_that("empty or small strings", {
   skip_if_no_python_stuff()
   lp_it <- causal_tokens_pred_tbl(texts = "It")
-  expect_equal(as.data.frame(lp_it), data.frame(token = "It", lp = NA_real_))
+  expect_equal(as.data.frame(lp_it), data.frame(token = "It", pred = NA_real_))
   expect_warning(lp_NA <- causal_tokens_pred_tbl(texts = ""))
-  expect_equal(as.data.frame(lp_NA), data.frame(token = "", lp = NA_real_))
+  expect_equal(as.data.frame(lp_NA), data.frame(token = "", pred = NA_real_))
   small_str <- c("It", "It", "is")
   lp_small <- causal_words_pred(x = small_str, by = c(1, 2, 2))
   expect_equal(lp_small[1:2], c(It = NA_real_, It = NA_real_))

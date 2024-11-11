@@ -17,7 +17,7 @@
 #' @param batch_size Maximum size of the batch. Larges batches speedup
 #'                   processing but take more memory.
 #' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
+#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A named vector of log probabilities.
 #'
 #' @examplesIf interactive()

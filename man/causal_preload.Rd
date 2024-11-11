@@ -65,7 +65,7 @@ causal_preload(model = "gpt2")
 Other causal model functions: 
 \code{\link{causal_config}()},
 \code{\link{causal_lp}()},
-\code{\link{causal_next_tokens_tbl}()},
+\code{\link{causal_next_tokens_pred_tbl}()},
 \code{\link{causal_pred_mats}()},
 \code{\link{causal_targets_pred}()},
 \code{\link{causal_tokens_pred_tbl}()},

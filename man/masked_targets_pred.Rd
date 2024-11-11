@@ -23,10 +23,11 @@ masked_targets_pred(
 
 \item{r_contexts}{Right context of the target word.}
 
-\item{log.p}{If TRUE (default),  x are assumed to be log-transformed
-probabilities with base e, if FALSE x are assumed to be
-raw probabilities, alternatively log.p can be the base of
-other logarithmic transformations.}
+\item{log.p}{Base of the logarithm used for the output predictability values.
+If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
+If \code{FALSE}, the raw probabilities are returned.
+Alternatively, \code{log.p} can be set to a numeric value specifying
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore

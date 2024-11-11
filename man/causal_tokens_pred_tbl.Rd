@@ -19,10 +19,11 @@ causal_tokens_pred_tbl(
 \arguments{
 \item{texts}{Vector or list of texts.}
 
-\item{log.p}{If TRUE (default),  x are assumed to be log-transformed
-probabilities with base e, if FALSE x are assumed to be
-raw probabilities, alternatively log.p can be the base of
-other logarithmic transformations.}
+\item{log.p}{Base of the logarithm used for the output predictability values.
+If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
+If \code{FALSE}, the raw probabilities are returned.
+Alternatively, \code{log.p} can be set to a numeric value specifying
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -43,7 +44,7 @@ processing but take more memory.}
 \item{.id}{Name of the column with the sentence id.}
 }
 \value{
-A table with token names (\code{token}), log-probability (\code{lp}) and optionally sentence id.
+A table with token names (\code{token}), predictability (\code{pred}) and optionally sentence id.
 }
 \description{
 Get the predictability (by default the natural logarithm of the word probability) of each token in a sentence (or group of sentences) using a causal transformer model.
@@ -91,7 +92,7 @@ causal_tokens_pred_tbl(
 Other causal model functions: 
 \code{\link{causal_config}()},
 \code{\link{causal_lp}()},
-\code{\link{causal_next_tokens_tbl}()},
+\code{\link{causal_next_tokens_pred_tbl}()},
 \code{\link{causal_pred_mats}()},
 \code{\link{causal_preload}()},
 \code{\link{causal_targets_pred}()},

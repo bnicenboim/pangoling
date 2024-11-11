@@ -64,7 +64,7 @@ tokenize_lst("This is different from This")
 ```
 
 
-Going back to the initial example, because `causal_next_tokens_tbl` returns log probabilities, if we exponentiate them and we sum them, we should get 1:
+Going back to the initial example, because `causal_next_tokens_tbl` returns log (natural) probabilities, if we exponentiate them and we sum them, we should get 1:
 
 ```{r}
 sum(exp(df_pred$lp))
@@ -85,7 +85,7 @@ toc()
 ```
 
 
-This package would be most useful int the following situation. Given a (toy) dataset where sentences are organized with one word or short phrase in each row:
+This package would be most useful in the following situation. Given a (toy) dataset where sentences are organized with one word or short phrase in each row:
 ```{r, cache = TRUE}
 sentences <- c(
   "The apple doesn't fall far from the tree.",
@@ -96,15 +96,15 @@ df_sent <- strsplit(x = sentences, split = " ") |>
 df_sent
 ```
 
-One can get the log-transformed probability of each word based on GPT-2 as follows:
+One can get the natural log-transformed probability of each word based on GPT-2 as follows:
 
 ```{r}
 df_sent <- df_sent |>
-  mutate(lp = causal_lp(word, by = sent_n))
+  mutate(lp = causal_words_pred(word, by = sent_n))
 df_sent
 ```
 
-Notice that the `by` is inside the `causal_lp()` function. It' also possible to use `by` in the mutate call, or `group_by()`, but it will be slower.
+Notice that the `by` is inside the `causal_words_pred()` function. It' also possible to use `by` in the mutate call, or `group_by()`, but it will be slower.
 
 
 The attentive reader might have noticed that the log-probability of "tree" here is not the same as the one presented before. This is because the actual word is `" tree."` (notice the space), which contains two tokens:
@@ -118,13 +118,13 @@ The log-probability of `" tree."` is the sum of the log-probability of `" tree"`
 We can verify this in the following way.
 
 ```{r}
-df_token_lp <- causal_tokens_lp_tbl("The apple doesn't fall far from the tree.")
+df_token_lp <- causal_tokens_pred_tbl("The apple doesn't fall far from the tree.")
 df_token_lp
 
-(tree_lp <- df_token_lp
+(tree_lp <- df_token_lp |> 
   # requires a Ġ because there is a space before
-  |> filter(token == "Ġtree")
-  |> pull())
+  filter(token == "Ġtree") |>
+  pull())
 
 (dot_lp <- df_token_lp |>
   # doesn't require a Ġ because there is no space before
@@ -142,6 +142,6 @@ all.equal(
 )
 ```
 
-In a scenario as the one above, when one has a word-by-word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `causal_lp()` takes care of it.
+In a scenario as the one above, when one has a word-by-word text, and one wants to know the log-probability of each word, one doesn't have to worry about the encoding or tokens, since the function `causal_words_pred()` takes care of it.
 
 # References

@@ -23,10 +23,11 @@ causal_pred_mats(
 
 \item{by}{Vector that indicates how the text should be split.}
 
-\item{log.p}{If TRUE (default),  x are assumed to be log-transformed
-probabilities with base e, if FALSE x are assumed to be
-raw probabilities, alternatively log.p can be the base of
-other logarithmic transformations.}
+\item{log.p}{Base of the logarithm used for the output predictability values.
+If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
+If \code{FALSE}, the raw probabilities are returned.
+Alternatively, \code{log.p} can be set to a numeric value specifying
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
 
 \item{sorted}{When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to \code{by}) list(s) are returned.}
 
@@ -98,7 +99,7 @@ causal_pred_mats(
 Other causal model functions: 
 \code{\link{causal_config}()},
 \code{\link{causal_lp}()},
-\code{\link{causal_next_tokens_tbl}()},
+\code{\link{causal_next_tokens_pred_tbl}()},
 \code{\link{causal_preload}()},
 \code{\link{causal_targets_pred}()},
 \code{\link{causal_tokens_pred_tbl}()},

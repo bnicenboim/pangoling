@@ -54,7 +54,7 @@ test_that("bert masked works", {
 
 test_that("bert lp for target words works", {
   skip_if_no_python_stuff()
-  lw <- masked_lp(
+  lw <- masked_targets_pred(
     l_contexts = c("The", "The"),
     targets = c("apple", "pear"),
     r_contexts = c(
