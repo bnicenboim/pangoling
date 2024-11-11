@@ -322,7 +322,7 @@ causal_tokens_pred_tbl <- function(texts,
     if (ncol(mat) == 1 && colnames(mat) == "") {
       tidytable::tidytable(
                    token = "",
-                   lp = NA_real_
+                   pred = NA_real_
                  )
     } else {
       tidytable::tidytable(

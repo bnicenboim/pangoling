@@ -55,8 +55,8 @@ test_that("errors work", {
 test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
-    causal_next_tokens_tbl(context = "The apple doesn't fall far from the")
-  expect_equal(sum(exp(cont$lp)), 1, tolerance = .0001)
+    causal_next_tokens_pred_tbl(context = "The apple doesn't fall far from the")
+  expect_equal(sum(exp(cont$pred)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
   lp_prov <- causal_words_pred(x = prov_words)
   expect_equal(names(lp_prov), prov_words)
@@ -68,7 +68,7 @@ test_that("gpt2 get prob work", {
   expect_equal(names(lp_sent2), sent2_words)
   lp_sent3 <- causal_words_pred(x = sent3_words)
   expect_equal(names(lp_sent3), sent3_words)
-  expect_equal(cont$lp[1], unname(lp_prov[[8]]), tolerance = .0001)
+  expect_equal(cont$pred[1], unname(lp_prov[[8]]), tolerance = .0001)
   lp_prov_mat <- causal_pred_mats(x = prov_words)
   mat <- lp_prov_mat[[1]]
   expect_equal(
@@ -170,7 +170,7 @@ test_that("can handle extra parameters", {
 
   mat <- causal_pred_mats("This isn't it.")[[1]]
   expect_equal(
-    token_pred$lp,
+    token_pred$pred,
     tidytable::map_dbl(seq_along(tkns), ~ mat[token_pred$token[.x], .x])
   )
 })
@@ -178,15 +178,15 @@ test_that("can handle extra parameters", {
 test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
   probs <- causal_words_pred(x = c("This", "is", "it"), add_special_tokens = TRUE)
-  word_1_prob <- causal_next_tokens_tbl("<|endoftext|>")
-  prob1 <- word_1_prob[token == "This"]$lp
+  word_1_prob <- causal_next_tokens_pred_tbl("<|endoftext|>")
+  prob1 <- word_1_prob[token == "This"]$pred
   names(prob1) <- "This"
   expect_equal(probs[1], prob1, tolerance = 0.0001)
 
   probs_F <- causal_words_pred(x = c("This", "is", "it"), add_special_tokens = FALSE)
   expect_true(is.na(probs_F[1]))
-  word_2_prob <- causal_next_tokens_tbl("This")
-  prob2 <- word_2_prob[token == "Ġis"]$lp
+  word_2_prob <- causal_next_tokens_pred_tbl("This")
+  prob2 <- word_2_prob[token == "Ġis"]$pred
   names(prob2) <- "is"
   expect_equal(probs_F[2], prob2, tolerance = .0001)
 })
