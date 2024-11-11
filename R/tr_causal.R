@@ -154,17 +154,21 @@ causal_next_tokens_tbl <- function(context,
 #' @return A named vector of log probabilities.
 #'
 #' @examplesIf interactive()
-#' causal_lp(
+#' causal_each_pred(
 #'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
 #'   model = "gpt2"
 #' )
+#' causal_each_pred(
+#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+#'   model = "gpt2",
+#'   log.p = 1/2  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
+#' )
 #'
-
 #' @family causal model functions
 #' @export
 causal_each_pred <- function(x,
                       by = rep(1, length(x)),
-                      log.p = getOption("pangoling.causal.log.p")
+                      log.p = getOption("pangoling.log.p"),
                       ignore_regex = "",
                       model = getOption("pangoling.causal.default"),
                       checkpoint = NULL,
@@ -246,8 +250,8 @@ causal_each_pred <- function(x,
 
   lps <- out |> unsplit(by, drop = TRUE)
      names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
-     unsplit(by[keep], drop = TRUE)
-  lps |> ln_change(log.p = log.p)
+     unsplit(by, drop = TRUE)
+  lps |> ln_p_change(log.p = log.p)
   }
 
 

@@ -78,6 +78,7 @@ causal_next_tokens_tbl(
 \seealso{
 Other causal model functions: 
 \code{\link{causal_config}()},
+\code{\link{causal_each_pred}()},
 \code{\link{causal_lp}()},
 \code{\link{causal_lp_mats}()},
 \code{\link{causal_preload}()},

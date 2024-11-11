@@ -3,6 +3,7 @@
 S3method(tokenize_lst,character)
 S3method(tokenize_lst,numeric)
 export(causal_config)
+export(causal_each_pred)
 export(causal_lp)
 export(causal_lp_mats)
 export(causal_next_tokens_tbl)
