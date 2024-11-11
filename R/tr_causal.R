@@ -154,11 +154,11 @@ causal_next_tokens_tbl <- function(context,
 #' @return A named vector of log probabilities.
 #'
 #' @examplesIf interactive()
-#' causal_each_pred(
+#' causal_words_pred(
 #'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
 #'   model = "gpt2"
 #' )
-#' causal_each_pred(
+#' causal_words_pred(
 #'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
 #'   model = "gpt2",
 #'   log.p = 1/2  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
@@ -166,7 +166,7 @@ causal_next_tokens_tbl <- function(context,
 #'
 #' @family causal model functions
 #' @export
-causal_each_pred <- function(x,
+causal_words_pred <- function(x,
                       by = rep(1, length(x)),
                       log.p = getOption("pangoling.log.p"),
                       ignore_regex = "",
@@ -256,35 +256,36 @@ causal_each_pred <- function(x,
 
 
 
-#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer
+#' Get the predictability of each token in a sentence (or group of sentences) using a causal transformer
 #'
-#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer model.
+#' Get the predictability of each token in a sentence (or group of sentences) using a causal transformer model.
 #'
 #'
 #' @param texts Vector or list of texts.
 #' @param .id Name of the column with the sentence id.
 #' @inheritParams causal_preload
-#' @inheritParams causal_lp
+#' @inheritParams causal_word_pred
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
 #' @return A table with token names (`token`), log-probability (`lp`) and optionally sentence id.
 #'
 #' @examplesIf interactive()
-#' causal_tokens_lp_tbl(
+#' causal_tokens_pred_tbl(
 #'   texts = c("The apple doesn't fall far from the tree."),
 #'   model = "gpt2"
 #' )
 #'
 #' @family causal model functions
 #' @export
-causal_tokens_lp_tbl <- function(texts,
-                                 model = getOption("pangoling.causal.default"),
-                                 checkpoint = NULL,
-                                 add_special_tokens = NULL,
-                                 config_model = NULL,
-                                 config_tokenizer = NULL,
-                                 batch_size = 1,
-                                 .id = NULL) {
+causal_tokens_pred_tbl <- function(texts,
+                                   log.p = getOption("pangoling.log.p"),
+                                   model = getOption("pangoling.causal.default"),
+                                   checkpoint = NULL,
+                                   add_special_tokens = NULL,
+                                   config_model = NULL,
+                                   config_tokenizer = NULL,
+                                   batch_size = 1,
+                                   .id = NULL) {
   stride <- 1
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   ltexts <- as.list(unlist(texts, recursive = TRUE))
@@ -323,7 +324,8 @@ causal_tokens_lp_tbl <- function(texts,
     } else {
       tidytable::tidytable(
         token = colnames(mat),
-        lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y])
+        lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y]) |>
+          ln_p_change(log.p = log.p)
       )
     }
   }, .id = .id)
@@ -406,7 +408,7 @@ causal_mat <- function(tensor,
 #' Get a list of matrices with the log probabilities of possible word given
 #' its previous context using a causal transformer model.
 #'
-#' @inheritParams causal_lp
+#' @inheritParams causal_words_pred
 #' @inheritParams causal_preload
 #' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `by`) list(s) are returned. 
 #' @inherit  causal_preload details
@@ -414,7 +416,7 @@ causal_mat <- function(tensor,
 #' @return A list of matrices with tokens in their columns and the vocabulary of the model in their rows
 #'
 #' @examplesIf interactive()
-#' causal_lp_mats(
+#' causal_pred_mats(
 #'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
 #'   model = "gpt2"
 #' )
@@ -422,16 +424,17 @@ causal_mat <- function(tensor,
 #' @family causal model functions
 #' @export
 #'
-causal_lp_mats <- function(x,
-                           by = rep(1, length(x)),
-                           sorted = FALSE,
-                           model = getOption("pangoling.causal.default"),
-                           checkpoint = NULL,
-                           add_special_tokens = NULL,
-                           config_model = NULL,
-                           config_tokenizer = NULL,
-                           batch_size = 1,
-                           ...) {
+causal_pred_mats <- function(x,
+                             by = rep(1, length(x)),
+                             log.p = getOption("pangoling.log.p"),
+                             sorted = FALSE,
+                             model = getOption("pangoling.causal.default"),
+                             checkpoint = NULL,
+                             add_special_tokens = NULL,
+                             config_model = NULL,
+                             config_tokenizer = NULL,
+                             batch_size = 1,
+                             ...) {
   dots <- list(...)
   # Check for the deprecated .by argument
   if (!is.null(dots$.by)) {
@@ -482,5 +485,6 @@ causal_lp_mats <- function(x,
   names(lmat) <- levels(as.factor(by))
   if(!sorted) lmat <- lmat[unique(as.factor(by))]
   lmat |>
-    unlist(recursive = FALSE)
+    unlist(recursive = FALSE) |>
+    ln_p_change(log.p = log.p)
 }

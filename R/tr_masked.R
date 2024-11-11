@@ -149,11 +149,11 @@ masked_tokens_tbl <- function(masked_sentences,
 #' @param targets Target words.
 #' @param r_contexts Right context of the target word.
 #' @inheritParams masked_preload
-#' @inheritParams causal_lp
+#' @inheritParams causal_words_pred
 #' @inherit masked_preload details
 #' @return A named vector of log probabilities.
 #' @examplesIf interactive()
-#' masked_lp(
+#' masked_targets_pred(
 #'   l_contexts = c("The", "The"),
 #'   targets = c("apple", "pear"),
 #'   r_contexts = c(
@@ -165,9 +165,10 @@ masked_tokens_tbl <- function(masked_sentences,
 #'
 #' @family masked model functions
 #' @export
-masked_lp <- function(l_contexts,
+masked_targets_pred <- function(l_contexts,
                       targets,
                       r_contexts,
+                      log.p = getOption("pangoling.log.p"),
                       ignore_regex = "",
                       model = getOption("pangoling.masked.default"),
                       add_special_tokens = NULL,
@@ -241,7 +242,9 @@ masked_lp <- function(l_contexts,
       # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
     }
   )
-  unlist(out, recursive = TRUE)
+  unlist(out, recursive = TRUE) |>
+          ln_p_change(log.p = log.p)
+
 }
 
 

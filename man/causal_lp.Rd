@@ -105,10 +105,10 @@ causal_lp(
 \seealso{
 Other causal model functions: 
 \code{\link{causal_config}()},
-\code{\link{causal_each_pred}()},
-\code{\link{causal_lp_mats}()},
 \code{\link{causal_next_tokens_tbl}()},
+\code{\link{causal_pred_mats}()},
 \code{\link{causal_preload}()},
-\code{\link{causal_tokens_lp_tbl}()}
+\code{\link{causal_tokens_pred_tbl}()},
+\code{\link{causal_words_pred}()}
 }
 \concept{causal model functions}
