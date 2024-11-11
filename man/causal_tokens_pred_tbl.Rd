@@ -19,6 +19,11 @@ causal_tokens_pred_tbl(
 \arguments{
 \item{texts}{Vector or list of texts.}
 
+\item{log.p}{If TRUE (default),  x are assumed to be log-transformed
+probabilities with base e, if FALSE x are assumed to be
+raw probabilities, alternatively log.p can be the base of
+other logarithmic transformations.}
+
 \item{model}{Name of a pre-trained model or folder.}
 
 \item{checkpoint}{Folder of a checkpoint.}
@@ -31,6 +36,9 @@ same default as the
 model from Hugging Face is accessed.}
 
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+
+\item{batch_size}{Maximum size of the batch. Larges batches speedup
+processing but take more memory.}
 
 \item{.id}{Name of the column with the sentence id.}
 }

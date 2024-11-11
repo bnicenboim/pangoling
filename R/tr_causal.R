@@ -264,7 +264,7 @@ causal_words_pred <- function(x,
 #' @param texts Vector or list of texts.
 #' @param .id Name of the column with the sentence id.
 #' @inheritParams causal_preload
-#' @inheritParams causal_word_pred
+#' @inheritParams causal_words_pred
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_tbl More examples
 #' @return A table with token names (`token`), log-probability (`lp`) and optionally sentence id.
