@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_pred_mats}
 \alias{causal_pred_mats}
-\title{Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer}
+\title{Get a list of matrices with the predictability of possible word given its previous context using a causal transformer}
 \usage{
 causal_pred_mats(
   x,
@@ -52,7 +52,7 @@ processing but take more memory.}
 A list of matrices with tokens in their columns and the vocabulary of the model in their rows
 }
 \description{
-Get a list of matrices with the log probabilities of possible word given
+Get a list of matrices with the predictability (by default the natural logarithm of the word probability) of possible word given
 its previous context using a causal transformer model.
 }
 \details{
@@ -100,6 +100,7 @@ Other causal model functions:
 \code{\link{causal_lp}()},
 \code{\link{causal_next_tokens_tbl}()},
 \code{\link{causal_preload}()},
+\code{\link{causal_targets_pred}()},
 \code{\link{causal_tokens_pred_tbl}()},
 \code{\link{causal_words_pred}()}
 }

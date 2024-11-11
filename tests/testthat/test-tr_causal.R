@@ -21,14 +21,14 @@ test_that("gpt2 load and gets config", {
 
 test_that("empty or small strings", {
   skip_if_no_python_stuff()
-  lp_it <- causal_tokens_lp_tbl(texts = "It")
+  lp_it <- causal_tokens_pred_tbl(texts = "It")
   expect_equal(as.data.frame(lp_it), data.frame(token = "It", lp = NA_real_))
-  expect_warning(lp_NA <- causal_tokens_lp_tbl(texts = ""))
+  expect_warning(lp_NA <- causal_tokens_pred_tbl(texts = ""))
   expect_equal(as.data.frame(lp_NA), data.frame(token = "", lp = NA_real_))
   small_str <- c("It", "It", "is")
-  lp_small <- causal_lp(x = small_str, by = c(1, 2, 2))
+  lp_small <- causal_words_pred(x = small_str, by = c(1, 2, 2))
   expect_equal(lp_small[1:2], c(It = NA_real_, It = NA_real_))
-  expect_warning(lp_small_ <- causal_lp(x = c("", "It"), by = c(1, 2)))
+  expect_warning(lp_small_ <- causal_words_pred(x = c("", "It"), by = c(1, 2)))
   expect_equal(lp_small_, c(NA_real_, "It" = NA_real_))
 })
 
@@ -39,17 +39,17 @@ test_that("long input work", {
   long0 <- paste(rep("x", 1022), collapse = " ")
   long <- paste(rep("x", 1024), collapse = " ")
   longer <- paste(rep("x", 1025), collapse = " ")
-  lp_long0 <- causal_tokens_lp_tbl(texts = c(long0, long, longer), add_special_tokens = TRUE, batch_size = 3, model = "sshleifer/tiny-gpt2")
+  lp_long0 <- causal_tokens_pred_tbl(texts = c(long0, long, longer), add_special_tokens = TRUE, batch_size = 3, model = "sshleifer/tiny-gpt2")
   skip_on_os("windows") #the following just doesn't work on windows,
   # but it's not that important
-    lp_long1 <- causal_tokens_lp_tbl(c(long0, long, longer), add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
+    lp_long1 <- causal_tokens_pred_tbl(c(long0, long, longer), add_special_tokens = TRUE, batch_size = 1, model = "sshleifer/tiny-gpt2")
   expect_equal(lp_long0, lp_long1)
 })
 }
 
 test_that("errors work", {
   skip_if_no_python_stuff()
-  expect_error(causal_lp(c("It", "is."), by = 3))
+  expect_error(causal_words_pred(c("It", "is."), by = 3))
 })
 
 test_that("gpt2 get prob work", {
@@ -58,18 +58,18 @@ test_that("gpt2 get prob work", {
     causal_next_tokens_tbl(context = "The apple doesn't fall far from the")
   expect_equal(sum(exp(cont$lp)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
-  lp_prov <- causal_lp(x = prov_words)
+  lp_prov <- causal_words_pred(x = prov_words)
   expect_equal(names(lp_prov), prov_words)
-  lp_cont <- causal_lp(l_contexts = c("Don't judge a book by its",
+  lp_cont <- causal_targets_pred(l_contexts = c("Don't judge a book by its",
                                       "The apple doesn't fall far from the"),
-                       x = c("cover", "tree"))
+                       targets = c("cover", "tree"))
   expect_equal(lp_cont[2], lp_prov[8], tolerance = .0001)
-  lp_sent2 <- causal_lp(x = sent2_words)
+  lp_sent2 <- causal_words_pred(x = sent2_words)
   expect_equal(names(lp_sent2), sent2_words)
-  lp_sent3 <- causal_lp(x = sent3_words)
+  lp_sent3 <- causal_words_pred(x = sent3_words)
   expect_equal(names(lp_sent3), sent3_words)
   expect_equal(cont$lp[1], unname(lp_prov[[8]]), tolerance = .0001)
-  lp_prov_mat <- causal_lp_mats(x = prov_words)
+  lp_prov_mat <- causal_pred_mats(x = prov_words)
   mat <- lp_prov_mat[[1]]
   expect_equal(
     c(
@@ -89,7 +89,7 @@ test_that("gpt2 get prob work", {
 
   # regex
   lp_prov2 <-
-    causal_lp(
+    causal_words_pred(
       x = strsplit(paste0(prov, "."), " ")[[1]],
       ignore_regex = "[[:punct:]]"
     )
@@ -98,13 +98,13 @@ test_that("gpt2 get prob work", {
   ##
   sent <- "This is it, is it?"
   sent_w <- strsplit(sent, " ")[[1]]
-  lp_sent <- causal_lp(x = sent_w)
+  lp_sent <- causal_words_pred(x = sent_w)
   lp_sent2 <-
-    causal_lp(x = sent_w, ignore_regex = "^[[:punct:]]$")
+    causal_words_pred(x = sent_w, ignore_regex = "^[[:punct:]]$")
   expect_equal(lp_sent[c(-3, -5)], lp_sent2[c(-3, -5)])
 
   lp_sent_rep <-
-    causal_lp(
+    causal_words_pred(
       x = rep(sent_w, 2),
       by = rep(seq_len(2), each = length(sent_w))
     )
@@ -118,10 +118,10 @@ test_that("gpt2 get prob work", {
  df_order2 <-  data.frame(word = c(sent2_words,prov_words),
                           item = c(rep(2, each = length(sent2_words)),
                                    rep(1, each= length(prov_words))))
- expect_equal(causal_lp(df_order1$word, by = df_order1$item),
-              causal_lp(x = df_order2$word, by = df_order2$item))
- expect_equal(causal_lp_mats(x = df_order1$word, by = df_order1$item),
-              causal_lp_mats(x = df_order2$word, by = df_order2$item) |>
+ expect_equal(causal_words_pred(x = df_order1$word, by = df_order1$item),
+              causal_words_pred(x = df_order2$word, by = df_order2$item))
+ expect_equal(causal_pred_mats(x = df_order1$word, by = df_order1$item),
+              causal_pred_mats(x = df_order2$word, by = df_order2$item) |>
                 setNames(c("1","2")))
  
 })
@@ -129,11 +129,11 @@ test_that("gpt2 get prob work", {
 test_that("batches work", {
   skip_if_no_python_stuff()
   texts <- rep(c("This is not it.", "This is it."), 5)
-  lp_batch <- causal_tokens_lp_tbl(texts,
+  lp_batch <- causal_tokens_pred_tbl(texts,
     batch_size = 3, .id = ".id"
   )
 
-  lp_nobatch <- causal_tokens_lp_tbl(texts,
+  lp_nobatch <- causal_tokens_pred_tbl(texts,
     batch_size = 1, .id = ".id"
   )
   expect_equal(lp_batch, lp_nobatch, tolerance = .0001)
@@ -148,12 +148,12 @@ test_that("batches work", {
       rep(6, length(sent2_words))
     )
   )
-  lp_2_batch <- causal_lp(x = df$x, by = df$.id, batch_size = 4)
-  lp_2_no_batch <- causal_lp(x = df$x, by = df$.id, batch_size = 1)
+  lp_2_batch <- causal_words_pred(x = df$x, by = df$.id, batch_size = 4)
+  lp_2_no_batch <- causal_words_pred(x = df$x, by = df$.id, batch_size = 1)
   expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
 
 df <- data.frame(l_contexts = rep(c("Don't judge a book by its","The apple doesn't fall far from the"),5), x = rep(c("cover", "tree"),5))
-  #lp_2_batch <- causal_lp(x = df$x, l_contexts = df$l_contexts, batch_size = 4)
+  #lp_2_batch <- causal_words_pred(x = df$x, l_contexts = df$l_contexts, batch_size = 4)
 
 })
 
@@ -161,29 +161,29 @@ test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
 
   tkns <- tokenize_lst("This isn't it.")[[1]]
-  token_lp <- causal_tokens_lp_tbl("This isn't it.")
-  token_lp2 <- causal_tokens_lp_tbl(texts = "This isn't it.", add_special_tokens = TRUE)
-  token_lp3 <- causal_tokens_lp_tbl(texts = "<|endoftext|>This isn't it.")
-  expect_equal(token_lp$token, tkns)
-  expect_equal(token_lp$token, token_lp2$token[-1])
-  expect_equal(token_lp2, token_lp3)
+  token_pred <- causal_tokens_pred_tbl("This isn't it.")
+  token_pred2 <- causal_tokens_pred_tbl(texts = "This isn't it.", add_special_tokens = TRUE)
+  token_pred3 <- causal_tokens_pred_tbl(texts = "<|endoftext|>This isn't it.")
+  expect_equal(token_pred$token, tkns)
+  expect_equal(token_pred$token, token_pred2$token[-1])
+  expect_equal(token_pred2, token_pred3)
 
-  mat <- causal_lp_mats("This isn't it.")[[1]]
+  mat <- causal_pred_mats("This isn't it.")[[1]]
   expect_equal(
-    token_lp$lp,
-    tidytable::map_dbl(seq_along(tkns), ~ mat[token_lp$token[.x], .x])
+    token_pred$lp,
+    tidytable::map_dbl(seq_along(tkns), ~ mat[token_pred$token[.x], .x])
   )
 })
 
 test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
-  probs <- causal_lp(x = c("This", "is", "it"), add_special_tokens = TRUE)
+  probs <- causal_words_pred(x = c("This", "is", "it"), add_special_tokens = TRUE)
   word_1_prob <- causal_next_tokens_tbl("<|endoftext|>")
   prob1 <- word_1_prob[token == "This"]$lp
   names(prob1) <- "This"
   expect_equal(probs[1], prob1, tolerance = 0.0001)
 
-  probs_F <- causal_lp(x = c("This", "is", "it"), add_special_tokens = FALSE)
+  probs_F <- causal_words_pred(x = c("This", "is", "it"), add_special_tokens = FALSE)
   expect_true(is.na(probs_F[1]))
   word_2_prob <- causal_next_tokens_tbl("This")
   prob2 <- word_2_prob[token == "Ġis"]$lp
@@ -195,10 +195,10 @@ test_that("can handle extra parameters", {
 if (0) {
   test_that("can handle longer than 1024 input", {
     num0 <- paste0(1:485, sep = ",")
-    lp_num0 <- get_causal_lp(x = num0, model = "sshleifer/tiny-gpt2")
+    lp_num0 <- get_causal_pred(x = num0, model = "sshleifer/tiny-gpt2")
 
     num1 <- paste0(1:500, sep = ",")
-    lp_num1 <- get_causal_lp(
+    lp_num1 <- get_causal_pred(
       x = num1,
       model = "sshleifer/tiny-gpt2",
       stride = 10
@@ -211,13 +211,13 @@ test_that("other models using get prob don't fail", {
   skip_if_no_python_stuff()
   tokenize_lst("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
 
-  expect_no_error(causal_lp(
+  expect_no_error(causal_words_pred(
     x = c("El", "bebé", "de", "cigüeña."),
     model = "flax-community/gpt-2-spanish"
   ))
 
   expect_no_error(
-    causal_lp(
+    causal_words_pred(
       x = strsplit(paste0(prov, "."), " ")[[1]],
       model = "distilgpt2"
     )

@@ -104,19 +104,19 @@ causal_next_tokens_tbl <- function(context,
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   trf <- lang_model(model,
                     checkpoint = checkpoint,
-    task = "causal",
-    config_model = config_model
-  )
+                    task = "causal",
+                    config_model = config_model
+                    )
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
 
   # no batches allowed
   context_tensor <- encode(list(unlist(context)),
-    tkzr,
-    add_special_tokens = add_special_tokens
-  )$input_ids
+                           tkzr,
+                           add_special_tokens = add_special_tokens
+                           )$input_ids
   generated_outputs <- trf(context_tensor)
   n_tokens <- length(context_tensor$tolist()[0])
   logits_next_word <- generated_outputs$logits[0][n_tokens - 1]
@@ -131,7 +131,7 @@ causal_next_tokens_tbl <- function(context,
 
 #' Get the predictability of each element of a vector of words (or phrases) using a causal transformer
 #'
-#' Get the predictability (default natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
+#' Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
@@ -167,16 +167,16 @@ causal_next_tokens_tbl <- function(context,
 #' @family causal model functions
 #' @export
 causal_words_pred <- function(x,
-                      by = rep(1, length(x)),
-                      log.p = getOption("pangoling.log.p"),
-                      ignore_regex = "",
-                      model = getOption("pangoling.causal.default"),
-                      checkpoint = NULL,
-                      add_special_tokens = NULL,
-                      config_model = NULL,
-                      config_tokenizer = NULL,
-                      batch_size = 1,
-                      ...) {
+                              by = rep(1, length(x)),
+                              log.p = getOption("pangoling.log.p"),
+                              ignore_regex = "",
+                              model = getOption("pangoling.causal.default"),
+                              checkpoint = NULL,
+                              add_special_tokens = NULL,
+                              config_model = NULL,
+                              config_tokenizer = NULL,
+                              batch_size = 1,
+                              ...) {
   dots <- list(...)
   # Check for unknown arguments
   if (length(dots) > 0) {
@@ -196,14 +196,14 @@ causal_words_pred <- function(x,
     function(word) paste0(word, collapse = " ")
   )
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   trf <- lang_model(model,
                     checkpoint = checkpoint,
                     task = "causal",
                     config_model = config_model
-  )
+                    )
   tensors <- create_tensor_lst(
     texts = unname(pasted_texts),
     tkzr = tkzr,
@@ -214,51 +214,51 @@ causal_words_pred <- function(x,
 
   lmats <- lapply(tensors, function(tensor) {
     causal_mat(tensor,
-      trf,
-      tkzr,
-      add_special_tokens = add_special_tokens,
-      stride = stride
-    )
+               trf,
+               tkzr,
+               add_special_tokens = add_special_tokens,
+               stride = stride
+               )
   }) |>
     unlist(recursive = FALSE)
 
   out <- tidytable::pmap(
-    list(
-      word_by_word_texts,
-      names(word_by_word_texts),
-      lmats
-    ),
-    function(words, item, mat) {
-      # words <- word_by_word_texts[[1]]
-      # item <- names(word_by_word_texts)[[1]]
-      # mat <- lmats[[1]]
-        
-      message_verbose(
-        "Text id: ", item, "\n`",
-        paste(words, collapse = " "),
-        "`"
-      )
-      word_lp(words,
-        mat = mat,
-        ignore_regex = ignore_regex,
-        model = model,
-        add_special_tokens = add_special_tokens,
-        config_tokenizer = config_tokenizer
-      )
-    }
-  )
+                      list(
+                        word_by_word_texts,
+                        names(word_by_word_texts),
+                        lmats
+                      ),
+                      function(words, item, mat) {
+                        # words <- word_by_word_texts[[1]]
+                        # item <- names(word_by_word_texts)[[1]]
+                        # mat <- lmats[[1]]
+
+                        message_verbose(
+                          "Text id: ", item, "\n`",
+                          paste(words, collapse = " "),
+                          "`"
+                        )
+                        word_lp(words,
+                                mat = mat,
+                                ignore_regex = ignore_regex,
+                                model = model,
+                                add_special_tokens = add_special_tokens,
+                                config_tokenizer = config_tokenizer
+                                )
+                      }
+                    )
 
   lps <- out |> unsplit(by, drop = TRUE)
-     names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
-     unsplit(by, drop = TRUE)
+  names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
+    unsplit(by, drop = TRUE)
   lps |> ln_p_change(log.p = log.p)
-  }
+}
 
 
 
 #' Get the predictability of each token in a sentence (or group of sentences) using a causal transformer
 #'
-#' Get the predictability of each token in a sentence (or group of sentences) using a causal transformer model.
+#' Get the predictability (by default the natural logarithm of the word probability) of each token in a sentence (or group of sentences) using a causal transformer model.
 #'
 #'
 #' @param texts Vector or list of texts.
@@ -290,43 +290,43 @@ causal_tokens_pred_tbl <- function(texts,
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   ltexts <- as.list(unlist(texts, recursive = TRUE))
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   trf <- lang_model(model,
                     checkpoint = checkpoint,
                     task = "causal",
                     config_model = config_model
-    )
+                    )
   tensors <- create_tensor_lst(ltexts,
-    tkzr,
-    add_special_tokens = add_special_tokens,
-    stride = stride,
-    batch_size = batch_size
-  )
+                               tkzr,
+                               add_special_tokens = add_special_tokens,
+                               stride = stride,
+                               batch_size = batch_size
+                               )
 
   ls_mat <- tidytable::map(tensors, function(tensor) {
     causal_mat(tensor,
-      trf,
-      tkzr,
-      add_special_tokens = add_special_tokens,
-      stride = stride
-    )
+               trf,
+               tkzr,
+               add_special_tokens = add_special_tokens,
+               stride = stride
+               )
   }) |>
     unlist(recursive = FALSE)
 
   tidytable::map_dfr(ls_mat, function(mat) {
     if (ncol(mat) == 1 && colnames(mat) == "") {
       tidytable::tidytable(
-        token = "",
-        lp = NA_real_
-      )
+                   token = "",
+                   lp = NA_real_
+                 )
     } else {
       tidytable::tidytable(
-        token = colnames(mat),
-        lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y]) |>
-          ln_p_change(log.p = log.p)
-      )
+                   token = colnames(mat),
+                   lp = tidytable::map2_dbl(colnames(mat), seq_len(ncol(mat)), ~ mat[.x, .y]) |>
+                     ln_p_change(log.p = log.p)
+                 )
     }
   }, .id = .id)
 }
@@ -355,9 +355,9 @@ causal_mat <- function(tensor,
   }
 
   logits_b <- trf$forward(
-    input_ids = tensor$input_ids,
-    attention_mask = tensor$attention_mask
-  )$logits
+                    input_ids = tensor$input_ids,
+                    attention_mask = tensor$attention_mask
+                  )$logits
   # if (logits_b$shape[0] > 1) {
   # stop2("Input is too long")
   # # if there is a sliding window, because
@@ -403,9 +403,9 @@ causal_mat <- function(tensor,
 
 
 
-#' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer
+#' Get a list of matrices with the predictability of possible word given its previous context using a causal transformer
 #'
-#' Get a list of matrices with the log probabilities of possible word given
+#' Get a list of matrices with the predictability (by default the natural logarithm of the word probability) of possible word given
 #' its previous context using a causal transformer model.
 #'
 #' @inheritParams causal_words_pred
@@ -451,14 +451,14 @@ causal_pred_mats <- function(x,
   stride <- 1
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   trf <- lang_model(model,
                     checkpoint = checkpoint,
-                        task = "causal",
-    config_model = config_model
-  )
+                    task = "causal",
+                    config_model = config_model
+                    )
   x <- trimws(x, whitespace = "[ \t]")
   word_by_word_texts <- split(x, by)
   pasted_texts <- lapply(
@@ -466,25 +466,142 @@ causal_pred_mats <- function(x,
     function(word) paste0(word, collapse = " ")
   )
   tensors <- create_tensor_lst(unname(pasted_texts),
-    tkzr,
-    add_special_tokens = add_special_tokens,
-    stride = stride,
-    batch_size = batch_size
-  )
+                               tkzr,
+                               add_special_tokens = add_special_tokens,
+                               stride = stride,
+                               batch_size = batch_size
+                               )
   lmat <- tidytable::map(
-    tensors,
-    function(tensor) {
-      causal_mat(tensor,
-        trf,
-        tkzr,
-        add_special_tokens = add_special_tokens,
-        stride = stride
-      )
-    }
-  )
+                       tensors,
+                       function(tensor) {
+                         causal_mat(tensor,
+                                    trf,
+                                    tkzr,
+                                    add_special_tokens = add_special_tokens,
+                                    stride = stride
+                                    )
+                       }
+                     )
   names(lmat) <- levels(as.factor(by))
   if(!sorted) lmat <- lmat[unique(as.factor(by))]
   lmat |>
     unlist(recursive = FALSE) |>
     ln_p_change(log.p = log.p)
+}
+
+
+
+#' Get the predictability of each element of a vector of words (or phrases) using a causal transformer
+#'
+#' Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) given a
+#' vector of left contexts using a using a causal transformer model. #'
+#'
+#' @param targets Target words.
+#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
+#'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
+#' @inheritParams causal_words_pred
+#' @param ... not in use.
+#' @inheritParams causal_preload
+#' @inherit  causal_preload details
+#' @inheritSection causal_next_tokens_tbl More examples
+#' @return A named vector of predictability values (by default the natural logarithm of the word probability).
+#'
+#' @examplesIf interactive()
+#'causal_targets_pred(
+#'   x = "tree.",
+#'   l_contexts = "The apple doesn't fall far from the tree.",
+#'   by = NULL, # it's ignored anyways
+#'   model = "gpt2"
+#' )
+
+#' @family causal model functions
+#' @export
+causal_targets_pred <- function(targets,
+                                l_contexts = NULL,
+                                log.p = getOption("pangoling.log.p"),
+                                ignore_regex = "",
+                                model = getOption("pangoling.causal.default"),
+                                checkpoint = NULL,
+                                add_special_tokens = NULL,
+                                config_model = NULL,
+                                config_tokenizer = NULL,
+                                batch_size = 1,
+                                ...) {
+  dots <- list(...)
+  # Check for unknown arguments
+  if (length(dots) > 0) {
+    unknown_args <- setdiff(names(dots), ".by")
+    if (length(unknown_args) > 0) {
+      stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
+    }
+  }
+
+  stride <- 1 # fixed for now
+  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  x <- c(rbind(l_contexts, targets))
+  by <- rep(seq_len(length(x)/2), each = 2)
+  word_by_word_texts <- get_word_by_word_texts(x, by)
+
+  pasted_texts <- lapply(
+    word_by_word_texts,
+    function(word) paste0(word, collapse = " ")
+  )
+  tkzr <- tokenizer(model,
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
+  trf <- lang_model(model,
+                    checkpoint = checkpoint,
+                    task = "causal",
+                    config_model = config_model
+                    )
+  tensors <- create_tensor_lst(
+    texts = unname(pasted_texts),
+    tkzr = tkzr,
+    add_special_tokens = add_special_tokens,
+    stride = stride,
+    batch_size = batch_size
+  )
+
+  lmats <- lapply(tensors, function(tensor) {
+    causal_mat(tensor,
+               trf,
+               tkzr,
+               add_special_tokens = add_special_tokens,
+               stride = stride
+               )
+  }) |>
+    unlist(recursive = FALSE)
+  out <- tidytable::pmap(
+                      list(
+                        word_by_word_texts,
+                        names(word_by_word_texts),
+                        lmats
+                      ),
+                      function(words, item, mat) {
+                        message_verbose(
+                          "Text id: ", item, "\n`",
+                          paste(words, collapse = " "),
+                          "`"
+                        )
+                        word_lp(words,
+                                mat = mat,
+                                ignore_regex = ignore_regex,
+                                model = model,
+                                add_special_tokens = add_special_tokens,
+                                config_tokenizer = config_tokenizer
+                                )
+                      }
+                    )
+
+  keep <- c(FALSE, TRUE)
+
+  out <- out |> lapply(function(x) x[keep])
+  lps <- out |> unsplit(by[keep], drop = TRUE)
+
+  names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
+    unsplit(by[keep], drop = TRUE)
+  lps |>
+    ln_p_change(log.p = log.p)
+
 }

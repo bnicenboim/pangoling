@@ -46,7 +46,7 @@ processing but take more memory.}
 A table with token names (\code{token}), log-probability (\code{lp}) and optionally sentence id.
 }
 \description{
-Get the predictability of each token in a sentence (or group of sentences) using a causal transformer model.
+Get the predictability (by default the natural logarithm of the word probability) of each token in a sentence (or group of sentences) using a causal transformer model.
 }
 \details{
 A causal language model (also called GPT-like, auto-regressive, or decoder
@@ -94,6 +94,7 @@ Other causal model functions:
 \code{\link{causal_next_tokens_tbl}()},
 \code{\link{causal_pred_mats}()},
 \code{\link{causal_preload}()},
+\code{\link{causal_targets_pred}()},
 \code{\link{causal_words_pred}()}
 }
 \concept{causal model functions}

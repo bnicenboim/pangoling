@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_masked.R
 \name{masked_targets_pred}
 \alias{masked_targets_pred}
-\title{Get the log probability of a target word (or phrase) given a left and right context}
+\title{Get the predictability of a target word (or phrase) given a left and right context}
 \usage{
 masked_targets_pred(
   l_contexts,
@@ -44,10 +44,10 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
 }
 \value{
-A named vector of log probabilities.
+A named vector of predictability values (by default the natural logarithm of the word probability).
 }
 \description{
-Get the log probability of a vector of target words (or phrase) given a
+Get the predictability (by default the natural logarithm of the word probability) of a vector of target words (or phrase) given a
 vector of left and of right contexts using a masked transformer.
 }
 \details{
@@ -79,7 +79,7 @@ in pangoling website for more examples.
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+If interactive()
 masked_targets_pred(
   l_contexts = c("The", "The"),
   targets = c("apple", "pear"),
@@ -89,7 +89,7 @@ masked_targets_pred(
   ),
   model = "bert-base-uncased"
 )
-\dontshow{\}) # examplesIf}
+
 }
 \seealso{
 Other masked model functions: 

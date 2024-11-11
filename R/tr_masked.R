@@ -134,9 +134,9 @@ masked_tokens_tbl <- function(masked_sentences,
     tidytable::relocate(mask_n, .after = tidyselect::everything())
 }
 
-#' Get the log probability of a target word (or phrase) given a left and right context
+#' Get the predictability of a target word (or phrase) given a left and right context
 #'
-#' Get the log probability of a vector of target words (or phrase) given a
+#' Get the predictability (by default the natural logarithm of the word probability) of a vector of target words (or phrase) given a
 #' vector of left and of right contexts using a masked transformer.
 #'
 #' @section More examples:
@@ -151,8 +151,8 @@ masked_tokens_tbl <- function(masked_sentences,
 #' @inheritParams masked_preload
 #' @inheritParams causal_words_pred
 #' @inherit masked_preload details
-#' @return A named vector of log probabilities.
-#' @examplesIf interactive()
+#' @return A named vector of predictability values (by default the natural logarithm of the word probability).
+#' @examples If interactive()
 #' masked_targets_pred(
 #'   l_contexts = c("The", "The"),
 #'   targets = c("apple", "pear"),

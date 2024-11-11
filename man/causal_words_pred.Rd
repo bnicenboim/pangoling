@@ -54,7 +54,7 @@ processing but take more memory.}
 A named vector of log probabilities.
 }
 \description{
-Get the predictability (default natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
+Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
 \href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
 in pangoling website for more examples.
 }
@@ -109,6 +109,7 @@ Other causal model functions:
 \code{\link{causal_next_tokens_tbl}()},
 \code{\link{causal_pred_mats}()},
 \code{\link{causal_preload}()},
+\code{\link{causal_targets_pred}()},
 \code{\link{causal_tokens_pred_tbl}()}
 }
 \concept{causal model functions}
