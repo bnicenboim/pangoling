@@ -22,6 +22,12 @@ Error in py_run_string_impl(code, local, convert) :
 Run `reticulate::py_last_error()` for details.
 ```
 
+This might mean that the python dependencies were not installed. `pangoling` provides a convienence function to install the necessary python dependencies in a *conda* environment:
+
+```{r, eval = FALSE}
+install_py_pangoling()
+```
+
 `pangoling` (as many other R packages) relies on `reticulate` for  Python functionality. Even if the package installation seems successful, the issue may be that `reticulate` is not correctly loading the correct Python environment. By default, R should use the a *conda* environment named `r-reticulate` when managing these configurations automatically.
 
 One can verify this by using `py_config`, this is the output in a linux computer where the conda environment wasn't loaded:
