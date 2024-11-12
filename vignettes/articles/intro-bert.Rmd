@@ -62,11 +62,11 @@ We can also use BERT to examine the predictability of words assuming that both t
 ))
 ```
 
-The function `masked_lp()` will give us the log-probability of the target word (and will take care of summing the log-probabilities in case the target is composed by several tokens).
+The function `masked_targets_pred()` will give us the log-probability of the target word (and will take care of summing the log-probabilities in case the target is composed by several tokens).
 
 ```{r}
 df_sent <- df_sent %>%
-  mutate(lp = masked_lp(
+  mutate(lp = masked_targets_pred(
     l_contexts = left,
     targets = critical,
     r_contexts = right
