@@ -1,0 +1,37 @@
+#' Self-Paced Reading Dataset on Chinese Relative Clauses
+#'
+#' This dataset contains data from a self-paced reading experiment on Chinese
+#' relative clause comprehension. It is structured to support analysis of reaction
+#' times and comprehension accuracy across various experimental conditions.
+#'
+#' @format A tibble with 4,608 rows and 14 variables:
+#' \describe{
+#'   \item{subject}{Participant identifier, a character vector.}
+#'   \item{item}{Trial item number, an integer.}
+#'   \item{cond}{Experimental condition, a character vector indicating variations in sentence structure.}
+#'   \item{word}{Chinese word presented in each trial, a character vector.}
+#'   \item{wordn}{Position of the word within the sentence, an integer.}
+#'   \item{rt}{Reaction time in milliseconds for reading each word, an integer.}
+#'   \item{region}{Sentence region or phrase type (e.g., "hd1", "Det+CL"), a character vector.}
+#'   \item{question}{Comprehension question associated with the trial, a character vector.}
+#'   \item{accuracy}{Binary accuracy score for the comprehension question (1 = correct, 0 = incorrect).}
+#'   \item{correct_answer}{Expected correct answer for the comprehension question, a character vector ("Y" or "N").}
+#'   \item{question_type}{Type of comprehension question, a character vector.}
+#'   \item{experiment}{Name of the experiment, indicating self-paced reading, a character vector.}
+#'   \item{list}{Experimental list number, for counterbalancing item presentation, an integer.}
+#'   \item{sentence}{Full sentence used in the trial with words marked for analysis, a character vector.}
+#' }
+#'
+#' @source Jäger, L., Chen, Z., Li, Q., Lin, C.-J. C., & Vasishth, S. (2015).
+#' \emph{The subject-relative advantage in Chinese: Evidence for expectation-based processing}.
+#' Journal of Memory and Language, 79–80, 97-120. \url{https://doi.org/10.1016/j.jml.2014.10.005}
+#'
+#' @examples
+#' # Basic exploration
+#' head(df_jaeger14)
+#'
+#' # Summarize reaction times by region
+#' df_jaeger14 %>%
+#'   group_by(region) %>%
+#'   summarise(mean_rt = mean(rt, na.rm = TRUE))
+"df_jaeger14"
