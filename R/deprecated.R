@@ -26,7 +26,8 @@ masked_tokens_tbl <- function(masked_sentences,
                               add_special_tokens = NULL,
                               config_model = NULL,
                               config_tokenizer = NULL) {
-  message_verbose("Processing using masked model '", model, "'...")
+ .Deprecated(new = "new_function1() or new_function2()")
+ message_verbose("Processing using masked model '", model, "'...")
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
