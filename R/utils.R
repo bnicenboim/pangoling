@@ -114,6 +114,22 @@ message_verbose <- function(...) {
 
 
 #' @noRd
+message_verbose_model <- function(model, checkpoint, causal = TRUE) {
+
+  checkpoint <- checkpoint %||% ""
+  model_type <- ifelse(causal, "causal", "masked")
+
+  message_verbose("Processing using ", model_type," model '", file.path(model, checkpoint), "' ...")
+}
+
+#' @noRd
+conc_words <- function(word_list, sep) {
+  lapply(word_list,
+                         function(word) paste0(word, collapse = sep))
+
+}
+
+#' @noRd
 stop2 <- function(...) {
   stop(..., call. = FALSE)
 }

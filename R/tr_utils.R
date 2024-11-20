@@ -294,6 +294,7 @@ create_tensor_lst <- function(texts,
 
 
 word_lp <- function(words,
+                    sep,
                     mat,
                     ignore_regex,
                     model,
@@ -303,7 +304,7 @@ word_lp <- function(words,
     return(NA_real_)
   }
   if (length(words) > 1) {
-    words_lm <- c(words[1], paste0(" ", words[-1]))
+    words_lm <- c(words[1], paste0(sep, words[-1]))
   } else {
     words_lm <- words
   }
@@ -320,6 +321,9 @@ word_lp <- function(words,
   token_n <- tidytable::map_dbl(tokens, length)
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 
+  if(ncol(mat) != length(index_vocab)) {
+    stop2("Unexpected different length between number of tokens, please open an issue with a reproducible example at [https://github.com/bnicenboim/pangoling/issues].")
+  }
 
   token_lp <- tidytable::map2_dbl(index_vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
 

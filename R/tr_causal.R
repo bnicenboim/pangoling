@@ -102,7 +102,7 @@ causal_next_tokens_pred_tbl <- function(context,
                                         config_model = NULL,
                                         config_tokenizer = NULL) {
   if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
-  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  message_verbose_model(model, checkpoint)
   trf <- lang_model(model,
                     checkpoint = checkpoint,
                     task = "causal",
@@ -131,15 +131,16 @@ causal_next_tokens_pred_tbl <- function(context,
 }
 
 
-#' Get the predictability of each element of a vector of words (or phrases) using a causal transformer
+#' Get the predictability of each element of a vector of words (or phrases) in a series of texts using a causal transformer
 #'
-#' Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
+#' Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) in a series of texts using a causal transformer model. See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
 #'
 #' @param x Vector of words, phrases or texts.
 #' @param by Vector that indicates how the text should be split.
+#' @param sep Character indicating how words are separated in a sentence.
 #' @param log.p Base of the logarithm used for the output predictability values.
 #'              If `TRUE` (default), the natural logarithm (base *e*) is used.
 #'              If `FALSE`, the raw probabilities are returned.
@@ -157,12 +158,32 @@ causal_next_tokens_pred_tbl <- function(context,
 #' @return A named vector of log probabilities.
 #'
 #' @examplesIf interactive()
+#' example_data <- tribble(
+#'    ~sent_n, ~word,
+#'        1,  "The",
+#'        1,  "apple",
+#'        1,  "doesn't",
+#'        1,  "fall",
+#'        1,  "far",
+#'        1,  "from",
+#'        1,  "the",
+#'        1,  "tree.",
+#'        2,  "Don't",
+#'        2,  "judge",
+#'        2,  "a",
+#'        2,  "book",
+#'        2,  "by",
+#'        2,  "its",
+#'        2,  "cover."
+#' )
 #' causal_words_pred(
-#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+#'   x = example_data$word,
+#'   by = example_data$sent_n,
 #'   model = "gpt2"
 #' )
 #' causal_words_pred(
-#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+#'   x = example_data$word,
+#'   by = example_data$sent_n,
 #'   model = "gpt2",
 #'   log.p = 1/2  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
 #' )
@@ -171,6 +192,7 @@ causal_next_tokens_pred_tbl <- function(context,
 #' @export
 causal_words_pred <- function(x,
                               by = rep(1, length(x)),
+                              sep = " ",
                               log.p = getOption("pangoling.log.p"),
                               ignore_regex = "",
                               model = getOption("pangoling.causal.default"),
@@ -190,14 +212,11 @@ causal_words_pred <- function(x,
   }
   
   stride <- 1 # fixed for now
-  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  message_verbose_model(model, checkpoint = checkpoint)
 
   word_by_word_texts <- get_word_by_word_texts(x, by)
 
-  pasted_texts <- lapply(
-    word_by_word_texts,
-    function(word) paste0(word, collapse = " ")
-  )
+  pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
                     config_tokenizer = config_tokenizer
@@ -243,6 +262,7 @@ causal_words_pred <- function(x,
                         )
                         word_lp(words,
                                 mat = mat,
+                                sep = sep,
                                 ignore_regex = ignore_regex,
                                 model = model,
                                 add_special_tokens = add_special_tokens,
@@ -290,7 +310,7 @@ causal_tokens_pred_tbl <- function(texts,
                                    batch_size = 1,
                                    .id = NULL) {
   stride <- 1
-  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  message_verbose_model(model, checkpoint)
   ltexts <- as.list(unlist(texts, recursive = TRUE))
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
@@ -429,6 +449,7 @@ causal_mat <- function(tensor,
 #'
 causal_pred_mats <- function(x,
                              by = rep(1, length(x)),
+                             sep = " ",
                              log.p = getOption("pangoling.log.p"),
                              sorted = FALSE,
                              model = getOption("pangoling.causal.default"),
@@ -452,7 +473,7 @@ causal_pred_mats <- function(x,
     }
   }
   stride <- 1
-  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  message_verbose_model(model, checkpoint)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
                     config_tokenizer = config_tokenizer
@@ -464,10 +485,7 @@ causal_pred_mats <- function(x,
                     )
   x <- trimws(x, whitespace = "[ \t]")
   word_by_word_texts <- split(x, by)
-  pasted_texts <- lapply(
-    word_by_word_texts,
-    function(word) paste0(word, collapse = " ")
-  )
+  pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tensors <- create_tensor_lst(unname(pasted_texts),
                                tkzr,
                                add_special_tokens = add_special_tokens,
@@ -511,15 +529,16 @@ causal_pred_mats <- function(x,
 #'
 #' @examplesIf interactive()
 #' causal_targets_pred(
-#'   targets = "tree.",
-#'   l_contexts = "The apple doesn't fall far from the tree.",
+#'   targets = c("tree.","cover."),
+#'   l_contexts = c("The apple doesn't fall far from the",
+#'                  "Don't judge a book by its"),
 #'   model = "gpt2"
 #' )
-
 #' @family causal model functions
 #' @export
 causal_targets_pred <- function(targets,
                                 l_contexts = NULL,
+                                sep = " ",
                                 log.p = getOption("pangoling.log.p"),
                                 ignore_regex = "",
                                 model = getOption("pangoling.causal.default"),
@@ -539,15 +558,12 @@ causal_targets_pred <- function(targets,
   }
 
   stride <- 1 # fixed for now
-  message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
+  message_verbose_model(model, checkpoint)
   x <- c(rbind(l_contexts, targets))
   by <- rep(seq_len(length(x)/2), each = 2)
   word_by_word_texts <- get_word_by_word_texts(x, by)
 
-  pasted_texts <- lapply(
-    word_by_word_texts,
-    function(word) paste0(word, collapse = " ")
-  )
+  pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
                     config_tokenizer = config_tokenizer

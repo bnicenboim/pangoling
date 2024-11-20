@@ -91,7 +91,7 @@ masked_tokens_tbl <- function(masked_sentences,
                               add_special_tokens = NULL,
                               config_model = NULL,
                               config_tokenizer = NULL) {
-  message_verbose("Processing using masked model '", model, "'...")
+ message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
@@ -184,7 +184,7 @@ masked_targets_pred <- function(l_contexts,
     config_model = config_model
   )
 
-  message_verbose("Processing using masked model '", model, "'...")
+ message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
 
   target_tokens <- char_to_token(targets, tkzr)
   masked_sentences <- tidytable::pmap_chr(
