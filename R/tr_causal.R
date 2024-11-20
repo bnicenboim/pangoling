@@ -219,13 +219,11 @@ causal_words_pred <- function(x,
   pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer
-                    )
+                    config_tokenizer = config_tokenizer)
   trf <- lang_model(model,
                     checkpoint = checkpoint,
                     task = "causal",
-                    config_model = config_model
-                    )
+                    config_model = config_model)
   tensors <- create_tensor_lst(
     texts = unname(pasted_texts),
     tkzr = tkzr,
@@ -239,8 +237,7 @@ causal_words_pred <- function(x,
                trf,
                tkzr,
                add_special_tokens = add_special_tokens,
-               stride = stride
-               )
+               stride = stride)
   }) |>
     unlist(recursive = FALSE)
 
@@ -257,7 +254,7 @@ causal_words_pred <- function(x,
 
                         message_verbose(
                           "Text id: ", item, "\n`",
-                          paste(words, collapse = " "),
+                          paste(words, collapse = sep),
                           "`"
                         )
                         word_lp(words,
@@ -266,8 +263,7 @@ causal_words_pred <- function(x,
                                 ignore_regex = ignore_regex,
                                 model = model,
                                 add_special_tokens = add_special_tokens,
-                                config_tokenizer = config_tokenizer
-                                )
+                                config_tokenizer = config_tokenizer)
                       }
                     )
 
@@ -314,27 +310,23 @@ causal_tokens_pred_tbl <- function(texts,
   ltexts <- as.list(unlist(texts, recursive = TRUE))
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer
-                    )
+                    config_tokenizer = config_tokenizer)
   trf <- lang_model(model,
                     checkpoint = checkpoint,
                     task = "causal",
-                    config_model = config_model
-                    )
+                    config_model = config_model)
   tensors <- create_tensor_lst(ltexts,
                                tkzr,
                                add_special_tokens = add_special_tokens,
                                stride = stride,
-                               batch_size = batch_size
-                               )
+                               batch_size = batch_size)
 
   ls_mat <- tidytable::map(tensors, function(tensor) {
     causal_mat(tensor,
                trf,
                tkzr,
                add_special_tokens = add_special_tokens,
-               stride = stride
-               )
+               stride = stride)
   }) |>
     unlist(recursive = FALSE)
 
@@ -599,7 +591,7 @@ causal_targets_pred <- function(targets,
                       function(words, item, mat) {
                         message_verbose(
                           "Text id: ", item, "\n`",
-                          paste(words, collapse = " "),
+                          paste(words, collapse = sep),
                           "`"
                         )
                         word_lp(words,
@@ -621,5 +613,4 @@ causal_targets_pred <- function(targets,
     unsplit(by[keep], drop = TRUE)
   lps |>
     ln_p_change(log.p = log.p)
-
 }

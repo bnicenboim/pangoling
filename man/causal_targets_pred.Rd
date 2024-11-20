@@ -7,6 +7,7 @@
 causal_targets_pred(
   targets,
   l_contexts = NULL,
+  sep = " ",
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
   model = getOption("pangoling.causal.default"),
@@ -23,6 +24,8 @@ causal_targets_pred(
 
 \item{l_contexts}{Left context for each word in \code{x}. If \code{l_contexts} is used,
 \code{by} is ignored. Set \code{by = NULL} to avoid a message notifying that.}
+
+\item{sep}{Character indicating how words are separated in a sentence.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -93,8 +96,9 @@ in pangoling website for more examples.
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_targets_pred(
-  targets = "tree.",
-  l_contexts = "The apple doesn't fall far from the tree.",
+  targets = c("tree.","cover."),
+  l_contexts = c("The apple doesn't fall far from the",
+                 "Don't judge a book by its"),
   model = "gpt2"
 )
 \dontshow{\}) # examplesIf}

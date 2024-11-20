@@ -47,8 +47,7 @@ tokenize_lst.character <- function(x,
   id <- get_id(x,
     model = model,
     add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+    config_tokenizer = config_tokenizer)
   lapply(id, function(i) {
     tokenize_lst.numeric(i,
       model = model,
@@ -225,13 +224,16 @@ get_id <- function(x,
                    add_special_tokens = NULL,
                    config_tokenizer = NULL,
                    tkzr = NULL) {
+  
   if (is.null(tkzr)) {
     tkzr <- tokenizer(model,
       add_special_tokens = add_special_tokens,
-      config_tokenizer = config_tokenizer
-    )
+      config_tokenizer = config_tokenizer)
   }
-  if (!is.null(add_special_tokens) && add_special_tokens) {
+  #use the default
+  add_special_tokens <- add_special_tokens %||% inspect$signature(tkzr$batch_encode_plus)$parameters["add_special_tokens"]$default
+  
+  if (add_special_tokens) {
     x[1] <- paste0(
       tkzr$special_tokens_map$bos_token,
       tkzr$special_tokens_map$cls_token, x[1]
@@ -256,7 +258,7 @@ create_tensor_lst <- function(texts,
     tkzr$pad_token <- tkzr$eos_token
   }
   texts <- unlist(texts)
-  # If I runt the following line, some models such as
+  # If I run the following line, some models such as
   # 'flax-community/gpt-2-spanish' give a weird error of
   # 'GPT2TokenizerFast' object has no attribute 'is_fast'
   # max_length <- tkzr$model_max_length
@@ -308,16 +310,16 @@ word_lp <- function(words,
   } else {
     words_lm <- words
   }
-  tokens <- lapply(get_id(words_lm,
-    model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  ),
-  tokenize_lst.numeric,
-  model = model,
-  add_special_tokens = add_special_tokens,
-  config_tokenizer = config_tokenizer
-  )
+  l_ids <- get_id(words_lm,
+                  model = model,
+                  add_special_tokens = add_special_tokens,
+                  config_tokenizer = config_tokenizer)
+  tokens <- lapply(l_ids,
+                  tokenize_lst.numeric,
+                  model = model,
+                  add_special_tokens = add_special_tokens,
+                  config_tokenizer = config_tokenizer)
+  
   token_n <- tidytable::map_dbl(tokens, length)
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 

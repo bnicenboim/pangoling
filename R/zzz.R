@@ -12,8 +12,8 @@ torch <- NULL
   # use superassignment to update global reference
   transformers <<- reticulate::import("transformers",
     delay_load = TRUE,
-    convert = FALSE
-  )
+    convert = FALSE)
+  inspect <<- reticulate::import("inspect", delay_load = TRUE, convert = TRUE) 
   torch <<- reticulate::import("torch", delay_load = TRUE, convert = FALSE)
   # TODO message or something if it's not installed
   # ask about the env

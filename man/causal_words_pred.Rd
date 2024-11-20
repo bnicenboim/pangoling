@@ -2,11 +2,12 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_words_pred}
 \alias{causal_words_pred}
-\title{Get the predictability of each element of a vector of words (or phrases) using a causal transformer}
+\title{Get the predictability of each element of a vector of words (or phrases) in a series of texts using a causal transformer}
 \usage{
 causal_words_pred(
   x,
   by = rep(1, length(x)),
+  sep = " ",
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
   model = getOption("pangoling.causal.default"),
@@ -22,6 +23,8 @@ causal_words_pred(
 \item{x}{Vector of words, phrases or texts.}
 
 \item{by}{Vector that indicates how the text should be split.}
+
+\item{sep}{Character indicating how words are separated in a sentence.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -55,7 +58,7 @@ processing but take more memory.}
 A named vector of log probabilities.
 }
 \description{
-Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) using a causal transformer model. See the
+Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) in a series of texts using a causal transformer model. See the
 \href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
 in pangoling website for more examples.
 }
@@ -92,12 +95,32 @@ in pangoling website for more examples.
 
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+example_data <- tribble(
+   ~sent_n, ~word,
+       1,  "The",
+       1,  "apple",
+       1,  "doesn't",
+       1,  "fall",
+       1,  "far",
+       1,  "from",
+       1,  "the",
+       1,  "tree.",
+       2,  "Don't",
+       2,  "judge",
+       2,  "a",
+       2,  "book",
+       2,  "by",
+       2,  "its",
+       2,  "cover."
+)
 causal_words_pred(
-  x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+  x = example_data$word,
+  by = example_data$sent_n,
   model = "gpt2"
 )
 causal_words_pred(
-  x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
+  x = example_data$word,
+  by = example_data$sent_n,
   model = "gpt2",
   log.p = 1/2  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
 )

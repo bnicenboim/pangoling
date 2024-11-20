@@ -7,6 +7,7 @@
 causal_pred_mats(
   x,
   by = rep(1, length(x)),
+  sep = " ",
   log.p = getOption("pangoling.log.p"),
   sorted = FALSE,
   model = getOption("pangoling.causal.default"),
@@ -22,6 +23,8 @@ causal_pred_mats(
 \item{x}{Vector of words, phrases or texts.}
 
 \item{by}{Vector that indicates how the text should be split.}
+
+\item{sep}{Character indicating how words are separated in a sentence.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
