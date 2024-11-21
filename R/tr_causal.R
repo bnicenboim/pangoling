@@ -258,8 +258,8 @@ causal_words_pred <- function(x,
                           "`"
                         )
                         word_lp(words,
-                                mat = mat,
                                 sep = sep,
+                                mat = mat,
                                 ignore_regex = ignore_regex,
                                 model = model,
                                 add_special_tokens = add_special_tokens,
@@ -595,6 +595,7 @@ causal_targets_pred <- function(targets,
                           "`"
                         )
                         word_lp(words,
+                                sep = sep,
                                 mat = mat,
                                 ignore_regex = ignore_regex,
                                 model = model,

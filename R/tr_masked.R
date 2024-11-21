@@ -232,6 +232,7 @@ masked_targets_pred <- function(l_contexts,
         message_verbose(l, " [", words, "] ", r)
 
         word_lp(words,
+                sep = sep,
           mat = m,
           ignore_regex = ignore_regex,
           model = model,
