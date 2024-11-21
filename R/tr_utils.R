@@ -248,7 +248,7 @@ get_id <- function(x,
   ## add initial and final special characters if needed
   ## Just making up a sequence and adding the special characters (if they exist)
   placeholder <- reticulate::py_to_r(tkzr$convert_tokens_to_ids("."))
-  sequence <- reticulate::py_to_r(tkzr(".")$input_ids)
+  sequence <- reticulate::py_to_r(tkzr(".", add_special_tokens = add_special_tokens)$input_ids)
   position <- which(sequence == placeholder)
   initial <- if (position > 1) sequence[1:(position - 1)] else NULL
   final <- if (position < length(sequence)) sequence[(position + 1):length(sequence)] else NULL
