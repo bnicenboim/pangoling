@@ -210,11 +210,17 @@ causal_words_pred <- function(x,
       stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
     }
   }
+  if (length(x) != length(by)) stop2("The argument `by` has an incorrect length.")
+
+ if(any(x != trimws(x)) & sep == " ") {
+   message_verbose('Notice that some words have white spaces, argument `sep` should probably set to "".')
+ }
   
   stride <- 1 # fixed for now
   message_verbose_model(model, checkpoint = checkpoint)
 
-  word_by_word_texts <- get_word_by_word_texts(x, by)
+  word_by_word_texts <- split(x, by, drop = TRUE)
+
 
   pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
@@ -553,8 +559,8 @@ causal_targets_pred <- function(targets,
   message_verbose_model(model, checkpoint)
   x <- c(rbind(l_contexts, targets))
   by <- rep(seq_len(length(x)/2), each = 2)
-  word_by_word_texts <- get_word_by_word_texts(x, by)
-
+  word_by_word_texts <- split(x, by, drop = TRUE)
+  
   pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,

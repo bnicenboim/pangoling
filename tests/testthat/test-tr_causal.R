@@ -223,3 +223,7 @@ test_that("other models using get prob don't fail", {
     )
   )
 })
+
+
+#test of chinese, test of no spaces
+# test of by using a factor with extra levels, missing levels, etc

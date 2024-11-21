@@ -308,8 +308,8 @@ causal_lp <- function(x,
     x <- c(rbind(l_contexts, x))
     by <- rep(seq_len(length(x)/2), each = 2)
   }
-  word_by_word_texts <- get_word_by_word_texts(x, by)
-
+  word_by_word_texts <- split(x, by, drop = TRUE)
+  
   pasted_texts <- lapply(
     word_by_word_texts,
     function(word) paste0(word, collapse = " ")
