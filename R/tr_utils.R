@@ -201,7 +201,7 @@ tokenizer <- function(model = "gpt2",
       )
     )
   } else {
-    lst_to_kwargs(c(pretrained_model_name_or_path = model, config_tokenizer))
+    lst_to_kwargs(c(pretrained_model_name_or_path = model, use_fast = FALSE, config_tokenizer))
     reticulate::py_to_r(
       reticulate::py_run_string(
         "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
@@ -230,20 +230,32 @@ get_id <- function(x,
       add_special_tokens = add_special_tokens,
       config_tokenizer = config_tokenizer)
   }
-  #use the default
-  add_special_tokens <- add_special_tokens %||% inspect$signature(tkzr$batch_encode_plus)$parameters["add_special_tokens"]$default
   
-  if (add_special_tokens) {
-    x[1] <- paste0(
-      tkzr$special_tokens_map$bos_token,
-      tkzr$special_tokens_map$cls_token, x[1]
-    )
-    x[length(x)] <- paste0(x[length(x)], tkzr$special_tokens_map$sep_token)
-  } ### more general
-  lapply(x, function(i) {
+  # if (add_special_tokens) {
+  #   x[1] <- paste0(
+  #     tkzr$special_tokens_map$bos_token,
+  #     tkzr$special_tokens_map$cls_token, x[1]
+  #   )
+  #   x[length(x)] <- paste0(x[length(x)], tkzr$special_tokens_map$sep_token)
+  # }
+  
+  ### more general
+  out <- lapply(x, function(i) {
     t <- tkzr$tokenize(i)
     tkzr$convert_tokens_to_ids(t)
   })
+  
+  ## add initial and final special characters if needed
+  ## Just making up a sequence and adding the special characters (if they exist)
+  placeholder <- reticulate::py_to_r(tkzr$convert_tokens_to_ids("."))
+  sequence <- reticulate::py_to_r(tkzr(".")$input_ids)
+  position <- which(sequence == placeholder)
+  initial <- if (position > 1) sequence[1:(position - 1)] else NULL
+  final <- if (position < length(sequence)) sequence[(position + 1):length(sequence)] else NULL
+  out[[1]] <- c(initial, out[[1]])
+  out[[length(out)]] <- c(out[[length(out)]], final)
+  
+  return(out)
 }
 
 
