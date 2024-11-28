@@ -98,6 +98,32 @@ get_vocab <- function(tkzr) {
   sort(unlist(tkzr$get_vocab())) |> names()
 }
 
+
+# Function to handle decoding with error handling
+safe_decode <- function(id, tkzr) {
+  tryCatch(
+    {
+      # Attempt to decode the ID
+      tkzr$decode(id)
+    },
+    error = function(e) {
+      # Check if the error is "Embedded NUL in string"
+      if (grepl("Embedded NUL in string", e$message)) {
+        return("NULL")  # Return NULL for this specific error
+      }
+      stop(e)  # Re-throw other errors
+    }
+  )
+}
+
+
+get_vocab_words <- function(tkzr) {
+  ids <- seq_along(get_vocab(tkzr))-1L
+ sapply(ids, function(x) safe_decode(x, tkzr))
+}
+
+
+
 encode <- function(x, tkzr, add_special_tokens = NULL, ...) {
   if (!is.null(add_special_tokens)) {
     tkzr$batch_encode_plus(x,

@@ -225,5 +225,12 @@ test_that("other models using get prob don't fail", {
 })
 
 
-#test of chinese, test of no spaces
-# test of by using a factor with extra levels, missing levels, etc
+## 1 <- get_vocab(tokenizer("DeepESP/gpt2-spanish"))
+## v2 <- get_vocab_words(tokenizer("DeepESP/gpt2-spanish"))
+## v1[300:310]
+## v2[300:310]
+## tokenize_lst("Das ist schön.", model = "dbmdz/german-gpt2")
+## td <- tokenizer("dbmdz/german-gpt2")
+## td$tokenize(" schön")
+# suprisal of NA
+# batch of 10 not working
