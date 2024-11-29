@@ -86,7 +86,7 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #'
 #' @family masked model functions
 #' @export
-masked_tokens_tbl <- function(masked_sentences,
+masked_tokens_pred_tbl <- function(masked_sentences,
                               model = getOption("pangoling.masked.default"),
                               add_special_tokens = NULL,
                               config_model = NULL,

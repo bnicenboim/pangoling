@@ -26,7 +26,7 @@ masked_tokens_tbl <- function(masked_sentences,
                               add_special_tokens = NULL,
                               config_model = NULL,
                               config_tokenizer = NULL) {
- .Deprecated(new = "new_function1() or new_function2()")
+ .Deprecated(new = "masked_tokens_pred_tbl()")
  message_verbose("Processing using masked model '", model, "'...")
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
@@ -109,6 +109,7 @@ masked_lp <- function(l_contexts,
                       add_special_tokens = NULL,
                       config_model = NULL,
                       config_tokenizer = NULL) {
+ .Deprecated(new = "masked_targets_pred()")
   stride <- 1
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
@@ -210,6 +211,9 @@ causal_next_tokens_tbl <- function(context,
                                    add_special_tokens = NULL,
                                    config_model = NULL,
                                    config_tokenizer = NULL) {
+
+ .Deprecated(new = "causal_next_tokens_pred_tbl()")
+
   if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   trf <- lang_model(model,
@@ -287,6 +291,7 @@ causal_lp <- function(x,
                       config_tokenizer = NULL,
                       batch_size = 1,
                       ...) {
+ .Deprecated(new = "causal_targets_pred() supporting the l_context argument or causal_words_pred() for the x and by arguments.")
   dots <- list(...)
   # Check for the deprecated .by argument
   if (!is.null(dots$.by)) {
@@ -413,6 +418,8 @@ causal_tokens_lp_tbl <- function(texts,
                                  config_tokenizer = NULL,
                                  batch_size = 1,
                                  .id = NULL) {
+
+ .Deprecated(new = "causal_tokens_pred_tbl()")
   stride <- 1
   message_verbose("Processing using causal model '", file.path(model, checkpoint), "'...")
   ltexts <- as.list(unlist(texts, recursive = TRUE))
@@ -491,6 +498,7 @@ causal_lp_mats <- function(x,
                            config_tokenizer = NULL,
                            batch_size = 1,
                            ...) {
+ .Deprecated(new = "causal_pred_mats()")
   dots <- list(...)
   # Check for the deprecated .by argument
   if (!is.null(dots$.by)) {

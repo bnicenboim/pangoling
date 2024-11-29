@@ -5,7 +5,7 @@
 \title{Get the possible next tokens and their log probabilities its previous context using a causal transformer}
 \usage{
 causal_next_tokens_pred_tbl(
-  context,
+  l_context,
   log.p = getOption("pangoling.log.p"),
   model = getOption("pangoling.causal.default"),
   checkpoint = NULL,
@@ -15,7 +15,7 @@ causal_next_tokens_pred_tbl(
 )
 }
 \arguments{
-\item{context}{The context.}
+\item{l_context}{The left context.}
 
 \item{model}{Name of a pre-trained model or folder.}
 

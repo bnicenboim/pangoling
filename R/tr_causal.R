@@ -82,7 +82,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
-#' @param context The context.
+#' @param l_context The left context.
 #' @inheritParams causal_preload
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
@@ -94,14 +94,14 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @family causal model functions
 #' @export
-causal_next_tokens_pred_tbl <- function(context,
+causal_next_tokens_pred_tbl <- function(l_context,
                                         log.p = getOption("pangoling.log.p"),
                                         model = getOption("pangoling.causal.default"),
                                         checkpoint = NULL,
                                         add_special_tokens = NULL,
                                         config_model = NULL,
                                         config_tokenizer = NULL) {
-  if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
+  if (length(unlist(l_context)) > 1) stop2("Only one context is allowed in this function.")
   message_verbose_model(model, checkpoint)
   trf <- lang_model(model,
                     checkpoint = checkpoint,
@@ -114,7 +114,7 @@ causal_next_tokens_pred_tbl <- function(context,
                     )
 
   # no batches allowed
-  context_tensor <- encode(list(unlist(context)),
+  context_tensor <- encode(list(unlist(l_context)),
                            tkzr,
                            add_special_tokens = add_special_tokens
                            )$input_ids

@@ -60,6 +60,7 @@ Other masked model functions:
 \code{\link{masked_config}()},
 \code{\link{masked_lp}()},
 \code{\link{masked_targets_pred}()},
+\code{\link{masked_tokens_pred_tbl}()},
 \code{\link{masked_tokens_tbl}()}
 }
 \concept{masked model functions}
