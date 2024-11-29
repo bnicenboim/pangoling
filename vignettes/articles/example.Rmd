@@ -1,0 +1,81 @@
+---
+title: "Surprisal from a causal (GPT-like) model as a cognitive processing bottleneck."
+bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache = TRUE
+)
+```
+
+
+```{r}
+library(pangoling)
+library(tidytable)
+library(tictoc)
+```
+
+use data from Jaeger et al 2014, Chinese sentences shown in self-paced reading to participants.  the research question and the experimental conditions don't matter to us, sentences are shown "word-by-word" (one to three characters together) to subjects using self-paced reading, explain:
+
+```{r}
+data("df_jaeger14")
+df_jaeger14
+```
+
+We get the unique words and sentences to get the predictability (we don't want to do it with the entire text because there will be repetition across subjects and the model will run several time son identical words in identical sentences).
+
+```{r}
+df_stim <- df_jaeger14 |> distinct(item, cond, word, wordn)
+df_stim |> print(n=20)
+
+ df_jaeger14 |> distinct(item, cond, word, wordn, sentence) |>
+   filter(item ==1, cond =="a")
+```
+
+We preload a gpt-2 like model trained with chinese texts (see huggingface...)
+
+```{r}
+## https://huggingface.co/uer/gpt2-chinese-cluecorpussmall
+causal_preload("uer/gpt2-chinese-cluecorpussmall")
+#"yuanzhoulvpi/gpt2_chinese"
+```
+
+We want to get surprisal values, so rather than getting the natural log probability of the next word, we want to get the surprisal values in bits, this is $-log_2(P(word))$, which can also be written as $log_{1/2}(P(word))$ for that reason we set `log.p = 0.5`.
+
+Because in chinese words are not separated by spaces, we change the default value to `sep= ""`, this way gpt2 will build sentences with words with no spaces between them.
+
+finally, to speed up the processing, we configure the command so that the sentences are run in batches of 10.
+
+```{r}
+tic()
+df_stim <- df_stim |>
+  mutate(surprisal = causal_words_pred(word,
+                                       by = interaction(item, cond),
+                                       log.p = 0.5,
+                                       model = "uer/gpt2-chinese-cluecorpussmall",
+#model ="yuanzhoulvpi/gpt2_chinese",
+                                       sep = "",
+                                       batch_size = 10))
+toc()
+df_stim |> print(n=20)
+```
+
+
+
+Now we add this information to the entire experimental dataset:
+
+```{r}
+df_jaeger14 <- df_jaeger14 |>
+  left_join(df_stim)
+```
+
+
+```{r}
+library(lme4)
+summary(lmer(log(rt) ~ log(surprisal) + ( log(surprisal)| subject) + ( log(surprisal)| item), data = df_jaeger14))
+```
+
+
