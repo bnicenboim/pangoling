@@ -33,6 +33,7 @@ torch <- NULL
   tokenizer <<- memoise::memoise(tokenizer)
   lang_model <<- memoise::memoise(lang_model)
   transformer_vocab <<- memoise::memoise(transformer_vocab)
+  get_vocab <<- memoise::memoise(get_vocab)
 
   # avoid notes:
   utils::globalVariables(c("mask_n"))

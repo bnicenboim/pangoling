@@ -13,6 +13,7 @@ causal_pred_mats(
   model = getOption("pangoling.causal.default"),
   checkpoint = NULL,
   add_special_tokens = NULL,
+  decode = FALSE,
   config_model = NULL,
   config_tokenizer = NULL,
   batch_size = 1,
@@ -101,13 +102,9 @@ causal_pred_mats(
 \seealso{
 Other causal model functions: 
 \code{\link{causal_config}()},
-\code{\link{causal_lp}()},
-\code{\link{causal_lp_mats}()},
 \code{\link{causal_next_tokens_pred_tbl}()},
-\code{\link{causal_next_tokens_tbl}()},
 \code{\link{causal_preload}()},
 \code{\link{causal_targets_pred}()},
-\code{\link{causal_tokens_lp_tbl}()},
 \code{\link{causal_tokens_pred_tbl}()},
 \code{\link{causal_words_pred}()}
 }

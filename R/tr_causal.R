@@ -83,6 +83,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' in pangoling website for more examples.
 #'
 #' @param l_context The left context.
+#' @param decode Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.
 #' @inheritParams causal_preload
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
@@ -96,6 +97,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' @export
 causal_next_tokens_pred_tbl <- function(l_context,
                                         log.p = getOption("pangoling.log.p"),
+                                        decode = FALSE,
                                         model = getOption("pangoling.causal.default"),
                                         checkpoint = NULL,
                                         add_special_tokens = NULL,
@@ -124,7 +126,7 @@ causal_next_tokens_pred_tbl <- function(l_context,
   l_softmax <- torch$log_softmax(logits_next_word, dim = -1L)$tolist()
   lp <- reticulate::py_to_r(l_softmax) |>
     unlist()
-  vocab <- get_vocab(tkzr)
+  vocab <- get_vocab(tkzr, decode = decode)
   tidytable::tidytable(token = vocab,
                        pred = lp |> ln_p_change(log.p = log.p)) |>
     tidytable::arrange(-pred)
@@ -243,6 +245,7 @@ causal_words_pred <- function(x,
                trf,
                tkzr,
                add_special_tokens = add_special_tokens,
+               decode = FALSE,
                stride = stride)
   }) |>
     unlist(recursive = FALSE)
@@ -332,6 +335,7 @@ causal_tokens_pred_tbl <- function(texts,
                trf,
                tkzr,
                add_special_tokens = add_special_tokens,
+               decode = FALSE,
                stride = stride)
   }) |>
     unlist(recursive = FALSE)
@@ -358,6 +362,7 @@ causal_mat <- function(tensor,
                        trf,
                        tkzr,
                        add_special_tokens = NULL,
+                       decode,
                        stride = 1) {
   message_verbose(
     "Processing a batch of size ",
@@ -368,7 +373,7 @@ causal_mat <- function(tensor,
 
   if (tensor$input_ids$shape[1] == 0) {
     warning("No tokens found.", call. = FALSE)
-    vocab <- get_vocab(tkzr)
+    vocab <- get_vocab(tkzr, decode = decode)
     mat <- matrix(rep(NA, length(vocab)), ncol = 1)
     rownames(mat) <- vocab
     colnames(mat) <- ""
@@ -414,7 +419,7 @@ causal_mat <- function(tensor,
     }
     # remove the last prediction, and the first is NA
     mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
-    rownames(mat) <- get_vocab(tkzr)
+    rownames(mat) <- get_vocab(tkzr, decode = decode)
     colnames(mat) <- unlist(tokens)
     mat
   })
@@ -453,6 +458,7 @@ causal_pred_mats <- function(x,
                              model = getOption("pangoling.causal.default"),
                              checkpoint = NULL,
                              add_special_tokens = NULL,
+                             decode = FALSE,
                              config_model = NULL,
                              config_tokenizer = NULL,
                              batch_size = 1,
@@ -494,9 +500,11 @@ causal_pred_mats <- function(x,
                        tensors,
                        function(tensor) {
                          causal_mat(tensor,
-                                    trf,
-                                    tkzr,
+                                    trf = trf,
+                                    tkzr = tkzr,
                                     add_special_tokens = add_special_tokens,
+
+                                    decode = decode,
                                     stride = stride
                                     )
                        }
@@ -581,9 +589,10 @@ causal_targets_pred <- function(targets,
 
   lmats <- lapply(tensors, function(tensor) {
     causal_mat(tensor,
-               trf,
-               tkzr,
+               trf = trf,
+               tkzr = tkzr,
                add_special_tokens = add_special_tokens,
+               decode = decode,
                stride = stride
                )
   }) |>

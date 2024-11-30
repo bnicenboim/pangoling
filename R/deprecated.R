@@ -1,25 +1,21 @@
-#' Get the possible tokens and their log probabilities for each mask in a sentence
-#'
-#' For each mask in a sentence, get the possible tokens and their log
-#' probabilities using a masked transformer.
-#'
-#' @section More examples:
-#' See the
-#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html)
-#' in pangoling website for more examples.
-#'
-#'
-#' @param masked_sentences Masked sentences.
-#' @inheritParams masked_preload
-#' @inherit masked_preload details
-#' @return A table with the masked sentences, the tokens (`token`),
-#'         log probability (`lp`), and the respective mask number (`mask_n`).
-#' @examplesIf interactive()
-#' masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
-#'   model = "bert-base-uncased"
-#' )
-#'
-#' @family masked model functions
+#' @title Deprecated functions in package \pkg{pangoling}.
+#' @description The functions listed below are deprecated and will be defunct in the near future. When possible, alternative functions with similar functionality are also mentioned. Help pages for deprecated functions are available at \code{help("<function>-deprecated")}.
+#' @name pangoling-deprecated
+#' @keywords internal
+NULL
+
+
+#' @title Get the possible tokens and their log probabilities for each mask in a sentence
+#' @description This function is deprecated. Use `masked_tokens_pred_tbl()` instead.
+#' @name masked_tokens_tbl-deprecated
+#' @usage masked_tokens_tbl(masked_sentences, model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname pangoling-deprecated
+#' @section \code{masked_tokens_tbl}:
+#' For \code{masked_tokens_tbl}, use \code{\link{masked_tokens_pred_tbl}}.
 #' @export
 masked_tokens_tbl <- function(masked_sentences,
                               model = getOption("pangoling.masked.default"),
@@ -70,37 +66,21 @@ masked_tokens_tbl <- function(masked_sentences,
     tidytable::relocate(mask_n, .after = tidyselect::everything())
 }
 
-#' Get the log probability of a target word (or phrase) given a left and right context
-#'
-#' Get the log probability of a vector of target words (or phrase) given a
-#' vector of left and of right contexts using a masked transformer.
-#'
-#' @section More examples:
-#' See the
-#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-bert.html)
-#' in pangoling website for more examples.
-#'
-#'
-#' @param l_contexts Left context of the target word.
-#' @param targets Target words.
-#' @param r_contexts Right context of the target word.
-#' @inheritParams masked_preload
-#' @inheritParams causal_lp
-#' @inherit masked_preload details
-#' @return A named vector of log probabilities.
-#' @examplesIf interactive()
-#' masked_lp(
-#'   l_contexts = c("The", "The"),
-#'   targets = c("apple", "pear"),
-#'   r_contexts = c(
-#'     "doesn't fall far from the tree.",
-#'     "doesn't fall far from the tree."
-#'   ),
-#'   model = "bert-base-uncased"
-#' )
-#'
-#' @family masked model functions
+
+
+#' @title Get the log probability of a target word (or phrase) given a left and right context
+#' @description This function is deprecated. Use `masked_targets_pred()` instead.
+#' @name masked_lp-deprecated
+#' @usage masked_lp(l_contexts, targets, r_contexts, ignore_regex = "", model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname pangoling-deprecated
+#' @section \code{masked_lp}:
+#' For \code{masked_lp}, use \code{\link{masked_targets_pred}}.
 #' @export
+
 masked_lp <- function(l_contexts,
                       targets,
                       r_contexts,
@@ -183,27 +163,17 @@ masked_lp <- function(l_contexts,
 }
 
 
-#' Get the possible next tokens and their log probabilities its previous context using a causal transformer
-#'
-#' Get the possible next tokens and their log probabilities based on its
-#' previous context using a causal transformer model from [Hugging Face](https://huggingface.co).
-#'
-#' @section More examples:
-#' See the
-#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
-#' in pangoling website for more examples.
-#'
-#' @param context The context.
-#' @inheritParams causal_preload
-#' @inherit  causal_preload details
-#' @return A table with possible next tokens and their log-probabilities.
-#' @examplesIf interactive()
-#' causal_next_tokens_tbl(
-#'   context = "The apple doesn't fall far from the",
-#'   model = "gpt2"
-#' )
-#'
-#' @family causal model functions
+#' @title Get the possible next tokens and their log probabilities for its previous context
+#' @description This function is deprecated. Use `causal_next_tokens_pred_tbl()` instead.
+#' @name causal_next_tokens_tbl-deprecated
+#' @usage causal_next_tokens_tbl(context, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname pangoling-deprecated
+#' @section \code{causal_next_tokens_tbl}:
+#' For \code{causal_next_tokens_tbl}, use \code{\link{causal_next_tokens_pred_tbl}}.
 #' @export
 causal_next_tokens_tbl <- function(context,
                                    model = getOption("pangoling.causal.default"),
@@ -243,42 +213,17 @@ causal_next_tokens_tbl <- function(context,
 }
 
 
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer
-#'
-#' Get the log probability of each element of a vector of words (or phrases) using a causal transformer model. See the
-#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
-#' in pangoling website for more examples.
-#'
-#'
-#' @param x Vector of words, phrases or texts.
-#' @param by Vector that indicates how the text should be split.
-#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
-#'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
-#' @param ... not in use.
-#' @inheritParams causal_preload
-#' @param ignore_regex Can ignore certain characters when calculates the log
-#'                      probabilities. For example `^[[:punct:]]$` will ignore
-#'                      all punctuation  that stands alone in a token.
-#' @param batch_size Maximum size of the batch. Larges batches speedup
-#'                   processing but take more memory.
-#' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
-#' @return A named vector of log probabilities.
-#'
-#' @examplesIf interactive()
-#' causal_lp(
-#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
-#'   model = "gpt2"
-#' )
-#'
-#'causal_lp(
-#'   x = "tree.",
-#'   l_contexts = "The apple doesn't fall far from the tree.",
-#'   by = NULL, # it's ignored anyways
-#'   model = "gpt2"
-#' )
+#' @title Get the log probability of each element of a vector of words (or phrases) using a causal transformer
+#' @description This function is deprecated. Use `causal_targets_pred()` (supports `l_context` argument) or `causal_words_pred()` (supports `x` and `by` arguments) instead.
+#' @name causal_lp-deprecated
+#' @usage causal_lp(x, by = rep(1, length(x)), l_contexts = NULL, ignore_regex = "", model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
 
-#' @family causal model functions
+#' @rdname pangoling-deprecated
+#' @section \code{causal_lp}:
+#' For \code{causal_lp}, use \code{\link{causal_targets_pred}} or \code{\link{causal_words_pred}}.
 #' @export
 causal_lp <- function(x,
                       by = rep(1, length(x)),
@@ -389,26 +334,17 @@ causal_lp <- function(x,
 
 
 
-#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer
-#'
-#' Get the log probability of each token in a sentence (or group of sentences) using a causal transformer model.
-#'
-#'
-#' @param texts Vector or list of texts.
-#' @param .id Name of the column with the sentence id.
-#' @inheritParams causal_preload
-#' @inheritParams causal_lp
-#' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
-#' @return A table with token names (`token`), log-probability (`lp`) and optionally sentence id.
-#'
-#' @examplesIf interactive()
-#' causal_tokens_lp_tbl(
-#'   texts = c("The apple doesn't fall far from the tree."),
-#'   model = "gpt2"
-#' )
-#'
-#' @family causal model functions
+#' @title Get the log probability of each token in a sentence (or group of sentences) using a causal transformer
+#' @description This function is deprecated. Use `causal_tokens_pred_tbl()` instead.
+#' @name causal_tokens_lp_tbl-deprecated
+#' @usage causal_tokens_lp_tbl(texts, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, .id = NULL)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
+
+#' @rdname pangoling-deprecated
+#' @section \code{causal_tokens_lp_tbl}:
+#' For \code{causal_tokens_lp_tbl}, use \code{\link{causal_tokens_pred_tbl}}.
 #' @export
 causal_tokens_lp_tbl <- function(texts,
                                  model = getOption("pangoling.causal.default"),
@@ -466,28 +402,18 @@ causal_tokens_lp_tbl <- function(texts,
 
 
 
+#' @title Get a list of matrices with the log probabilities of possible words given their previous context using a causal transformer
+#' @description This function is deprecated. Use `causal_pred_mats()` instead.
+#' @name causal_lp_mats-deprecated
+#' @usage causal_lp_mats(x, by = rep(1, length(x)), sorted = FALSE, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
+#' @seealso \code{\link{pangoling-deprecated}}
+#' @keywords internal
+NULL
 
-#' Get a list of matrices with the log probabilities of possible word given its previous context using a causal transformer
-#'
-#' Get a list of matrices with the log probabilities of possible word given
-#' its previous context using a causal transformer model.
-#'
-#' @inheritParams causal_lp
-#' @inheritParams causal_preload
-#' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `by`) list(s) are returned.
-#' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_tbl More examples
-#' @return A list of matrices with tokens in their columns and the vocabulary of the model in their rows
-#'
-#' @examplesIf interactive()
-#' causal_lp_mats(
-#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
-#'   model = "gpt2"
-#' )
-#'
-#' @family causal model functions
+#' @rdname pangoling-deprecated
+#' @section \code{causal_lp_mats}:
+#' For \code{causal_lp_mats}, use \code{\link{causal_pred_mats}}.
 #' @export
-#'
 causal_lp_mats <- function(x,
                            by = rep(1, length(x)),
                            sorted = FALSE,

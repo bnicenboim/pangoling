@@ -1,8 +1,9 @@
 #' Returns the vocabulary of a model
 #'
-#' Returns the vocabulary of a model.
+#' Returns the (decoded) vocabulary of a model.
 #'
-#' @inheritParams causal_lp
+#' @inheritParams causal_words_pred
+#' @inheritParams causal_next_tokens_pred_tbl
 #'
 #' @return A vector with the vocabulary of a model.
 #' @examplesIf interactive()
@@ -12,12 +13,14 @@
 #' @family token-related functions
 transformer_vocab <- function(model = getOption("pangoling.causal.default"),
                               add_special_tokens = NULL,
-                              config_tokenizer = NULL) {
+                              decode = FALSE,
+                              config_tokenizer = NULL
+                              ) {
   tkzr <- tokenizer(model,
     add_special_tokens = add_special_tokens,
     config_tokenizer = config_tokenizer
   )
-  sort(unlist(tkzr$get_vocab())) |> names()
+  get_vocab(tkzr = tkzr, decode = decode)
 }
 
 #' Tokenize an input
@@ -94,8 +97,14 @@ ntokens <- function(x,
 }
 
 
-get_vocab <- function(tkzr) {
-  sort(unlist(tkzr$get_vocab())) |> names()
+get_vocab <- function(tkzr, decode = FALSE) {
+  if(decode == FALSE){
+    sort(unlist(tkzr$get_vocab())) |> names()
+  } else {
+    ids <- seq_along(get_vocab(tkzr))-1L
+ sapply(ids, function(x) safe_decode(x, tkzr))
+
+  }
 }
 
 
@@ -117,10 +126,6 @@ safe_decode <- function(id, tkzr) {
 }
 
 
-get_vocab_words <- function(tkzr) {
-  ids <- seq_along(get_vocab(tkzr))-1L
- sapply(ids, function(x) safe_decode(x, tkzr))
-}
 
 
 

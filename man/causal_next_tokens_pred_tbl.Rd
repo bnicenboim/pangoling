@@ -7,6 +7,7 @@
 causal_next_tokens_pred_tbl(
   l_context,
   log.p = getOption("pangoling.log.p"),
+  decode = FALSE,
   model = getOption("pangoling.causal.default"),
   checkpoint = NULL,
   add_special_tokens = NULL,
@@ -16,6 +17,8 @@ causal_next_tokens_pred_tbl(
 }
 \arguments{
 \item{l_context}{The left context.}
+
+\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -79,13 +82,9 @@ causal_next_tokens_pred_tbl(
 \seealso{
 Other causal model functions: 
 \code{\link{causal_config}()},
-\code{\link{causal_lp}()},
-\code{\link{causal_lp_mats}()},
-\code{\link{causal_next_tokens_tbl}()},
 \code{\link{causal_pred_mats}()},
 \code{\link{causal_preload}()},
 \code{\link{causal_targets_pred}()},
-\code{\link{causal_tokens_lp_tbl}()},
 \code{\link{causal_tokens_pred_tbl}()},
 \code{\link{causal_words_pred}()}
 }
