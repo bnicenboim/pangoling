@@ -55,7 +55,7 @@ test_that("errors work", {
 test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
-    causal_next_tokens_pred_tbl(context = "The apple doesn't fall far from the")
+    causal_next_tokens_pred_tbl(l_context = "The apple doesn't fall far from the")
   expect_equal(sum(exp(cont$pred)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
   lp_prov <- causal_words_pred(x = prov_words)

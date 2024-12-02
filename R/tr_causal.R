@@ -592,7 +592,7 @@ causal_targets_pred <- function(targets,
                trf = trf,
                tkzr = tkzr,
                add_special_tokens = add_special_tokens,
-               decode = decode,
+               decode = FALSE,
                stride = stride
                )
   }) |>

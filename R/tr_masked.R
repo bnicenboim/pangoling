@@ -87,48 +87,50 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #' @family masked model functions
 #' @export
 masked_tokens_pred_tbl <- function(masked_sentences,
-                              model = getOption("pangoling.masked.default"),
-                              add_special_tokens = NULL,
-                              config_model = NULL,
-                              config_tokenizer = NULL) {
- message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
+                                   model = getOption("pangoling.masked.default"),
+                                   checkpoint = NULL,
+                                   add_special_tokens = NULL,
+                                   config_model = NULL,
+                                   config_tokenizer = NULL) {
+  message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   trf <- lang_model(model,
-    task = "masked",
-    config_model = config_model
-  )
+                    checkpoint = checkpoint,
+                    task = "masked",
+                    config_model = config_model
+                    )
   vocab <- get_vocab(tkzr)
   # non_batched:
   # TODO: speedup using batches
   tidytable::map_dfr(masked_sentences, function(masked_sentence) {
     masked_tensor <- encode(list(masked_sentence), tkzr,
-      add_special_tokens = add_special_tokens
-    )$input_ids
+                            add_special_tokens = add_special_tokens
+                            )$input_ids
     outputs <- trf(masked_tensor)
     mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
     logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
     lp <- reticulate::py_to_r(
-      torch$log_softmax(logits_masks, dim = -1L)$tolist()
-    )
+                        torch$log_softmax(logits_masks, dim = -1L)$tolist()
+                      )
     if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
     # names(lp) <-  1:length(lp)
     if (length(mask_pos) == 0) {
       tidytable::tidytable(
-        masked_sentence = masked_sentence,
-        token = NA,
-        lp = NA,
-        mask_n = NA
-      )
+                   masked_sentence = masked_sentence,
+                   token = NA,
+                   lp = NA,
+                   mask_n = NA
+                 )
     } else {
       lp |> tidytable::map_dfr(~
-        tidytable::tidytable(
-          masked_sentence = masked_sentence,
-          token = vocab, lp = .x
-        ) |>
-          tidytable::arrange(-lp), .id = "mask_n")
+                                 tidytable::tidytable(
+                                              masked_sentence = masked_sentence,
+                                              token = vocab, lp = .x
+                                            ) |>
+                                 tidytable::arrange(-lp), .id = "mask_n")
     }
   }) |>
     tidytable::relocate(mask_n, .after = tidyselect::everything())
@@ -166,85 +168,91 @@ masked_tokens_pred_tbl <- function(masked_sentences,
 #' @family masked model functions
 #' @export
 masked_targets_pred <- function(l_contexts,
-                      targets,
-                      r_contexts,
-                      log.p = getOption("pangoling.log.p"),
-                      ignore_regex = "",
-                      model = getOption("pangoling.masked.default"),
-                      add_special_tokens = NULL,
-                      config_model = NULL,
-                      config_tokenizer = NULL) {
+                                targets,
+                                r_contexts,
+                                log.p = getOption("pangoling.log.p"),
+                                ignore_regex = "",
+                                model = getOption("pangoling.masked.default"),
+                                checkpoint = NULL,
+                                add_special_tokens = NULL,
+                                config_model = NULL,
+                                config_tokenizer = NULL) {
   stride <- 1
+  message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
+
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer)
   trf <- lang_model(model,
-    task = "masked",
-    config_model = config_model
-  )
+                    checkpoint = checkpoint,
+                    task = "masked",
+                    config_model = config_model)
 
- message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
 
-  target_tokens <- char_to_token(targets, tkzr)
+  target_tokens <- lapply(targets, tkzr$tokenize)
   masked_sentences <- tidytable::pmap_chr(
-    list(
-      l_contexts,
-      target_tokens,
-      r_contexts
-    ),
-    function(l, target, r) {
-      paste0(
-        l,
-        " ",
-        paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
-        " ",
-        r
-      )
-    }
-  )
+                                   list(
+                                     l_contexts,
+                                     target_tokens,
+                                     r_contexts
+                                   ),
+                                   function(l, target, r) {
+                                     paste0(
+                                       l,
+                                       " ",
+                                       paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
+                                       " ",
+                                       r
+                                     )
+                                   }
+                                 )
 
   # named tensor list:
   tensors_lst <- tidytable::map2(masked_sentences, targets, function(t, w) {
     l <- create_tensor_lst(t,
-      tkzr,
-      add_special_tokens = add_special_tokens,
-      stride = stride
-    )
+                           tkzr,
+                           add_special_tokens = add_special_tokens,
+                           stride = stride
+                           )
     names(l) <- w
     l
   })
 
   out <- tidytable::pmap(
-    list(targets, l_contexts, r_contexts, tensors_lst),
-    function(words, l, r, tensor_lst) {
-      # TODO: make it by batches
-      ls_mat <- masked_lp_mat(lapply(tensor_lst, function(t) t$input_ids),
-        trf = trf,
-        tkzr = tkzr,
-        add_special_tokens = add_special_tokens,
-        stride = stride
-      )
-      text <- paste0(words, collapse = " ")
-      tokens <- char_to_token(text, tkzr)[[1]]
-      lapply(ls_mat, function(m) {
-        # m <- ls_mat[[1]]
-        message_verbose(l, " [", words, "] ", r)
+                      list(targets, l_contexts, r_contexts, tensors_lst),
+                      function(words, l, r, tensor_lst) {
+                        # TODO: make it by batches
+                        # words <- targets[[1]]
+                        # l <- l_contexts[[1]]
+                        # r <- r_contexts[[1]]
+                        # tensor_lst <- tensors_lst[[1]]
+                        ls_mat <- masked_lp_mat(tensor_lst = lapply(tensor_lst, function(t) t$input_ids),
+                                                trf = trf,
+                                                tkzr = tkzr,
+                                                add_special_tokens = add_special_tokens,
+                                                stride = stride)
+                        text <- paste0(words, collapse = " ")
+                        tokens <- tkzr$tokenize(text)
+                        lapply(ls_mat, function(m) {
+                          # m <- ls_mat[[1]]
+                          message_verbose(l, " [", words, "] ", r)
 
-        word_lp(words,
-                sep = sep,
-          mat = m,
-          ignore_regex = ignore_regex,
-          model = model,
-          add_special_tokens = add_special_tokens,
-          config_tokenizer = config_tokenizer
-        )
-      })
-      # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
-    }
-  )
+                          word_lp(words,
+                                  #sep doesn't matter for Bert tokenizer
+                                  sep = "",
+                                  mat = m,
+                                  ignore_regex = ignore_regex,
+                                  model = model,
+                                  # we don't want to add anything to the target
+                                  add_special_tokens = FALSE,
+                                  config_tokenizer = config_tokenizer
+                                  )
+                        })
+                        # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
+                      }
+                    )
   unlist(out, recursive = TRUE) |>
-          ln_p_change(log.p = log.p)
+    ln_p_change(log.p = log.p)
 
 }
 
@@ -258,7 +266,7 @@ masked_lp_mat <- function(tensor_lst,
                           N_pred = 1) {
   tensor <- torch$row_stack(unname(tensor_lst))
   words <- names(tensor_lst)
-  tokens <- char_to_token(words, tkzr)
+  tokens <- tkzr$tokenize(words)
   n_masks <- sum(tensor_lst[[1]]$tolist()[[1]] == tkzr$mask_token_id)
   message_verbose(
     "Processing ",
@@ -300,14 +308,14 @@ masked_lp_mat <- function(tensor_lst,
       logits_masked[lengths(logits_masked) > 0] |>
       torch$row_stack()
     lp <- reticulate::py_to_r(torch$log_softmax(logits_masked_cleaned,
-      dim = -1L
-    ))$tolist()
+                                                dim = -1L
+                                                ))$tolist()
     mat <- do.call("cbind", lp)
     # columns are not named
     mat_NA <- matrix(NA,
-      nrow = nrow(mat),
-      ncol = sum(lengths(logits_masked) == 0)
-    )
+                     nrow = nrow(mat),
+                     ncol = sum(lengths(logits_masked) == 0)
+                     )
     # add NA columns for predictions not made
     mat <- cbind(mat_NA, mat)
     colnames(mat) <- unlist(tokens)
