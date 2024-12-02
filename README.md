@@ -16,7 +16,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 Review](https://badges.ropensci.org/575_status.svg)](https://github.com/ropensci/software-review/issues/575)
 <!-- badges: end -->
 
-`pangoling`[^1] is an R package for estimating the log-probabilities of
+`pangoling`\[1\] is an R package for estimating the log-probabilities of
 words in a given context using transformer models. The package provides
 an interface for utilizing pre-trained transformer models (such as GPT-2
 or BERT) to obtain word probabilities. These log-probabilities are often
@@ -28,7 +28,7 @@ The package is mostly a wrapper of the python package
 [`transformers`](https://pypi.org/project/transformers/) to process data
 in a convenient format.
 
-## Important! Limitations and bias
+## Important\! Limitations and bias
 
 The training data of the most popular models (such as GPT-2) haven’t
 been released, so one cannot inspect it. It’s clear that the data
@@ -102,17 +102,14 @@ as follows:
 
 ``` r
 df_sent <- df_sent |>
-  mutate(lp = causal_lp(word, by = sent_n))
-#> Processing using causal model ''...
+  mutate(lp = causal_words_pred(word, by = sent_n))
+#> Processing using causal model 'gpt2/' ...
 #> Processing a batch of size 1 with 10 tokens.
 #> Processing a batch of size 1 with 9 tokens.
 #> Text id: 1
 #> `The apple doesn't fall far from the tree.`
 #> Text id: 2
 #> `Don't judge a book by its cover.`
-```
-
-``` r
 df_sent
 #> # A tidytable: 15 × 3
 #>    sent_n word         lp
@@ -158,7 +155,7 @@ Another R package that act as a wrapper for
 [`text`](https://r-text.org//) However, `text` is more general, and its
 focus is on Natural Language Processing and Machine Learning.
 
-[^1]: The logo of the package was created with [stable
+1.  The logo of the package was created with [stable
     diffusion](https://huggingface.co/spaces/stabilityai/stable-diffusion)
     and the R package
     [hexSticker](https://github.com/GuangchuangYu/hexSticker).

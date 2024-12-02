@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 <!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
 
-Whereas [the introductory vignette](articles/intro-gpt2) presents the most popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
+Whereas [the vignette about GPT-2](articles/intro-gpt2) presents a very popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
 
 A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also @Devlinetal2018].
 
@@ -28,7 +28,7 @@ library(tidytable) # fast alternative to dplyr
 Notice the following potential pitfall. This would be a **bad** approach for making predictions in a masked model:
 
 ```{r}
-masked_tokens_tbl("The apple doesn't fall far from the [MASK]")
+masked_tokens_pred_tbl("The apple doesn't fall far from the [MASK]")
 ```
 (The pretrained models and tokenizers will be downloaded from https://huggingface.co/ the first time they are used.)
 
@@ -37,14 +37,14 @@ The most common predictions are punctuation marks, because BERT uses the left *a
 More expected results are obtained in the following way:
 
 ```{r}
-masked_tokens_tbl("The apple doesn't fall far from the [MASK].")
+masked_tokens_pred_tbl("The apple doesn't fall far from the [MASK].")
 ```
 
 We can mask several tokens as well (but bear in mind that this type of models are trained with only 10-15% of masks):
 
 ```{r}
 df_masks <- 
-  masked_tokens_tbl("The apple doesn't fall far from the [MASK][MASK]")
+  masked_tokens_pred_tbl("The apple doesn't fall far from the [MASK][MASK]")
 df_masks |> filter(mask_n == 1)
 df_masks |> filter(mask_n == 2)
 ```

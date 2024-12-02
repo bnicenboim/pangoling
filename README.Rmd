@@ -69,7 +69,7 @@ One can get the log-transformed probability of each word based on GPT-2 as follo
 
 ```{r, cache = TRUE}
 df_sent <- df_sent |>
-  mutate(lp = causal_lp(word, by = sent_n))
+  mutate(lp = causal_words_pred(word, by = sent_n))
 df_sent
 ```
 
