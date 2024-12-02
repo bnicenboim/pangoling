@@ -112,6 +112,26 @@ test_that("bert lp for multiple target words works", {
     ms[token == "nice" & mask_n==1, ]$lp + ms[token == "apple" & mask_n==2, ]$lp,
     ms[token == "pretty" & mask_n==1, ]$lp + ms[token == "pear" & mask_n==2, ]$lp
   )
-  names(lps) <- c("nice apple", "tasty pear")
+  names(lps) <- c("nice apple", "pretty pear")
   expect_equal(lw, lps)
+
+lw <- masked_targets_pred(
+    l_contexts = c("The", "The"),
+    targets = c("nice apple", "tasty pear"),
+    r_contexts = c(
+      "doesn't fall far from the tree.",
+      "doesn't fall far from the tree."
+    ),
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
+
+   ms2 <- masked_tokens_pred_tbl(c("The [MASK] [MASK] [MASK] doesn't fall far from the tree."),
+    model = "google/bert_uncased_L-2_H-128_A-2"
+  )
+  lps2 <- c(
+    ms2[token == "ta" & mask_n==1, ]$lp + ms2[token == "##sty" & mask_n ==2, ]$lp + ms2[token == "pear" & mask_n==3, ]$lp
+  )
+names(lps2) <- "tasty pear"
+
+  expect_equal(lw, c(lps[1], lps2))
 })

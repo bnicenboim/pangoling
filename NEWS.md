@@ -36,3 +36,9 @@
 # pangoling 0.0.0.9009
 * Deprecated `.by` in favor of `by`.
 
+# pangoling 0.0.0.9010
+* New function names.
+* Added `sep` argument to support for languages without space between words (e.g. Chinese).
+* New `log.p` argument to indicate how the predictability is calculated.
+
+

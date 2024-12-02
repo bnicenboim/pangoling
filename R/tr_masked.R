@@ -266,7 +266,7 @@ masked_lp_mat <- function(tensor_lst,
                           N_pred = 1) {
   tensor <- torch$row_stack(unname(tensor_lst))
   words <- names(tensor_lst)
-  tokens <- tkzr$tokenize(words)
+  tokens <- lapply(words, tkzr$tokenize)
   n_masks <- sum(tensor_lst[[1]]$tolist()[[1]] == tkzr$mask_token_id)
   message_verbose(
     "Processing ",
