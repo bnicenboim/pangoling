@@ -429,7 +429,7 @@ causal_mat <- function(tensor,
     mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
     # in case the last words in the vocab were not used to train the model
     vocab <- get_vocab(tkzr, decode = decode)
-    diff_words <- length(vocab) - length(nrow(mat))
+    diff_words <- length(vocab) - nrow(mat)
     if(diff_words > 0) {
       warning("Tokenizer's vocabulary is larger than the model's.")
     } else if(diff_words < 0) stop2("Tokenizer's vocabulary is smaller than the model's.")
