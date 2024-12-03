@@ -21,7 +21,7 @@ causal_pred_mats(
 )
 }
 \arguments{
-\item{x}{Vector of words, phrases or texts.}
+\item{x}{Vector of (non-empty) words, phrases or texts.}
 
 \item{by}{Vector that indicates how the text should be split.}
 

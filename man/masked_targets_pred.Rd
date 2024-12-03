@@ -11,6 +11,7 @@ masked_targets_pred(
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
   model = getOption("pangoling.masked.default"),
+  checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL
@@ -34,6 +35,8 @@ probabilities. For example \verb{^[[:punct:]]$} will ignore
 all punctuation  that stands alone in a token.}
 
 \item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{Folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

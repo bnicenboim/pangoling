@@ -6,6 +6,8 @@
 \alias{pangoling-package}
 \title{pangoling: Access to Large Language Model Predictions}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Access to word predictability using large language (transformer) models.
 }
 \details{

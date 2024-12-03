@@ -427,7 +427,14 @@ causal_mat <- function(tensor,
     }
     # remove the last prediction, and the first is NA
     mat <- cbind(rep(NA, nrow(mat)), mat[, -ncol(mat)])
-    rownames(mat) <- get_vocab(tkzr, decode = decode)
+    # in case the last words in the vocab were not used to train the model
+    vocab <- get_vocab(tkzr, decode = decode)
+    diff_words <- length(vocab) - length(nrow(mat))
+    if(diff_words > 0) {
+      warning("Tokenizer's vocabulary is larger than the model's.")
+    } else if(diff_words < 0) stop2("Tokenizer's vocabulary is smaller than the model's.")
+    
+    rownames(mat) <- vocab[1:nrow(mat)]
     colnames(mat) <- unlist(tokens)
     mat
   })
@@ -570,7 +577,9 @@ causal_targets_pred <- function(targets,
       stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
     }
   }
-
+  if(any(targets != trimws(targets)) | any(contexts != trimws(contexts))  & sep == " ") {
+    message_verbose('Notice that some words have white spaces, if this is intended, argument `sep` should probably set to "".')
+  }
   stride <- 1 # fixed for now
   message_verbose_model(model, checkpoint)
   x <- c(rbind(contexts, targets))

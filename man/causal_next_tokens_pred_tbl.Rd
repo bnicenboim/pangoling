@@ -5,7 +5,7 @@
 \title{Get the possible next tokens and their log probabilities its previous context using a causal transformer}
 \usage{
 causal_next_tokens_pred_tbl(
-  l_context,
+  context,
   log.p = getOption("pangoling.log.p"),
   decode = FALSE,
   model = getOption("pangoling.causal.default"),
@@ -16,7 +16,7 @@ causal_next_tokens_pred_tbl(
 )
 }
 \arguments{
-\item{l_context}{The left context.}
+\item{context}{The context.}
 
 \item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
 

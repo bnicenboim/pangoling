@@ -7,6 +7,7 @@
 masked_tokens_pred_tbl(
   masked_sentences,
   model = getOption("pangoling.masked.default"),
+  checkpoint = NULL,
   add_special_tokens = NULL,
   config_model = NULL,
   config_tokenizer = NULL

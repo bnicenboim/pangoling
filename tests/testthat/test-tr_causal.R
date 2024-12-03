@@ -224,9 +224,32 @@ test_that("other models using get prob don't fail", {
   )
 })
 
-causal_preload("Norod78/hebrew-gpt_neo-small")
-cont <- "אני אוהב"
-expect_warning(next_word <- causal_next_tokens_pred_tbl(context = cont, model = "Norod78/hebrew-gpt_neo-small",
-                            decode = TRUE))
+test_that("weird model using hebrew works", {
+  skip_if_no_python_stuff()
+  causal_preload("Norod78/hebrew-gpt_neo-small")
+  cont <- "אני אוהב"
+  expect_warning(next_word <- causal_next_tokens_pred_tbl(context = cont,
+                                                          model = "Norod78/hebrew-gpt_neo-small",
+                                                          decode = TRUE))
 
-causal_targets_pred(targets = next_word[1,]$token, contexts = cont, model = "Norod78/hebrew-gpt_neo-small")
+  expect_warning(out <- causal_targets_pred(targets = trimws(next_word[1,]$token),
+                                            contexts = cont,
+                                            model = "Norod78/hebrew-gpt_neo-small"))
+  expect_equal(next_word[1,]$pred, unname(out),tolerance = 0.0001)
+
+  word_by_word <- strsplit(paste0(cont, next_word[1,]$token), " ")[[1]]
+  expect_warning(outww <- causal_words_pred(x = word_by_word,
+                                            model = "Norod78/hebrew-gpt_neo-small"))
+
+  expect_equal(outww[3], out,tolerance = 0.0001)
+
+  expect_warning(lmat <- causal_pred_mats(x = word_by_word,
+                                          model = "Norod78/hebrew-gpt_neo-small",
+                                          decode = TRUE))
+
+
+  expect_equal(lmat[[1]][rownames(lmat[[1]])==next_word[1,]$token,3], unname(out),
+               tolerance = 0.0001)
+
+
+})

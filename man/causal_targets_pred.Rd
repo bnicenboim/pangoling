@@ -6,7 +6,7 @@
 \usage{
 causal_targets_pred(
   targets,
-  l_contexts = NULL,
+  contexts = NULL,
   sep = " ",
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
@@ -22,7 +22,7 @@ causal_targets_pred(
 \arguments{
 \item{targets}{Target words.}
 
-\item{l_contexts}{Left context for each word in \code{x}. If \code{l_contexts} is used,
+\item{contexts}{Context for each word in \code{x}. If \code{contexts} is used,
 \code{by} is ignored. Set \code{by = NULL} to avoid a message notifying that.}
 
 \item{sep}{Character indicating how words are separated in a sentence.}
@@ -97,7 +97,7 @@ in pangoling website for more examples.
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_targets_pred(
   targets = c("tree.","cover."),
-  l_contexts = c("The apple doesn't fall far from the",
+  contexts = c("The apple doesn't fall far from the",
                  "Don't judge a book by its"),
   model = "gpt2"
 )
