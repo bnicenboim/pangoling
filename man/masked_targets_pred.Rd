@@ -5,9 +5,9 @@
 \title{Get the predictability of a target word (or phrase) given a left and right context}
 \usage{
 masked_targets_pred(
-  l_contexts,
+  prev_contexts,
   targets,
-  r_contexts,
+  after_contexts,
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
   model = getOption("pangoling.masked.default"),
@@ -18,11 +18,11 @@ masked_targets_pred(
 )
 }
 \arguments{
-\item{l_contexts}{Left context of the target word.}
+\item{prev_contexts}{Left context of the target word in left-to-right written languages.}
 
 \item{targets}{Target words.}
 
-\item{r_contexts}{Right context of the target word.}
+\item{after_contexts}{Right context of the target in left-to-right written languages.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -85,9 +85,9 @@ in pangoling website for more examples.
 \examples{
 If interactive()
 masked_targets_pred(
-  l_contexts = c("The", "The"),
+  prev_contexts = c("The", "The"),
   targets = c("apple", "pear"),
-  r_contexts = c(
+  after_contexts = c(
     "doesn't fall far from the tree.",
     "doesn't fall far from the tree."
   ),
