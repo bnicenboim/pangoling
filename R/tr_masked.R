@@ -147,18 +147,18 @@ masked_tokens_pred_tbl <- function(masked_sentences,
 #' in pangoling website for more examples.
 #'
 #'
-#' @param l_contexts Left context of the target word.
+#' @param prev_contexts Left context of the target word in left-to-right written languages.
 #' @param targets Target words.
-#' @param r_contexts Right context of the target word.
+#' @param after_contexts Right context of the target in left-to-right written languages.
 #' @inheritParams masked_preload
 #' @inheritParams causal_words_pred
 #' @inherit masked_preload details
 #' @return A named vector of predictability values (by default the natural logarithm of the word probability).
 #' @examples If interactive()
 #' masked_targets_pred(
-#'   l_contexts = c("The", "The"),
+#'   prev_contexts = c("The", "The"),
 #'   targets = c("apple", "pear"),
-#'   r_contexts = c(
+#'   after_contexts = c(
 #'     "doesn't fall far from the tree.",
 #'     "doesn't fall far from the tree."
 #'   ),
@@ -167,9 +167,9 @@ masked_tokens_pred_tbl <- function(masked_sentences,
 #'
 #' @family masked model functions
 #' @export
-masked_targets_pred <- function(l_contexts,
+masked_targets_pred <- function(prev_contexts,
                                 targets,
-                                r_contexts,
+                                after_contexts,
                                 log.p = getOption("pangoling.log.p"),
                                 ignore_regex = "",
                                 model = getOption("pangoling.masked.default"),
@@ -194,9 +194,9 @@ masked_targets_pred <- function(l_contexts,
   target_tokens <- lapply(targets, tkzr$tokenize)
   masked_sentences <- tidytable::pmap_chr(
                                    list(
-                                     l_contexts,
+                                     prev_contexts,
                                      target_tokens,
-                                     r_contexts
+                                     after_contexts
                                    ),
                                    function(l, target, r) {
                                      paste0(
@@ -221,12 +221,12 @@ masked_targets_pred <- function(l_contexts,
   })
 
   out <- tidytable::pmap(
-                      list(targets, l_contexts, r_contexts, tensors_lst),
+                      list(targets, prev_contexts, after_contexts, tensors_lst),
                       function(words, l, r, tensor_lst) {
                         # TODO: make it by batches
                         # words <- targets[[1]]
-                        # l <- l_contexts[[1]]
-                        # r <- r_contexts[[1]]
+                        # l <- prev_contexts[[1]]
+                        # r <- after_contexts[[1]]
                         # tensor_lst <- tensors_lst[[1]]
                         ls_mat <- masked_lp_mat(tensor_lst = lapply(tensor_lst, function(t) t$input_ids),
                                                 trf = trf,

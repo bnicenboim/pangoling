@@ -135,3 +135,20 @@ names(lps2) <- "tasty pear"
 
   expect_equal(lw, c(lps[1], lps2))
 })
+
+
+masked_tokens_pred_tbl(
+  masked_sentences =  "אני אוהב  [MASK].",
+  model = "onlplab/alephbert-base"
+)
+
+
+lw <- masked_targets_pred(
+  l_contexts = c("אני אוהב", "אני אוהב"),
+  targets = c("אותך", "אותה"),
+  r_contexts = c(
+    ".",
+    "."
+  ),
+  model = "onlplab/alephbert-base"
+)

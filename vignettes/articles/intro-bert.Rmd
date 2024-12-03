@@ -67,9 +67,9 @@ The function `masked_targets_pred()` will give us the log-probability of the tar
 ```{r}
 df_sent <- df_sent %>%
   mutate(lp = masked_targets_pred(
-    l_contexts = left,
+    prev_contexts = left,
     targets = critical,
-    r_contexts = right
+    after_contexts = right
   ))
 df_sent
 ```
