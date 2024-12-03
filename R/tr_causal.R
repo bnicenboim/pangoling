@@ -82,7 +82,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
-#' @param l_context The left context.
+#' @param context The context.
 #' @param decode Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.
 #' @inheritParams causal_preload
 #' @inherit  causal_preload details
@@ -95,7 +95,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @family causal model functions
 #' @export
-causal_next_tokens_pred_tbl <- function(l_context,
+causal_next_tokens_pred_tbl <- function(context,
                                         log.p = getOption("pangoling.log.p"),
                                         decode = FALSE,
                                         model = getOption("pangoling.causal.default"),
@@ -103,7 +103,8 @@ causal_next_tokens_pred_tbl <- function(l_context,
                                         add_special_tokens = NULL,
                                         config_model = NULL,
                                         config_tokenizer = NULL) {
-  if (length(unlist(l_context)) > 1) stop2("Only one context is allowed in this function.")
+  if (length(unlist(context)) > 1) stop2("Only one context is allowed in this function.")
+  if(any(!is_really_string(context))) stop2("`context` needs to contain a string.")
   message_verbose_model(model, checkpoint)
   trf <- lang_model(model,
                     checkpoint = checkpoint,
@@ -116,17 +117,22 @@ causal_next_tokens_pred_tbl <- function(l_context,
                     )
 
   # no batches allowed
-  context_tensor <- encode(list(unlist(l_context)),
+  context_tensor <- encode(list(unlist(context)),
                            tkzr,
                            add_special_tokens = add_special_tokens
                            )$input_ids
   generated_outputs <- trf(context_tensor)
-  n_tokens <- length(context_tensor$tolist()[0])
+  n_tokens <- length(context_tensor$tolist()[[1]]) # was 0
   logits_next_word <- generated_outputs$logits[0][n_tokens - 1]
   l_softmax <- torch$log_softmax(logits_next_word, dim = -1L)$tolist()
   lp <- reticulate::py_to_r(l_softmax) |>
     unlist()
   vocab <- get_vocab(tkzr, decode = decode)
+  diff_words <- length(vocab) - length(lp)
+  if(diff_words > 0) {
+    warning("Tokenizer's vocabulary is longer than the model's. Some words will have NA predictability.")
+    lp <- c(lp, rep(NA, diff_words))
+    } else if(diff_words < 0) stop2("Tokenizer's vocabulary is smaller than the model's.")
   tidytable::tidytable(token = vocab,
                        pred = lp |> ln_p_change(log.p = log.p)) |>
     tidytable::arrange(-pred)
@@ -140,7 +146,7 @@ causal_next_tokens_pred_tbl <- function(l_context,
 #' in pangoling website for more examples.
 #'
 #'
-#' @param x Vector of words, phrases or texts.
+#' @param x Vector of (non-empty) words, phrases or texts.
 #' @param by Vector that indicates how the text should be split.
 #' @param sep Character indicating how words are separated in a sentence.
 #' @param log.p Base of the logarithm used for the output predictability values.
@@ -204,6 +210,7 @@ causal_words_pred <- function(x,
                               config_tokenizer = NULL,
                               batch_size = 1,
                               ...) {
+  if(any(!is_really_string(x))) stop2("`x` needs to be a vector of non-empty strings.")
   dots <- list(...)
   # Check for unknown arguments
   if (length(dots) > 0) {
@@ -314,6 +321,7 @@ causal_tokens_pred_tbl <- function(texts,
                                    config_tokenizer = NULL,
                                    batch_size = 1,
                                    .id = NULL) {
+  if(any(!is_really_string(texts))) stop2("`texts` needs to be a vector of non-empty strings.")
   stride <- 1
   message_verbose_model(model, checkpoint)
   ltexts <- as.list(unlist(texts, recursive = TRUE))
@@ -463,13 +471,12 @@ causal_pred_mats <- function(x,
                              config_tokenizer = NULL,
                              batch_size = 1,
                              ...) {
+  if(any(!is_really_string(x))) stop2("`x` needs to be a vector of non-empty strings.")
   dots <- list(...)
-  # Check for the deprecated .by argument
-  if (!is.null(dots$.by)) {
-    warning("The '.by' argument is deprecated. Please use 'by' instead.")
-    by <- dots$.by # Assume that if .by is supplied, it takes precedence
-  }
-  # Check for unknown arguments
+  if(any(x != trimws(x)) & sep == " ") {
+    message_verbose('Notice that some words have white spaces, argument `sep` should probably set to "".')
+ }
+   # Check for unknown arguments
   if (length(dots) > 0) {
     unknown_args <- setdiff(names(dots), ".by")
     if (length(unknown_args) > 0) {
@@ -487,7 +494,6 @@ causal_pred_mats <- function(x,
                     task = "causal",
                     config_model = config_model
                     )
-  x <- trimws(x, whitespace = "[ \t]")
   word_by_word_texts <- split(x, by)
   pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tensors <- create_tensor_lst(unname(pasted_texts),
@@ -524,7 +530,7 @@ causal_pred_mats <- function(x,
 #' vector of left contexts using a using a causal transformer model. #'
 #'
 #' @param targets Target words.
-#' @param l_contexts Left context for each word in `x`. If `l_contexts` is used,
+#' @param contexts Context for each word in `x`. If `contexts` is used,
 #'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
 #' @inheritParams causal_words_pred
 #' @param ... not in use.
@@ -536,14 +542,14 @@ causal_pred_mats <- function(x,
 #' @examplesIf interactive()
 #' causal_targets_pred(
 #'   targets = c("tree.","cover."),
-#'   l_contexts = c("The apple doesn't fall far from the",
+#'   contexts = c("The apple doesn't fall far from the",
 #'                  "Don't judge a book by its"),
 #'   model = "gpt2"
 #' )
 #' @family causal model functions
 #' @export
 causal_targets_pred <- function(targets,
-                                l_contexts = NULL,
+                                contexts = NULL,
                                 sep = " ",
                                 log.p = getOption("pangoling.log.p"),
                                 ignore_regex = "",
@@ -554,6 +560,8 @@ causal_targets_pred <- function(targets,
                                 config_tokenizer = NULL,
                                 batch_size = 1,
                                 ...) {
+  if(any(!is_really_string(targets))) stop2("`targets` needs to be a vector of non-empty strings.")
+  if(any(!is_really_string(contexts))) stop2("`contexts` needs to be a vector of non-empty strings.")
   dots <- list(...)
   # Check for unknown arguments
   if (length(dots) > 0) {
@@ -565,7 +573,7 @@ causal_targets_pred <- function(targets,
 
   stride <- 1 # fixed for now
   message_verbose_model(model, checkpoint)
-  x <- c(rbind(l_contexts, targets))
+  x <- c(rbind(contexts, targets))
   by <- rep(seq_len(length(x)/2), each = 2)
   word_by_word_texts <- split(x, by, drop = TRUE)
   

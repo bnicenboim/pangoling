@@ -40,5 +40,5 @@
 * New function names.
 * Added `sep` argument to support for languages without space between words (e.g. Chinese).
 * New `log.p` argument to indicate how the predictability is calculated.
-
+* Better checks for valid input.
 

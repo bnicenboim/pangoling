@@ -134,6 +134,17 @@ stop2 <- function(...) {
   stop(..., call. = FALSE)
 }
 
+
+#' @noRd
+is_really_string <- function(x){
+  if(length(x) == 0) return(FALSE)
+
+  tidytable::case_when(is.na(x) ~ FALSE,
+                       is.null(x) ~ FALSE,
+                       x == "" ~ FALSE,
+                       is.character(x) ~ TRUE)
+}
+
 # #' Replacement of str_match
 # #' @noRd
 # chr_match <- function(string, pattern) {

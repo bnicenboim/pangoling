@@ -23,13 +23,13 @@ test_that("empty or small strings", {
   skip_if_no_python_stuff()
   lp_it <- causal_tokens_pred_tbl(texts = "It")
   expect_equal(as.data.frame(lp_it), data.frame(token = "It", pred = NA_real_))
-  expect_warning(lp_NA <- causal_tokens_pred_tbl(texts = ""))
-  expect_equal(as.data.frame(lp_NA), data.frame(token = "", pred = NA_real_))
+  expect_error(lp_NA <- causal_tokens_pred_tbl(texts = ""))
+  #expect_equal(as.data.frame(lp_NA), data.frame(token = "", pred = NA_real_))
   small_str <- c("It", "It", "is")
   lp_small <- causal_words_pred(x = small_str, by = c(1, 2, 2))
   expect_equal(lp_small[1:2], c(It = NA_real_, It = NA_real_))
-  expect_warning(lp_small_ <- causal_words_pred(x = c("", "It"), by = c(1, 2)))
-  expect_equal(lp_small_, c(NA_real_, "It" = NA_real_))
+  expect_error(lp_small_ <- causal_words_pred(x = c("", "It"), by = c(1, 2)))
+#  expect_equal(lp_small_, c(NA_real_, "It" = NA_real_))
 })
 
 if(0){
@@ -55,12 +55,12 @@ test_that("errors work", {
 test_that("gpt2 get prob work", {
   skip_if_no_python_stuff()
   cont <-
-    causal_next_tokens_pred_tbl(l_context = "The apple doesn't fall far from the")
+    causal_next_tokens_pred_tbl(context = "The apple doesn't fall far from the")
   expect_equal(sum(exp(cont$pred)), 1, tolerance = .0001)
   expect_equal(cont[1]$token, "Ġtree")
   lp_prov <- causal_words_pred(x = prov_words)
   expect_equal(names(lp_prov), prov_words)
-  lp_cont <- causal_targets_pred(l_contexts = c("Don't judge a book by its",
+  lp_cont <- causal_targets_pred(contexts = c("Don't judge a book by its",
                                       "The apple doesn't fall far from the"),
                        targets = c("cover", "tree"))
   expect_equal(lp_cont[2], lp_prov[8], tolerance = .0001)
@@ -152,8 +152,8 @@ test_that("batches work", {
   lp_2_no_batch <- causal_words_pred(x = df$x, by = df$.id, batch_size = 1)
   expect_equal(lp_2_batch, lp_2_no_batch, tolerance = .0001)
 
-df <- data.frame(l_contexts = rep(c("Don't judge a book by its","The apple doesn't fall far from the"),5), x = rep(c("cover", "tree"),5))
-  #lp_2_batch <- causal_words_pred(x = df$x, l_contexts = df$l_contexts, batch_size = 4)
+df <- data.frame(contexts = rep(c("Don't judge a book by its","The apple doesn't fall far from the"),5), x = rep(c("cover", "tree"),5))
+  #lp_2_batch <- causal_words_pred(x = df$x, contexts = df$contexts, batch_size = 4)
 
 })
 
@@ -224,13 +224,9 @@ test_that("other models using get prob don't fail", {
   )
 })
 
+causal_preload("Norod78/hebrew-gpt_neo-small")
+cont <- "אני אוהב"
+expect_warning(next_word <- causal_next_tokens_pred_tbl(context = cont, model = "Norod78/hebrew-gpt_neo-small",
+                            decode = TRUE))
 
-## 1 <- get_vocab(tokenizer("DeepESP/gpt2-spanish"))
-## v2 <- get_vocab_words(tokenizer("DeepESP/gpt2-spanish"))
-## v1[300:310]
-## v2[300:310]
-## tokenize_lst("Das ist schön.", model = "dbmdz/german-gpt2")
-## td <- tokenizer("dbmdz/german-gpt2")
-## td$tokenize(" schön")
-# suprisal of NA
-# batch of 10 not working
+causal_targets_pred(targets = next_word[1,]$token, contexts = cont, model = "Norod78/hebrew-gpt_neo-small")

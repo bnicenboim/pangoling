@@ -177,6 +177,8 @@ masked_targets_pred <- function(l_contexts,
                                 add_special_tokens = NULL,
                                 config_model = NULL,
                                 config_tokenizer = NULL) {
+  if(any(!is_really_string(targets))) stop2("`targets` needs to be a vector of non-empty strings.")
+
   stride <- 1
   message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
 
