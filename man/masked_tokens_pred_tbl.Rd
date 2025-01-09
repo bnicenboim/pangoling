@@ -6,6 +6,7 @@
 \usage{
 masked_tokens_pred_tbl(
   masked_sentences,
+  log.p = getOption("pangoling.log.p"),
   model = getOption("pangoling.masked.default"),
   checkpoint = NULL,
   add_special_tokens = NULL,
@@ -16,7 +17,15 @@ masked_tokens_pred_tbl(
 \arguments{
 \item{masked_sentences}{Masked sentences.}
 
+\item{log.p}{Base of the logarithm used for the output predictability values.
+If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
+If \code{FALSE}, the raw probabilities are returned.
+Alternatively, \code{log.p} can be set to a numeric value specifying
+the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+
 \item{model}{Name of a pre-trained model or folder.}
+
+\item{checkpoint}{Folder of a checkpoint.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
@@ -29,11 +38,10 @@ model from Hugging Face is accessed.}
 }
 \value{
 A table with the masked sentences, the tokens (\code{token}),
-log probability (\code{lp}), and the respective mask number (\code{mask_n}).
+predictability (\code{pred}), and the respective mask number (\code{mask_n}).
 }
 \description{
-For each mask in a sentence, get the possible tokens and their log
-probabilities using a masked transformer.
+For each mask, indicated with \verb{[MASK]}, in a sentence, get the possible tokens and their  predictability (by default the natural logarithm of the word probability) using a masked transformer.
 }
 \details{
 A masked language model (also called BERT-like, or encoder model) is a type
@@ -65,7 +73,7 @@ in pangoling website for more examples.
 
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
+masked_tokens_pred_tbl("The [MASK] doesn't fall far from the tree.",
   model = "bert-base-uncased"
 )
 \dontshow{\}) # examplesIf}

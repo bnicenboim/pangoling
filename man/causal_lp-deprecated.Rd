@@ -3,9 +3,6 @@
 \name{causal_lp-deprecated}
 \alias{causal_lp-deprecated}
 \title{Get the log probability of each element of a vector of words (or phrases) using a causal transformer}
-\usage{
-causal_lp(x, by = rep(1, length(x)), l_contexts = NULL, ignore_regex = "", model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
-}
 \description{
 This function is deprecated. Use \code{causal_targets_pred()} (supports \code{l_context} argument) or \code{causal_words_pred()} (supports \code{x} and \code{by} arguments) instead.
 }

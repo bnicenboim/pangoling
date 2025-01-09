@@ -3,9 +3,6 @@
 \name{masked_lp-deprecated}
 \alias{masked_lp-deprecated}
 \title{Get the log probability of a target word (or phrase) given a left and right context}
-\usage{
-masked_lp(l_contexts, targets, r_contexts, ignore_regex = "", model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
-}
 \description{
 This function is deprecated. Use \code{masked_targets_pred()} instead.
 }

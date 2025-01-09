@@ -22,7 +22,9 @@ causal_words_pred(
 \arguments{
 \item{x}{Vector of (non-empty) words, phrases or texts.}
 
-\item{by}{Vector that indicates how the text should be split.}
+\item{by}{Vector that indicates how the text should be split. By default, this is \code{" "},
+but for languages, such as Chinese, which don't separate words,
+this should be set to \code{""}.}
 
 \item{sep}{Character indicating how words are separated in a sentence.}
 
@@ -30,7 +32,7 @@ causal_words_pred(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
@@ -55,7 +57,7 @@ processing but take more memory.}
 \item{...}{not in use.}
 }
 \value{
-A named vector of log probabilities.
+A named vector of (log) probabilities.
 }
 \description{
 Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) in a series of texts using a causal transformer model. See the

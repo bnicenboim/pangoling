@@ -23,7 +23,9 @@ causal_pred_mats(
 \arguments{
 \item{x}{Vector of (non-empty) words, phrases or texts.}
 
-\item{by}{Vector that indicates how the text should be split.}
+\item{by}{Vector that indicates how the text should be split. By default, this is \code{" "},
+but for languages, such as Chinese, which don't separate words,
+this should be set to \code{""}.}
 
 \item{sep}{Character indicating how words are separated in a sentence.}
 
@@ -31,7 +33,7 @@ causal_pred_mats(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
 
 \item{sorted}{When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to \code{by}) list(s) are returned.}
 
@@ -42,6 +44,8 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+
+\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}

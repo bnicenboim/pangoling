@@ -8,7 +8,6 @@ NULL
 #' @title Get the possible tokens and their log probabilities for each mask in a sentence
 #' @description This function is deprecated. Use `masked_tokens_pred_tbl()` instead.
 #' @name masked_tokens_tbl-deprecated
-#' @usage masked_tokens_tbl(masked_sentences, model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL
@@ -71,7 +70,6 @@ masked_tokens_tbl <- function(masked_sentences,
 #' @title Get the log probability of a target word (or phrase) given a left and right context
 #' @description This function is deprecated. Use `masked_targets_pred()` instead.
 #' @name masked_lp-deprecated
-#' @usage masked_lp(l_contexts, targets, r_contexts, ignore_regex = "", model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL
@@ -166,7 +164,6 @@ masked_lp <- function(l_contexts,
 #' @title Get the possible next tokens and their log probabilities for its previous context
 #' @description This function is deprecated. Use `causal_next_tokens_pred_tbl()` instead.
 #' @name causal_next_tokens_tbl-deprecated
-#' @usage causal_next_tokens_tbl(context, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL
@@ -216,7 +213,6 @@ causal_next_tokens_tbl <- function(context,
 #' @title Get the log probability of each element of a vector of words (or phrases) using a causal transformer
 #' @description This function is deprecated. Use `causal_targets_pred()` (supports `l_context` argument) or `causal_words_pred()` (supports `x` and `by` arguments) instead.
 #' @name causal_lp-deprecated
-#' @usage causal_lp(x, by = rep(1, length(x)), l_contexts = NULL, ignore_regex = "", model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL
@@ -337,7 +333,6 @@ causal_lp <- function(x,
 #' @title Get the log probability of each token in a sentence (or group of sentences) using a causal transformer
 #' @description This function is deprecated. Use `causal_tokens_pred_tbl()` instead.
 #' @name causal_tokens_lp_tbl-deprecated
-#' @usage causal_tokens_lp_tbl(texts, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, .id = NULL)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL
@@ -405,7 +400,6 @@ causal_tokens_lp_tbl <- function(texts,
 #' @title Get a list of matrices with the log probabilities of possible words given their previous context using a causal transformer
 #' @description This function is deprecated. Use `causal_pred_mats()` instead.
 #' @name causal_lp_mats-deprecated
-#' @usage causal_lp_mats(x, by = rep(1, length(x)), sorted = FALSE, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
 #' @seealso \code{\link{pangoling-deprecated}}
 #' @keywords internal
 NULL

@@ -3,9 +3,6 @@
 \name{causal_lp_mats-deprecated}
 \alias{causal_lp_mats-deprecated}
 \title{Get a list of matrices with the log probabilities of possible words given their previous context using a causal transformer}
-\usage{
-causal_lp_mats(x, by = rep(1, length(x)), sorted = FALSE, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, ...)
-}
 \description{
 This function is deprecated. Use \code{causal_pred_mats()} instead.
 }

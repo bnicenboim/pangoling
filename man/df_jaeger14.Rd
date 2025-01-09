@@ -56,7 +56,7 @@ Jäger, L., Chen, Z., Li, Q., Lin, C.-J. C., & Vasishth, S. (2015).
 Journal of Memory and Language, 79–80, 97-120. \url{https://doi.org/10.1016/j.jml.2014.10.005}
 }
 \usage{
-df_jaeger14
+data(df_jaeger14)
 }
 \description{
 This dataset contains data from a self-paced reading experiment on Chinese

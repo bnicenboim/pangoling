@@ -3,9 +3,6 @@
 \name{masked_tokens_tbl-deprecated}
 \alias{masked_tokens_tbl-deprecated}
 \title{Get the possible tokens and their log probabilities for each mask in a sentence}
-\usage{
-masked_tokens_tbl(masked_sentences, model, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
-}
 \description{
 This function is deprecated. Use \code{masked_tokens_pred_tbl()} instead.
 }

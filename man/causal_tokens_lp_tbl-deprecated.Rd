@@ -3,9 +3,6 @@
 \name{causal_tokens_lp_tbl-deprecated}
 \alias{causal_tokens_lp_tbl-deprecated}
 \title{Get the log probability of each token in a sentence (or group of sentences) using a causal transformer}
-\usage{
-causal_tokens_lp_tbl(texts, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL, batch_size = 1, .id = NULL)
-}
 \description{
 This function is deprecated. Use \code{causal_tokens_pred_tbl()} instead.
 }

@@ -3,9 +3,6 @@
 \name{causal_next_tokens_tbl-deprecated}
 \alias{causal_next_tokens_tbl-deprecated}
 \title{Get the possible next tokens and their log probabilities for its previous context}
-\usage{
-causal_next_tokens_tbl(context, model, checkpoint = NULL, add_special_tokens = NULL, config_model = NULL, config_tokenizer = NULL)
-}
 \description{
 This function is deprecated. Use \code{causal_next_tokens_pred_tbl()} instead.
 }

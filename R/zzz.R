@@ -35,7 +35,7 @@ torch <- NULL
   transformer_vocab <<- memoise::memoise(transformer_vocab)
   
   # avoid notes:
-  utils::globalVariables(c("mask_n"))
+  utils::globalVariables(c("mask_n","pred"))
 
   invisible()
 }

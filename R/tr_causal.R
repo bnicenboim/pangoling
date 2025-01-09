@@ -85,6 +85,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' @param context The context.
 #' @param decode Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.
 #' @inheritParams causal_preload
+#' @inheritParams causal_tokens_pred_tbl
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
 #' @examplesIf interactive()
@@ -165,7 +166,7 @@ causal_next_tokens_pred_tbl <- function(context,
 #'                   processing but take more memory.
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_pred_tbl More examples
-#' @return A named vector of log probabilities.
+#' @return A named vector of (log) probabilities.
 #'
 #' @examplesIf interactive()
 #' example_data <- tribble(
@@ -453,6 +454,7 @@ causal_mat <- function(tensor,
 #'
 #' @inheritParams causal_words_pred
 #' @inheritParams causal_preload
+#' @inheritParams causal_next_tokens_pred_tbl
 #' @param sorted When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to `by`) list(s) are returned. 
 #' @inherit  causal_preload details
 #' @inheritSection causal_next_tokens_pred_tbl More examples

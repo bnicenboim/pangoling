@@ -18,6 +18,12 @@ causal_next_tokens_pred_tbl(
 \arguments{
 \item{context}{The context.}
 
+\item{log.p}{Base of the logarithm used for the output predictability values.
+If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
+If \code{FALSE}, the raw probabilities are returned.
+Alternatively, \code{log.p} can be set to a numeric value specifying
+the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+
 \item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
 
 \item{model}{Name of a pre-trained model or folder.}

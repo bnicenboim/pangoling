@@ -65,8 +65,7 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 
 #' Get the possible tokens and their log probabilities for each mask in a sentence
 #'
-#' For each mask in a sentence, get the possible tokens and their log
-#' probabilities using a masked transformer.
+#' For each mask, indicated with `[MASK]`, in a sentence, get the possible tokens and their  predictability (by default the natural logarithm of the word probability) using a masked transformer.
 #'
 #' @section More examples:
 #' See the
@@ -76,17 +75,20 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #'
 #' @param masked_sentences Masked sentences.
 #' @inheritParams masked_preload
+#' @inheritParams causal_words_pred
 #' @inherit masked_preload details
 #' @return A table with the masked sentences, the tokens (`token`),
-#'         log probability (`lp`), and the respective mask number (`mask_n`).
+#'         predictability (`pred`), and the respective mask number (`mask_n`).
+#'
 #' @examplesIf interactive()
-#' masked_tokens_tbl("The [MASK] doesn't fall far from the tree.",
+#' masked_tokens_pred_tbl("The [MASK] doesn't fall far from the tree.",
 #'   model = "bert-base-uncased"
 #' )
 #'
 #' @family masked model functions
 #' @export
 masked_tokens_pred_tbl <- function(masked_sentences,
+                                   log.p = getOption("pangoling.log.p"),
                                    model = getOption("pangoling.masked.default"),
                                    checkpoint = NULL,
                                    add_special_tokens = NULL,
@@ -121,16 +123,17 @@ masked_tokens_pred_tbl <- function(masked_sentences,
       tidytable::tidytable(
                    masked_sentence = masked_sentence,
                    token = NA,
-                   lp = NA,
+                   pred = NA,
                    mask_n = NA
                  )
     } else {
       lp |> tidytable::map_dfr(~
                                  tidytable::tidytable(
                                               masked_sentence = masked_sentence,
-                                              token = vocab, lp = .x
+                                              token = vocab,
+                                              pred = ln_p_change(.x, log.p = log.p)
                                             ) |>
-                                 tidytable::arrange(-lp), .id = "mask_n")
+                                 tidytable::arrange(-pred), .id = "mask_n")
     }
   }) |>
     tidytable::relocate(mask_n, .after = tidyselect::everything())

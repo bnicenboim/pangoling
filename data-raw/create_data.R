@@ -42,6 +42,9 @@ df_jaeger14<- merged %>%
     sentence
   )
 
+Encoding(df_jaeger14$question) <- "UTF-8"
+Encoding(df_jaeger14$sentence) <- "UTF-8"
+
 usethis::use_data(df_jaeger14, overwrite = TRUE)
 
 ## df_jaeger14 |> print(n=20)

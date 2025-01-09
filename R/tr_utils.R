@@ -28,7 +28,7 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' Tokenize a string or token ids.
 #'
 #' @param x Strings or token ids.
-#' @inheritParams causal_lp
+#' @inheritParams causal_preload
 #' @return A list with tokens
 #'
 #' @examplesIf interactive()
@@ -77,7 +77,7 @@ tokenize_lst.numeric <- function(x,
 #'
 #' @param x character input
 #' @inheritParams tokenize_lst
-#'
+#' @inheritParams causal_preload
 #' @return The number of tokens in a string or vector of words.
 #'
 #'

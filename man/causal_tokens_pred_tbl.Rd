@@ -23,7 +23,7 @@ causal_tokens_pred_tbl(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms).}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
