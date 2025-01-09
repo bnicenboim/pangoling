@@ -53,3 +53,9 @@ This function automatically selects the appropriate method for environment manag
 with a focus on virtual and conda environments. It ensures flexibility in dependency management and Python version control.
 If a new environment is created, existing environments with the same name are removed.
 }
+\seealso{
+Other general functions: 
+\code{\link{perplexity_calc}()},
+\code{\link{set_cache_folder}()}
+}
+\concept{general functions}

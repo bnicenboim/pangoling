@@ -27,6 +27,7 @@ articles:
   - '`articles/intro-gpt2`'
   - '`articles/intro-bert`'
   - '`articles/troubleshooting`'
+  - '`articles/example`'
 
 reference:
 - title: About
@@ -44,3 +45,4 @@ reference:
 - title: "Others"
   contents:
   - has_concept("general functions")
+  - has_concept("datasets")

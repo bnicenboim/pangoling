@@ -56,7 +56,7 @@
 #' @source Jäger, L., Chen, Z., Li, Q., Lin, C.-J. C., & Vasishth, S. (2015).
 #' \emph{The subject-relative advantage in Chinese: Evidence for expectation-based processing}.
 #' Journal of Memory and Language, 79–80, 97-120. \url{https://doi.org/10.1016/j.jml.2014.10.005}
-#'
+#' @family datasets
 #' @examples
 #' # Basic exploration
 #' head(df_jaeger14)

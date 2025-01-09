@@ -93,4 +93,5 @@ df_jaeger14 \%>\%
   group_by(region) \%>\%
   summarise(mean_surprisal = mean(surprisal, na.rm = TRUE))
 }
+\concept{datasets}
 \keyword{datasets}

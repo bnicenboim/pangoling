@@ -147,13 +147,15 @@ causal_next_tokens_pred_tbl <- function(context,
 #'
 #'
 #' @param x Vector of (non-empty) words, phrases or texts.
-#' @param by Vector that indicates how the text should be split.
+#' @param by Vector that indicates how the text should be split. By default, this is `" "`,
+#'           but for languages, such as Chinese, which don't separate words,
+#'           this should be set to `""`.
 #' @param sep Character indicating how words are separated in a sentence.
 #' @param log.p Base of the logarithm used for the output predictability values.
 #'              If `TRUE` (default), the natural logarithm (base *e*) is used.
 #'              If `FALSE`, the raw probabilities are returned.
 #'              Alternatively, `log.p` can be set to a numeric value specifying
-#'              the base of the logarithm (e.g., `2` for base-2 logarithms).
+#'              the base of the logarithm (e.g., `2` for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set `log.p = 1/2`.
 #' @param ... not in use.
 #' @inheritParams causal_preload
 #' @param ignore_regex Can ignore certain characters when calculates the log
