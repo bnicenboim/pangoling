@@ -92,7 +92,7 @@ df_jaeger14 <- df_jaeger14 |> left_join(df_stim)
 
 We estimate the effect of surprisal on reading times (RTs) using a Bayesian hierarchical model. The model incorporates a hierarchical structure with by-subject and by-item group-level effects (also referred to as random effects), which account for variability across subjects and items. The only population-level effect (also called a fixed effect) of interest in this analysis is surprisal.
 
-For a detailed discussion of Bayesian hierarchical structures (including prior selection), see Section 4.2 and Chapter 5 of @nicenboim [*An Introduction to Bayesian Data Analysis for Cognitive Science*](https://bruno.nicenboim.me/bayescogsci/).
+For a detailed discussion of Bayesian hierarchical structures (including prior selection), see Section 4.2 and Chapter 5 of @nicenboim2025introduction [*An Introduction to Bayesian Data Analysis for Cognitive Science*](https://bruno.nicenboim.me/bayescogsci/).
 
 For simplicity, we do not scale or center the predictor.
 
@@ -136,8 +136,6 @@ conditional_effects(fit_surp)
 This vignette demonstrates how to calculate surprisal values using the `pangoling` package and estimate their effect on reading times using Bayesian hierarchical modeling. By leveraging pre-trained transformer models, researchers can explore the cognitive effects of surprisal in language comprehension experiments.
 
 @levy2008 theory highlights how surprisal acts as a cognitive bottleneck: higher surprisal reflects greater unexpectedness, which slows down processing due to the reallocation of cognitive resources. This example illustrates how models like GPT-2 can operationalize surprisal and facilitate testing such theories in empirical data.
-
-For further details on Bayesian modeling, see [An Introduction to Bayesian Data Analysis for Cognitive Science](https://bruno.nicenboim.me/bayescogsci/).
 
 
 # References
