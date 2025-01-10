@@ -13,13 +13,14 @@ knitr::opts_chunk$set(
 
 <!-- https://ropensci.org/blog/2019/12/08/precompute-vignettes/ -->
 
-Whereas [the vignette about GPT-2](articles/intro-gpt2) presents a very popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
+Whereas [the vignette about GPT-2](intro-gpt2.html) presents a very popular way to calculate word probabilities using GPT-like models, masked models present an alternative, especially, when we just care about the final word following a certain context.
 
 A masked language model (also called BERT-like, or encoder model) is a type of large language model  that can be used to predict the content of a mask in a sentence. BERT is an example of a masked language model [see also @Devlinetal2018].
 
 
+First load the following packages:
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, include = FALSE}
 library(pangoling)
 library(tidytable) # fast alternative to dplyr
 ```

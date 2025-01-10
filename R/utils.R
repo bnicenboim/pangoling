@@ -37,7 +37,7 @@
 #' with a focus on virtual and conda environments. It ensures flexibility in dependency management and Python version control.
 #' If a new environment is created, existing environments with the same name are removed.
 #'
-#' @family general functions
+#' @family helper functions
 #' @return
 #' The function returns `NULL` invisibly, but outputs a message on successful installation.
 #' @export

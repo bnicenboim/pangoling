@@ -56,9 +56,7 @@ causal_preload(model = "bert-base-uncased")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other masked model functions: 
-\code{\link{masked_config}()},
-\code{\link{masked_targets_pred}()},
-\code{\link{masked_tokens_pred_tbl}()}
+Other masked model helper functions: 
+\code{\link{masked_config}()}
 }
-\concept{masked model functions}
+\concept{masked model helper functions}

@@ -39,7 +39,7 @@
 #' @examplesIf interactive()
 #' causal_preload(model = "gpt2")
 #'
-#' @family causal model functions
+#' @family causal model helper functions
 #' @export
 #'
 causal_preload <- function(model = getOption("pangoling.causal.default"),
@@ -60,7 +60,7 @@ causal_preload <- function(model = getOption("pangoling.causal.default"),
 #' @examplesIf interactive()
 #' causal_config(model = "gpt2")
 #'
-#' @family causal model functions
+#' @family causal model helper functions
 #' @export
 causal_config <- function(model = getOption("pangoling.causal.default"),
                           checkpoint = NULL, config_model = NULL) {

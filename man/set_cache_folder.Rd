@@ -28,8 +28,7 @@ HuggingFace Transformers: \url{https://huggingface.co/transformers/index.html}
 \seealso{
 \url{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}
 
-Other general functions: 
-\code{\link{install_py_pangoling}()},
-\code{\link{perplexity_calc}()}
+Other helper functions: 
+\code{\link{install_py_pangoling}()}
 }
-\concept{general functions}
+\concept{helper functions}

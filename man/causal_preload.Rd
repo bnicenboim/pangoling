@@ -62,12 +62,7 @@ causal_preload(model = "gpt2")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other causal model functions: 
-\code{\link{causal_config}()},
-\code{\link{causal_next_tokens_pred_tbl}()},
-\code{\link{causal_pred_mats}()},
-\code{\link{causal_targets_pred}()},
-\code{\link{causal_tokens_pred_tbl}()},
-\code{\link{causal_words_pred}()}
+Other causal model helper functions: 
+\code{\link{causal_config}()}
 }
-\concept{causal model functions}
+\concept{causal model helper functions}

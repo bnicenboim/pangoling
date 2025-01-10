@@ -97,8 +97,6 @@ masked_targets_pred(
 }
 \seealso{
 Other masked model functions: 
-\code{\link{masked_config}()},
-\code{\link{masked_preload}()},
 \code{\link{masked_tokens_pred_tbl}()}
 }
 \concept{masked model functions}

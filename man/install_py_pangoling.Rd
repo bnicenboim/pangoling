@@ -54,8 +54,7 @@ with a focus on virtual and conda environments. It ensures flexibility in depend
 If a new environment is created, existing environments with the same name are removed.
 }
 \seealso{
-Other general functions: 
-\code{\link{perplexity_calc}()},
+Other helper functions: 
 \code{\link{set_cache_folder}()}
 }
-\concept{general functions}
+\concept{helper functions}

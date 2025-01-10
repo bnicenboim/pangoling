@@ -30,7 +30,7 @@ install_py_pangoling()
 
 `pangoling` (as many other R packages) relies on `reticulate` for  Python functionality. Even if the package installation seems successful, the issue may be that `reticulate` is not correctly loading the correct Python environment. By default, R should use the a *conda* environment named `r-reticulate` when managing these configurations automatically.
 
-One can verify this by using `py_config`, this is the output in a linux computer where the conda environment wasn't loaded:
+One can verify this by using `py_config`, this is the output in a linux computer where the conda environment **wasn't** loaded:
 
 ```{r}
 library(reticulate)
@@ -47,7 +47,6 @@ py_config()
 #> 
 #> NOTE: Python version was forced by RETICULATE_PYTHON_FALLBACK
 ```
-
 
 One can anyways configure RStudio to load the correct conda environment (`r-reticulate`) by default following these steps:
 
@@ -89,5 +88,5 @@ Error in py_run_string_impl(code, local, convert) :
 requests.exceptions.SSLError: HTTPSConnectionPool(host='huggingface.co', port=443): 
 ```
 
-The first time a model is run, it will download some files that will be available for subsequent runs. So if there is no internet connection (or the huggingface website is down) during the first run, one will experience this problem. Afterwards, it is possible to use `pangoling` without an internet connection. 
+The first time a model is run, it will download some files that will be available for subsequent runs. So if there is no internet connection (or the [huggingface](https://huggingface.co/) website is down) during the first run, one will experience this problem. Afterwards, it is possible to use `pangoling` without an internet connection. 
 

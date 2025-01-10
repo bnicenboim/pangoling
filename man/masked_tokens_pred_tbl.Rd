@@ -80,8 +80,6 @@ masked_tokens_pred_tbl("The [MASK] doesn't fall far from the tree.",
 }
 \seealso{
 Other masked model functions: 
-\code{\link{masked_config}()},
-\code{\link{masked_preload}()},
 \code{\link{masked_targets_pred}()}
 }
 \concept{masked model functions}

@@ -28,7 +28,7 @@
 #' @examplesIf interactive()
 #' causal_preload(model = "bert-base-uncased")
 #'
-#' @family masked model functions
+#' @family masked model helper functions
 #' @export
 #'
 masked_preload <- function(model = getOption("pangoling.masked.default"),
@@ -52,7 +52,7 @@ masked_preload <- function(model = getOption("pangoling.masked.default"),
 #' @examplesIf interactive()
 #' masked_config(model = "bert-base-uncased")
 #'
-#' @family masked model functions
+#' @family masked model helper functions
 #' @export
 masked_config <- function(model = getOption("pangoling.masked.default"),
                           config_model = NULL) {

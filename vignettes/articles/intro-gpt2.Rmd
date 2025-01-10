@@ -63,8 +63,13 @@ Also notice that GPT-2 tokenizer interprets differently initial tokens from toke
 tokenize_lst("This is different from This")
 ```
 
+It's also possible to decode the tokens to get "pure" text:
 
-Going back to the initial example, because `causal_next_tokens_pred_tbl` returns by default log natural probabilities, if we exponentiate them and we sum them, we should get 1:
+```{r}
+tokenize_lst("This is different from This", decode = TRUE)
+```
+
+Going back to the initial example, because `causal_next_tokens_pred_tbl()` returns by default log natural probabilities, if we exponentiate them and we sum them, we should get 1:
 
 ```{r}
 sum(exp(df_pred$pred))
@@ -73,7 +78,7 @@ sum(exp(df_pred$pred))
 Because of approximation errors, this is not exactly one.
 
 
-When doing tests, `sshleifer/tiny-gpt2` is quite useful since it's tiny. But notice that the predictions are quite bad.
+When doing tests, [`sshleifer/tiny-gpt2`](https://huggingface.co/sshleifer/tiny-gpt2) is quite useful since it's much faster because it's a tiny model. But notice that the predictions are quite bad.
 
 ```{r}
 causal_preload("sshleifer/tiny-gpt2")
@@ -85,7 +90,9 @@ toc()
 ```
 
 
-This package would be most useful in the following situation. Given a (toy) dataset where sentences are organized with one word or short phrase in each row:
+All in all, the package `pangoling` would be most useful in the following situation. (And see also the [worked-out example vignette](example.html).)
+
+Given a (toy) dataset where sentences are organized with one word or short phrase in each row:
 ```{r, cache = TRUE}
 sentences <- c(
   "The apple doesn't fall far from the tree.",
