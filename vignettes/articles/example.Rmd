@@ -1,5 +1,5 @@
 ---
-title: "Worked-Out Example of Surprisal from a Causal (GPT) Model as a Cognitive Processing Bottleneck"
+title: "Worked-out example: Surprisal from a causal (GPT) model as a cognitive processing bottleneck in reading"
 bibliography: '`r system.file("REFERENCES.bib", package="pangoling")`'
 ---
 
@@ -12,19 +12,20 @@ knitr::opts_chunk$set(
 ```
 
 This vignette demonstrates how to use the `pangoling` package to estimate the effect of *surprisal* on reading times (RTs) in a psycholinguistic experiment. 
+
 Surprisal is a measure of processing difficulty based on the unexpectedness of a word in its context. As introduced by @levy2008, surprisal is defined as $-\log_2 P(\text{word}|\text{context})$, where $P(\text{word}|\text{context})$ is the probability of the word given its preceding context. Higher surprisal values indicate greater processing difficulty and suggest a cognitive processing bottleneck, as readers allocate more resources to processing unexpected words. @levy2008 argues that human sentence comprehension operates efficiently by leveraging probabilistic expectations. When these expectations are violated (i.e., when surprisal is high), cognitive processing slows down, which can be observed through longer reading times in reading tasks.
 
 
-Surprisal is computed here using a GPT-2-like causal language model trained on Chinese texts. We use `pangoling` to retrieve the surprisal values. The dataset comes from @jaegeretal2015, which features Chinese sentences presented word-by-word to participants during a self-paced reading experiment.
+Surprisal is computed here using a GPT-2-like causal language model trained on Chinese texts. We use `pangoling` to retrieve the surprisal values. The dataset comes from @JaegerEtAl2015, which features Chinese sentences presented word-by-word to participants during a self-paced reading experiment.
 
 
-## Data analysis
+# Data analysis
 
-### 0. Preprocessing
+## 0. Preprocessing
 
 We load the required libraries first.
 
-```{r}
+```{r, message = FALSE}
 library(pangoling)
 library(tidytable) # Lightweight and faster alternative to dplyr
 library(tictoc)  # Report the time that a piece of code takes
@@ -32,14 +33,14 @@ library(brms) # Bayesian regression models in Stan
 options(mc.cores = parallel::detectCores()) # Use all the cores needed available for the Bayesian analysis by default
 ```
 
-The dataset `df_jaeger14` from @jaegeretal2015 contains Chinese sentences presented word-by-word to participants. Each word has an associated reaction time (RT). (The original research question and the experimental conditions don't matter to us.)
+The dataset `df_jaeger14` from @JaegerEtAl2015 contains Chinese sentences presented word-by-word to participants. Each word has an associated reaction time (RT). (The original research question and the experimental conditions don't matter to us.)
 
 ```{r}
 data("df_jaeger14")
 df_jaeger14
 ```
 
-To avoid redundant computations, we extract unique combinations of items, conditions, and words (We don't want to run `pangoling` on the entire dataset because there will be repetition across subjects and the model will run several times on identical words in identical sentences.):
+To avoid redundant computations, we extract unique combinations of items, conditions, and words. (We don't want to run `pangoling` on the entire dataset because there will be repetition across subjects, and thus the model will run several times on identical words in identical sentences):
 
 ```{r}
 df_stim <- df_jaeger14 |> distinct(item, cond, word, wordn)
@@ -48,15 +49,15 @@ df_stim |> print(n = 20)
 
 
 
-We use the Pangoling function `causal_preload()` to load the GPT-2 model [`uer/gpt2-chinese-cluecorpussmall`](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall) This model is trained on Chinese texts and can predict word probabilities based on preceding context.
+We use the `pangoling` function `causal_preload()` to load the GPT-2 model [`uer/gpt2-chinese-cluecorpussmall`](https://huggingface.co/uer/gpt2-chinese-cluecorpussmall) This model is trained on Chinese texts and can predict word probabilities based on preceding context.
 
 ```{r}
 causal_preload("uer/gpt2-chinese-cluecorpussmall")
 ```
 
-# 1. Add surprisal values to the dataset
+## 1. Add surprisal values to the dataset
 
-Surprisal in bits--that is base logarithm with base 2--is calculated as \$-\log\_2(P(\text{word}))\$, which is equivalent to \$\log\_{1/2}(P(\text{word}))\$. The `pangoling` function `causal_words_pred()` is configured to:
+Surprisal in bits (i.e., we use a logarithm with base 2) is calculated as $-\log_2(P(\text{word}|\text{context}))$, which is equivalent to $\log_{1/2}(P(\text{word}|\text{context}))$. The `pangoling` function `causal_words_pred()` is configured to:
 
 - Use `log.p = 0.5` to get surprisal in bits.
 - Set `sep = ""` since Chinese words are not separated by spaces.
@@ -91,10 +92,10 @@ df_jaeger14 <- df_jaeger14 |> left_join(df_stim)
 ## 2. Analyze the dataset with a Bayesian hierarchical model
 
 We estimate the effect of surprisal on reading times (RTs) using a Bayesian hierarchical model. The model incorporates a hierarchical structure with by-subject and by-item group-level effects (also referred to as random effects), which account for variability across subjects and items. The only population-level effect (also called a fixed effect) of interest in this analysis is surprisal.
+(For simplicity, we do not scale or center the predictor.)
 
-For a detailed discussion of Bayesian hierarchical structures (including prior selection), see Section 4.2 and Chapter 5 of @nicenboim2025introduction [*An Introduction to Bayesian Data Analysis for Cognitive Science*](https://bruno.nicenboim.me/bayescogsci/).
+For a detailed discussion of Bayesian hierarchical structures (including prior selection), see Section 4.2 and Chapter 5 of @nicenboim2025introduction, [*An Introduction to Bayesian Data Analysis for Cognitive Science*](https://bruno.nicenboim.me/bayescogsci/).
 
-For simplicity, we do not scale or center the predictor.
 
 
 ```{r brms, message = FALSE}

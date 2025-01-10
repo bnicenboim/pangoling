@@ -22,7 +22,7 @@ One interesting side-effect of causal language models is that the (log) probabil
 
 Load the following packages first:
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, include=FALSE}
 library(pangoling)
 library(tidytable) # fast alternative to dplyr
 library(tictoc) # measure time
@@ -57,7 +57,7 @@ In fact this is the way GPT-2 interprets our context:
 tokenize_lst("The apple doesn't fall far from the")
 ```
 
-Also notice that GPT-2 tokenizer interprets differently initial tokens from tokens that follow a space. After a space, a token always starts with "Ġ".
+Also notice that GPT-2 tokenizer interprets differently initial tokens from tokens that follow a space. A space in  a token is indicated with "Ġ".
 
 ```{r}
 tokenize_lst("This is different from This")
