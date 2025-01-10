@@ -83,15 +83,10 @@ conditions in a 2x2 fully crossed factorial design:
 head(df_jaeger14)
 
 # Summarize reaction times by region
-# library(tidytable)
-df_jaeger14 \%>\%
-  group_by(region) \%>\%
-  summarise(mean_rt = mean(rt, na.rm = TRUE))
-
-# Analyze surprisal values
-df_jaeger14 \%>\%
-  group_by(region) \%>\%
-  summarise(mean_surprisal = mean(surprisal, na.rm = TRUE))
+ library(tidytable)
+df_jaeger14 |>
+  group_by(region) |>
+  summarize(mean_rt = mean(rt, na.rm = TRUE))
 }
 \concept{datasets}
 \keyword{datasets}

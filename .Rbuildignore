@@ -4,6 +4,8 @@ _test
 ^LICENSE\.md$
 ^README\.md$
 ^README\.Rmd$
+^README\.html$
+^test_*
 ^extdata$
 ^data-raw$
 ^_pkgdown\.yml$

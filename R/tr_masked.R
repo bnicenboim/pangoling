@@ -157,7 +157,7 @@ masked_tokens_pred_tbl <- function(masked_sentences,
 #' @inheritParams causal_words_pred
 #' @inherit masked_preload details
 #' @return A named vector of predictability values (by default the natural logarithm of the word probability).
-#' @examples If interactive()
+#' @examplesIf interactive()
 #' masked_targets_pred(
 #'   prev_contexts = c("The", "The"),
 #'   targets = c("apple", "pear"),
