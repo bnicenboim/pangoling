@@ -6,6 +6,7 @@
 \usage{
 tokenize_lst(
   x,
+  decode = FALSE,
   model = getOption("pangoling.causal.default"),
   add_special_tokens = NULL,
   config_tokenizer = NULL
@@ -13,6 +14,8 @@ tokenize_lst(
 }
 \arguments{
 \item{x}{Strings or token ids.}
+
+\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
 
 \item{model}{Name of a pre-trained model or folder.}
 

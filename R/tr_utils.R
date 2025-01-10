@@ -29,6 +29,7 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @param x Strings or token ids.
 #' @inheritParams causal_preload
+#' @inheritParams causal_next_tokens_pred_tbl
 #' @return A list with tokens
 #'
 #' @examplesIf interactive()
@@ -36,6 +37,7 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' @family token-related functions
 #' @export
 tokenize_lst <- function(x,
+                         decode = FALSE,
                          model = getOption("pangoling.causal.default"),
                          add_special_tokens = NULL,
                          config_tokenizer = NULL) {
@@ -44,34 +46,46 @@ tokenize_lst <- function(x,
 
 #' @export
 tokenize_lst.character <- function(x,
+                                   decode = FALSE,
                                    model = getOption("pangoling.causal.default"),
                                    add_special_tokens = NULL,
                                    config_tokenizer = NULL) {
-  id <- get_id(x,
-    model = model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer)
+  tkzr <- tokenizer(model,
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer)
+  id <- get_id(x, tkzr = tkzr)
   lapply(id, function(i) {
-    tokenize_lst.numeric(i,
-      model = model,
-      add_special_tokens = add_special_tokens,
-      config_tokenizer = config_tokenizer
-    )
+    tokenize_ids_lst(i, decode = decode, tkzr = tkzr)
   })
 }
 
 #' @export
 tokenize_lst.numeric <- function(x,
+                                 decode = FALSE,
                                  model = getOption("pangoling.causal.default"),
                                  add_special_tokens = NULL,
                                  config_tokenizer = NULL) {
-  tidytable::map_chr(as.integer(x), function(x) {
-    tokenizer(model,
+  tkzr <- tokenizer(model,
       add_special_tokens = add_special_tokens,
       config_tokenizer = config_tokenizer
-    )$convert_ids_to_tokens(x)
-  })
+    )
+  tokenize_ids_lst(x, decode = decode, tkzr = tkzr)
+  }
+
+
+tokenize_ids_lst <- function(x, decode = decode, tkzr = tkzr){
+  if(decode == FALSE){
+    tidytable::map_chr(as.integer(x), function(x) {
+    tkzr$convert_ids_to_tokens(x)
+    })
+  } else if(decode == TRUE) {
+    tidytable::map_chr(as.integer(x), function(x) {
+      safe_decode(id = x, tkzr = tkzr)
+    })
+  }
 }
+
+
 
 #' The number of tokens in a string or vector of strings
 #'

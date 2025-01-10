@@ -16,13 +16,18 @@ Users can customize these options via the \code{options()} function by specifyin
 \itemize{
 \item \code{pangoling.debug}: Logical; when \code{TRUE}, enables debugging mode. Default is \code{FALSE}.
 \item \code{pangoling.verbose}: Integer; controls the verbosity level (e.g., 0 = silent, 1 = minimal, 2 = detailed). Default is \code{2}.
-\item \code{pangoling.log.p}: Logical; if \code{TRUE}, probabilities are logged. Default is \code{TRUE}.If TRUE (default),  x are assumed to be log-transformed probabilities with base e, if FALSE x are assumed to be raw probabilities, alternatively log.p can be the base of other logarithmic transformations.
+\item \code{pangoling.log.p}: Logical; if \code{TRUE} (default), pangoling outputs log-transformed probabilities with base e, if FALSE the output are raw probabilities. Alternatively \code{log.p} can be the base of other logarithmic transformations (e.g., base \code{1/2}, to get surprisal values in bits rather than predictability).
 \item \code{pangoling.cache}: A cache object created with \code{cachem::cache_mem}, allowing you to specify the maximum size (in bytes) for cached objects. Default is \code{1024 * 1024^2} bytes (1 MB).
 \item \code{pangoling.causal.default}: Character string; specifies the default model for causal language processing. Default is \code{"gpt2"}.
 \item \code{pangoling.masked.default}: Character string; specifies the default model for masked language processing. Default is \code{"bert-base-uncased"}.
 }
 
 Use \verb{options(pangoling.<option> = <value>)} to set these options in your session.
+}
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+options(pangoling.verbose = FALSE) # Removes messages
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 Useful links:

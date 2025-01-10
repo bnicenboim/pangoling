@@ -42,7 +42,7 @@ website](https://huggingface.co/gpt2).
 ## Installation
 
 There is still no released version of `pangoling`. The package is in the
-\*\* early\*\* stages of development, and it will probably be subject to
+\*\*early\*\* stages of development, and it will probably be subject to
 changes. To install the latest version from github use:
 
 ``` r
@@ -50,7 +50,7 @@ changes. To install the latest version from github use:
 remotes::install_github("bnicenboim/pangoling")
 ```
 
-`install_py_pangoling` function facilitates the installation of Python
+`install_py_pangoling()` function facilitates the installation of Python
 packages needed for using pangoling within an R environment, using the
 `reticulate` package for managing Python environments. This needs to be
 done once.

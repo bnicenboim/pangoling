@@ -209,8 +209,10 @@ if (0) {
 
 test_that("other models using get prob don't fail", {
   skip_if_no_python_stuff()
-  tokenize_lst("El bebé de cigüeña.", model = "flax-community/gpt-2-spanish")
-
+  expect_equal(tokenize_lst("El bebé de cigüeña.", 
+                            model = "flax-community/gpt-2-spanish", 
+                            decode = TRUE),
+               list(c("El", " bebé", " ", "d", "e", " cig", "üe", "ña", ".")))
   expect_no_error(causal_words_pred(
     x = c("El", "bebé", "de", "cigüeña."),
     model = "flax-community/gpt-2-spanish"

@@ -41,4 +41,6 @@
 * Added `sep` argument to support for languages without space between words (e.g. Chinese).
 * New `log.p` argument to indicate how the predictability is calculated.
 * Better checks for valid input.
+* Argument `decode` deals with encoding problems of the tokens with special characters.
+
 
