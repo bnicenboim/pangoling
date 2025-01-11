@@ -267,7 +267,7 @@ test_that("weird model using hebrew works", {
 
 
   expect_equal(lmat[[1]][rownames(lmat[[1]])==next_word[1,]$token,3], 
-               nname(out),
+               name(out),
                tolerance = 0.0001)
 
 
