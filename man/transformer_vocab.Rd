@@ -20,8 +20,8 @@ same default as the
 method in Python.}
 
 \item{decode}{Should it decode the tokens into readable strings? This is
-relevant for special characters such as accents and diacritics,
-which get mangled in the tokens.}
+relevant for special characters such as accents and
+diacritics, which get mangled in the tokens.}
 
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}

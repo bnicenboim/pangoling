@@ -93,8 +93,8 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @param context The context.
 #' @param decode Should it decode the tokens into readable strings? This is 
-#'               relevant for special characters such as accents and diacritics, 
-#'               which get mangled in the tokens.
+#'               relevant for special characters such as accents and 
+#'               diacritics, which get mangled in the tokens.
 #' @inheritParams causal_preload
 #' @inheritParams causal_tokens_pred_tbl
 #' @inherit  causal_preload details
@@ -165,8 +165,7 @@ causal_next_tokens_pred_tbl <-
 #' Get the predictability (by default the natural logarithm of the word 
 #' probability) of each element of a vector of words (or phrases) in a series of
 #'  texts using a causal transformer model. See the
-#' [online article]
-#' (https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
+#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #'
 #'

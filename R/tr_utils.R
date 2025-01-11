@@ -241,9 +241,9 @@ tokenizer <- function(model = "gpt2",
       config_tokenizer
     ))
     reticulate::py_to_r(
-                  reticulate::py_run_string(
-                                "tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"
-                              )
+          reticulate::py_run_string(
+              "tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"
+                      )
                 )
   } else {
     lst_to_kwargs(c(pretrained_model_name_or_path = model, 
@@ -251,8 +251,8 @@ tokenizer <- function(model = "gpt2",
                     config_tokenizer))
     reticulate::py_to_r(
                   reticulate::py_run_string(
-                                "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
-                              )
+              "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
+                          )
                 )
   }
 

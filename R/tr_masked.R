@@ -13,7 +13,7 @@
 #'  use `options(pangoling.masked.default = "newmaskedmodel")`.
 #'
 #' A list of possible masked can be found in
-#' [Hugging Face website](https://huggingface.co/models?pipeline_tag=fill-mask).
+#' [Hugging Face website](https://huggingface.co/models?pipeline_tag=fill-mask)
 #'
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to
 #'  control how the model and tokenizer from Hugging Face is accessed, see the

@@ -68,8 +68,7 @@ A named vector of (log) probabilities.
 Get the predictability (by default the natural logarithm of the word
 probability) of each element of a vector of words (or phrases) in a series of
 texts using a causal transformer model. See the
-\link{online article}
-(https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
+\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
 in pangoling website for more examples.
 }
 \details{

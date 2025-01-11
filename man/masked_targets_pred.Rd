@@ -75,7 +75,7 @@ accessed via \code{getOption("pangoling.masked.default")} (by default
 use \code{options(pangoling.masked.default = "newmaskedmodel")}.
 
 A list of possible masked can be found in
-\href{https://huggingface.co/models?pipeline_tag=fill-mask}{Hugging Face website}.
+\href{https://huggingface.co/models?pipeline_tag=fill-mask}{Hugging Face website}
 
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
