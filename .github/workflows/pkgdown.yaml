@@ -37,6 +37,7 @@ jobs:
             rstan
             stan-dev/cmdstanr
             BH
+            RcppEigen
             any::pkgdown
             local::.
           needs: website
