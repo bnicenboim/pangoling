@@ -5,26 +5,28 @@ region_order <- c(
   "DE", "head", "hd1", "hd2", "hd3", "hd4", "hd5"
 )
 
-  ## If I understand correctly, in object-mod conditions (c,d) I need to put word 5 and word 6 together, and in subject condition (a,b) , word 3 and 4
 exp1 <- tidytable::fread("data-raw/JaegerChenLiLinVasishth2015_Exp1.txt") |>
   tidytable::mutate(region.id = factor(region.id, levels = region_order)) %>%
-  tidytable::arrange(subject, item, cond, region.id) |>  tidytable::mutate(wordn = 1:n(), .by= c(item, cond, subject))
+  tidytable::arrange(subject, item, cond, region.id) |>
+  tidytable::mutate(wordn = seq_len(n()), .by= c(item, cond, subject))
 
 exp1 |> print(n=20)
 
 items <- tidytable::fread("data-raw/itemsJaegeretal2014.txt") |>
   tidytable::mutate(sentence = Sentence,
-                    Sentence = ifelse(Condition %in% c("a","b"),
-                                      gsub("^((\\*[^*]*?){3})\\*", "\\1", Sentence),
-                                      gsub("^((\\*[^*]*?){5})\\*", "\\1", Sentence)
-                                      )) |>
+                    Sentence =
+                      ifelse(Condition %in% c("a","b"),
+                             gsub("^((\\*[^*]*?){3})\\*", "\\1", Sentence),
+                             gsub("^((\\*[^*]*?){5})\\*", "\\1", Sentence)
+                             )) |>
   tidytable::separate_rows(Sentence, sep = "\\*") |>
   tidytable::filter(Sentence != "") |>
   tidytable::mutate(Sentence = trimws(Sentence)) |>
-  tidytable::mutate(wordn = 1:n(), .by= c(ItemId, Condition))
+  tidytable::mutate(wordn = seq_len(n()), .by= c(ItemId, Condition))
 print(items, n = 20)
 merged <- exp1 %>%
-  tidytable::left_join(items, by = c("item" = "ItemId", "cond" = "Condition", "wordn"))
+  tidytable::left_join(items,
+                       by = c("item" = "ItemId", "cond" = "Condition", "wordn"))
 
 # Select and rearrange columns to match the desired output
 df_jaeger14<- merged %>%

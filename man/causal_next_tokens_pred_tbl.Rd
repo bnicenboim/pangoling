@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_next_tokens_pred_tbl}
 \alias{causal_next_tokens_pred_tbl}
-\title{Get the possible next tokens and their log probabilities its previous context using a causal transformer}
+\title{Get the possible next tokens and their log probabilities its previous context
+using a causal transformer}
 \usage{
 causal_next_tokens_pred_tbl(
   context,
@@ -22,9 +23,13 @@ causal_next_tokens_pred_tbl(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).
+To get surprisal in bits (rather than predictability), set
+\code{log.p = 1/2}.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
+\item{decode}{Should it decode the tokens into readable strings? This is
+relevant for special characters such as accents and diacritics,
+which get mangled in the tokens.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -32,19 +37,22 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surpris
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 A table with possible next tokens and their log-probabilities.
 }
 \description{
 Get the possible next tokens and their log probabilities based on its
-previous context using a causal transformer model from \href{https://huggingface.co}{Hugging Face}.
+previous context using a causal transformer model from
+\href{https://huggingface.co}{Hugging Face}.
 }
 \details{
 A causal language model (also called GPT-like, auto-regressive, or decoder

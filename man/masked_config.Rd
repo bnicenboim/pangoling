@@ -38,8 +38,8 @@ A list of possible masked can be found in
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details. In case of errors check the status of
 \url{https://status.huggingface.co/}
 }
 \examples{

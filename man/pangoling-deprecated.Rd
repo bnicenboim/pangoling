@@ -77,7 +77,10 @@ causal_lp_mats(
 )
 }
 \description{
-The functions listed below are deprecated and will be defunct in the near future. When possible, alternative functions with similar functionality are also mentioned. Help pages for deprecated functions are available at \code{help("<function>-deprecated")}.
+The functions listed below are deprecated and will be defunct in
+the near future. When possible, alternative functions with similar
+functionality are also mentioned. Help pages for deprecated functions are
+available at \code{help("<function>-deprecated")}.
 }
 \section{\code{masked_tokens_tbl}}{
 
@@ -91,12 +94,14 @@ For \code{masked_lp}, use \code{\link{masked_targets_pred}}.
 
 \section{\code{causal_next_tokens_tbl}}{
 
-For \code{causal_next_tokens_tbl}, use \code{\link{causal_next_tokens_pred_tbl}}.
+For \code{causal_next_tokens_tbl}, use
+\code{\link{causal_next_tokens_pred_tbl}}.
 }
 
 \section{\code{causal_lp}}{
 
-For \code{causal_lp}, use \code{\link{causal_targets_pred}} or \code{\link{causal_words_pred}}.
+For \code{causal_lp}, use \code{\link{causal_targets_pred}} or
+\code{\link{causal_words_pred}}.
 }
 
 \section{\code{causal_tokens_lp_tbl}}{

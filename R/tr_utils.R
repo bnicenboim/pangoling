@@ -17,9 +17,9 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
                               config_tokenizer = NULL
                               ) {
   tkzr <- tokenizer(model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   get_vocab(tkzr = tkzr, decode = decode)
 }
 
@@ -33,7 +33,8 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' @return A list with tokens
 #'
 #' @examplesIf interactive()
-#' tokenize_lst(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
+#' tokenize_lst(x = c("The apple doesn't fall far from the tree."), 
+#'              model = "gpt2")
 #' @family token-related functions
 #' @export
 tokenize_lst <- function(x,
@@ -45,19 +46,20 @@ tokenize_lst <- function(x,
 }
 
 #' @export
-tokenize_lst.character <- function(x,
-                                   decode = FALSE,
-                                   model = getOption("pangoling.causal.default"),
-                                   add_special_tokens = NULL,
-                                   config_tokenizer = NULL) {
-  tkzr <- tokenizer(model,
-                    add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer)
-  id <- get_id(x, tkzr = tkzr)
-  lapply(id, function(i) {
-    tokenize_ids_lst(i, decode = decode, tkzr = tkzr)
-  })
-}
+tokenize_lst.character <- 
+  function(x,
+           decode = FALSE,
+           model = getOption("pangoling.causal.default"),
+           add_special_tokens = NULL,
+           config_tokenizer = NULL) {
+    tkzr <- tokenizer(model,
+                      add_special_tokens = add_special_tokens,
+                      config_tokenizer = config_tokenizer)
+    id <- get_id(x, tkzr = tkzr)
+    lapply(id, function(i) {
+      tokenize_ids_lst(i, decode = decode, tkzr = tkzr)
+    })
+  }
 
 #' @export
 tokenize_lst.numeric <- function(x,
@@ -66,17 +68,17 @@ tokenize_lst.numeric <- function(x,
                                  add_special_tokens = NULL,
                                  config_tokenizer = NULL) {
   tkzr <- tokenizer(model,
-      add_special_tokens = add_special_tokens,
-      config_tokenizer = config_tokenizer
-    )
+                    add_special_tokens = add_special_tokens,
+                    config_tokenizer = config_tokenizer
+                    )
   tokenize_ids_lst(x, decode = decode, tkzr = tkzr)
-  }
+}
 
 
 tokenize_ids_lst <- function(x, decode = decode, tkzr = tkzr){
   if(decode == FALSE){
     tidytable::map_chr(as.integer(x), function(x) {
-    tkzr$convert_ids_to_tokens(x)
+      tkzr$convert_ids_to_tokens(x)
     })
   } else if(decode == TRUE) {
     tidytable::map_chr(as.integer(x), function(x) {
@@ -104,10 +106,10 @@ ntokens <- function(x,
                     add_special_tokens = NULL,
                     config_tokenizer = NULL) {
   lengths(tokenize_lst(x,
-    model = model,
-    add_special_tokens = add_special_tokens,
-    config_tokenizer = config_tokenizer
-  ))
+                       model = model,
+                       add_special_tokens = add_special_tokens,
+                       config_tokenizer = config_tokenizer
+                       ))
 }
 
 
@@ -116,7 +118,9 @@ get_vocab <- function(tkzr, decode = FALSE) {
     sort(unlist(tkzr$get_vocab())) |> names()
   } else {
     ids <- seq_along(get_vocab(tkzr))-1L
- sapply(ids, function(x) safe_decode(x, tkzr))
+    vapply(ids, function(x) safe_decode(x, tkzr),
+           FUN.VALUE = character(1))
+
 
   }
 }
@@ -125,17 +129,17 @@ get_vocab <- function(tkzr, decode = FALSE) {
 # Function to handle decoding with error handling
 safe_decode <- function(id, tkzr) {
   tryCatch(
-    {
-      # Attempt to decode the ID
-      tkzr$decode(id)
-    },
-    error = function(e) {
-      # Check if the error is "Embedded NUL in string"
-      if (grepl("Embedded NUL in string", e$message)) {
-        return("NULL")  # Return NULL for this specific error
-      }
-      stop(e)  # Re-throw other errors
+  {
+    # Attempt to decode the ID
+    tkzr$decode(id)
+  },
+  error = function(e) {
+    # Check if the error is "Embedded NUL in string"
+    if (grepl("Embedded NUL in string", e$message)) {
+      return("NULL")  # Return NULL for this specific error
     }
+    stop(e)  # Re-throw other errors
+  }
   )
 }
 
@@ -146,15 +150,16 @@ safe_decode <- function(id, tkzr) {
 encode <- function(x, tkzr, add_special_tokens = NULL, ...) {
   if (!is.null(add_special_tokens)) {
     tkzr$batch_encode_plus(x,
-      return_tensors = "pt",
-      add_special_tokens = add_special_tokens, ...
-    )
+                           return_tensors = "pt",
+                           add_special_tokens = add_special_tokens, ...
+                           )
   } else {
     tkzr$batch_encode_plus(x, return_tensors = "pt", ...)
   }
 }
 
 #' Sends a var to python
+#' see 
 #' https://stackoverflow.com/questions/67562889/interoperability-between-python-and-r
 #' @noRd
 var_to_py <- function(var_name, x) {
@@ -172,10 +177,13 @@ lst_to_kwargs <- function(x) {
 }
 
 #' @noRd
-lang_model <- function(model = "gpt2", checkpoint = NULL, task = "causal", config_model = NULL) {
+lang_model <- function(model = "gpt2", 
+                       checkpoint = NULL, 
+                       task = "causal", 
+                       config_model = NULL) {
   reticulate::py_run_string(
-    'import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"'
-  )
+                'import os\nos.environ["TOKENIZERS_PARALLELISM"] = "false"'
+              )
   if(length(checkpoint)>0 && checkpoint != ""){
     model <- file.path(model, checkpoint)
   }
@@ -194,19 +202,19 @@ gc.collect()")
 
   reticulate::py_run_string("import transformers")
   automodel <- switch(task,
-    causal = "AutoModelForCausalLM",
-    masked = "AutoModelForMaskedLM"
-  )
+                      causal = "AutoModelForCausalLM",
+                      masked = "AutoModelForMaskedLM"
+                      )
   lst_to_kwargs(c(
     pretrained_model_name_or_path = model,
     return_dict_in_generate = TRUE,
     config_model
   ))
   reticulate::py_run_string(paste0(
-    "lm = transformers.",
-    automodel,
-    ".from_pretrained(**r.kwargs)"
-  ))
+                "lm = transformers.",
+                automodel,
+                ".from_pretrained(**r.kwargs)"
+              ))
 
   lm <- reticulate::py$lm
   lm$eval()
@@ -233,17 +241,19 @@ tokenizer <- function(model = "gpt2",
       config_tokenizer
     ))
     reticulate::py_to_r(
-      reticulate::py_run_string(
-        "tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"
-      )
-    )
+                  reticulate::py_run_string(
+                                "tkzr = transformers.GPT2Tokenizer.from_pretrained(**r.kwargs)"
+                              )
+                )
   } else {
-    lst_to_kwargs(c(pretrained_model_name_or_path = model, use_fast = FALSE, config_tokenizer))
+    lst_to_kwargs(c(pretrained_model_name_or_path = model, 
+                    use_fast = FALSE, 
+                    config_tokenizer))
     reticulate::py_to_r(
-      reticulate::py_run_string(
-        "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
-      )
-    )
+                  reticulate::py_run_string(
+                                "tkzr = transformers.AutoTokenizer.from_pretrained(**r.kwargs)"
+                              )
+                )
   }
 
   tkzr <- reticulate::py$tkzr
@@ -264,8 +274,8 @@ get_id <- function(x,
   
   if (is.null(tkzr)) {
     tkzr <- tokenizer(model,
-      add_special_tokens = add_special_tokens,
-      config_tokenizer = config_tokenizer)
+                      add_special_tokens = add_special_tokens,
+                      config_tokenizer = config_tokenizer)
   }
   
   # if (add_special_tokens) {
@@ -286,13 +296,25 @@ get_id <- function(x,
   ## Just making up a sequence and adding the special characters (if they exist)
   placeholder <- reticulate::py_to_r(tkzr$convert_tokens_to_ids("."))
   if(!is.null(add_special_tokens)) {
-    sequence <- reticulate::py_to_r(tkzr(".", add_special_tokens = add_special_tokens)$input_ids)  
+    sequence <- reticulate::py_to_r(
+                              tkzr(".",
+                                   add_special_tokens = 
+                                     add_special_tokens)$input_ids)
   } else {
     sequence <- reticulate::py_to_r(tkzr(".")$input_ids)  
   }
   position <- which(sequence == placeholder)
-  initial <- if (position > 1) sequence[1:(position - 1)] else NULL
-  final <- if (position < length(sequence)) sequence[(position + 1):length(sequence)] else NULL
+  if (position > 1){
+    initial <- sequence[1:(position - 1)]
+  }  else {
+    initial <- NULL
+  }
+
+  if (position < length(sequence)) {
+    final <- sequence[(position + 1):length(sequence)]
+  }else {
+    final <- NULL
+  }
   out[[1]] <- c(initial, out[[1]])
   out[[length(out)]] <- c(out[[length(out)]], final)
   
@@ -307,7 +329,7 @@ create_tensor_lst <- function(texts,
                               stride = 1,
                               batch_size = 1) {
   if (is.null(tkzr$special_tokens_map$pad_token) &&
-    !is.null(tkzr$special_tokens_map$eos_token)) {
+      !is.null(tkzr$special_tokens_map$eos_token)) {
     tkzr$pad_token <- tkzr$eos_token
   }
   texts <- unlist(texts)
@@ -326,12 +348,16 @@ create_tensor_lst <- function(texts,
   #   max_length <- Inf
   # }
 
-  g_batches <- c(rep(batch_size, floor(length(texts) / batch_size)), length(texts) %% batch_size)
+  g_batches <- c(rep(batch_size, 
+                     floor(length(texts) / batch_size)), 
+                 length(texts) %% batch_size)
   g_batches <- g_batches[g_batches > 0]
   text_ids <- tidytable::map2(
-    c(1, cumsum(g_batches)[-length(g_batches)] + 1), cumsum(g_batches),
-    ~ seq(.x, .y)
-  )
+                           c(1, 
+                             cumsum(g_batches)[-length(g_batches)] + 1), 
+                           cumsum(g_batches),
+                           ~ seq(.x, .y)
+                         )
   lapply(text_ids, function(text_id) {
     # message(paste(text_id, " "))
     tensor <- encode(
@@ -368,19 +394,23 @@ word_lp <- function(words,
                   add_special_tokens = add_special_tokens,
                   config_tokenizer = config_tokenizer)
   tokens <- lapply(l_ids,
-                  tokenize_lst.numeric,
-                  model = model,
-                  add_special_tokens = add_special_tokens,
-                  config_tokenizer = config_tokenizer)
+                   tokenize_lst.numeric,
+                   model = model,
+                   add_special_tokens = add_special_tokens,
+                   config_tokenizer = config_tokenizer)
   
   token_n <- tidytable::map_dbl(tokens, length)
   index_vocab <- data.table::chmatch(unlist(tokens), rownames(mat))
 
   if(ncol(mat) != length(index_vocab)) {
-    stop2("Unexpected different length between number of tokens, please open an issue with a reproducible example at [https://github.com/bnicenboim/pangoling/issues].")
+    stop2(paste0("Unexpected different length between number of tokens, ",
+                 "please open an issue with a reproducible example at ",
+                 "[https://github.com/bnicenboim/pangoling/issues]."))
   }
 
-  token_lp <- tidytable::map2_dbl(index_vocab, seq_len(ncol(mat)), ~ mat[.x, .y])
+  token_lp <- tidytable::map2_dbl(index_vocab, 
+                                  seq_len(ncol(mat)), 
+                                  ~ mat[.x, .y])
 
   if (options()$pangoling.debug) {
     print("******")
@@ -427,40 +457,61 @@ num_to_token <- function(x, tkzr) {
 
 #' Set Cache Folder for HuggingFace Transformers
 #'
-#' This function sets the cache directory for HuggingFace transformers. If a path is given, the function checks if the directory exists and then sets the `TRANSFORMERS_CACHE` environment variable to this path.
-#' If no path is provided, the function checks for the existing cache directory in a number of environment variables.
-#' If none of these environment variables are set, it provides the user with information on the default cache directory.
+#' This function sets the cache directory for HuggingFace transformers. If a 
+#' path is given, the function checks if the directory exists and then sets the 
+#' `TRANSFORMERS_CACHE` environment variable to this path.
+#' If no path is provided, the function checks for the existing cache directory 
+#' in a number of environment variables.
+#' If none of these environment variables are set, it provides the user with 
+#' information on the default cache directory.
 #'
-#' @param path Character string, the path to set as the cache directory. If NULL, the function will look for the cache directory in a number of environment variables. Default is NULL.
+#' @param path Character string, the path to set as the cache directory. 
+#'             If NULL, the function will look for the cache directory in a 
+#'             number of environment variables. Default is NULL.
 #'
-#' @return Nothing is returned, this function is called for its side effect of setting the `TRANSFORMERS_CACHE` environment variable, or providing information to the user.
+#' @return Nothing is returned, this function is called for its side effect of 
+#'        setting the `TRANSFORMERS_CACHE` environment variable, or providing 
+#'        information to the user.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' set_cache_folder("~/new_cache_dir")
 #' }
-#' @seealso \url{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}
-#' @references HuggingFace Transformers: \url{https://huggingface.co/transformers/index.html}
+#' @seealso 
+#'      (https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup)
+#' @references HuggingFace Transformers: 
+#'             (https://huggingface.co/transformers/index.html)
 #' @family helper functions
 set_cache_folder <- function(path = NULL){
   if(!is.null(path)){
     if(!dir.exists(path)) stop2("Folder '", path, "' doesn't exist.")
-    reticulate::py_run_string(paste0("import os\nos.environ['TRANSFORMERS_CACHE']='",path,"'"))
-    reticulate::py_run_string(paste0("import os\nos.environ['HF_HOME']='",path,"'"))
-}
+    reticulate::py_run_string(
+                  paste0("import os\nos.environ['TRANSFORMERS_CACHE']='",
+                         path,"'"))
+    reticulate::py_run_string(
+                  paste0("import os\nos.environ['HF_HOME']='",path,"'"))
+  }
   path <- c(Sys.getenv("TRANSFORMERS_CACHE"),
-  Sys.getenv("HUGGINGFACE_HUB_CACHE"),
-  Sys.getenv("HF_HOME"),
-  Sys.getenv("XDG_CACHE_HOME"))
+            Sys.getenv("HUGGINGFACE_HUB_CACHE"),
+            Sys.getenv("HF_HOME"),
+            Sys.getenv("XDG_CACHE_HOME"))
 
   path <- paste0(path[path!=""],"")[1]
   if(path != ""){
-    message_verbose("Pretrained models and tokenizers are downloaded and locally cached at '", path,"'.")
-    } else {
-      message_verbose("By default pretrained models are downloaded and locally cached at: ~/.cache/huggingface/hub. This is the default directory given by the shell environment variable TRANSFORMERS_CACHE. On Windows, the default directory is given by C:\\Users\\username\\.cache\\huggingface\\hub.
-
-For changing the shell environment variables that affect the cache folder see https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup")
-    }
+    message_verbose("Pretrained models and tokenizers are downloaded ",
+                    " and locally cached at '", path,"'.")
+  } else {
+    message_verbose(
+      "By default pretrained models are downloaded and locally",
+      " cached at: ~/.cache/huggingface/hub. ",
+      "This is the default directory given by the shell ",
+      "environment variable TRANSFORMERS_CACHE. On Windows, ",
+      "the default directory is given by ",
+      "C:\\Users\\username\\.cache\\huggingface\\hub.\n",
+      "For changing the shell environment variables that ",
+      "affect the cache folder see ",
+      "https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup")
+  }
 
 }

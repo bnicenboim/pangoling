@@ -16,11 +16,15 @@ transformer_vocab(
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
+\item{decode}{Should it decode the tokens into readable strings? This is
+relevant for special characters such as accents and diacritics,
+which get mangled in the tokens.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 A vector with the vocabulary of a model.

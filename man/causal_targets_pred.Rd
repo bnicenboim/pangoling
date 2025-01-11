@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_targets_pred}
 \alias{causal_targets_pred}
-\title{Get the predictability of each element of a vector of words (or phrases) using a causal transformer}
+\title{Get the predictability of each element of a vector of words (or phrases)
+using a causal transformer}
 \usage{
 causal_targets_pred(
   targets,
@@ -31,7 +32,9 @@ causal_targets_pred(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).
+To get surprisal in bits (rather than predictability), set
+\code{log.p = 1/2}.}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
@@ -43,12 +46,14 @@ all punctuation  that stands alone in a token.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 
 \item{batch_size}{Maximum size of the batch. Larges batches speedup
 processing but take more memory.}
@@ -56,11 +61,13 @@ processing but take more memory.}
 \item{...}{not in use.}
 }
 \value{
-A named vector of predictability values (by default the natural logarithm of the word probability).
+A named vector of predictability values (by default the natural
+logarithm of the word probability).
 }
 \description{
-Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) given a
-vector of left contexts using a using a causal transformer model. #'
+Get the predictability (by default the natural logarithm of the
+word probability) of each element of a vector of words (or phrases) given a
+vector of left contexts using a using a causal transformer model.
 }
 \details{
 A causal language model (also called GPT-like, auto-regressive, or decoder

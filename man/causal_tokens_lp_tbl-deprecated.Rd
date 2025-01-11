@@ -2,9 +2,11 @@
 % Please edit documentation in R/deprecated.R
 \name{causal_tokens_lp_tbl-deprecated}
 \alias{causal_tokens_lp_tbl-deprecated}
-\title{Get the log probability of each token in a sentence (or group of sentences) using a causal transformer}
+\title{Get the log probability of each token in a sentence (or group of
+sentences) using a causal transformer}
 \description{
-This function is deprecated. Use \code{causal_tokens_pred_tbl()} instead.
+This function is deprecated. Use \code{causal_tokens_pred_tbl()}
+instead.
 }
 \seealso{
 \code{\link{pangoling-deprecated}}

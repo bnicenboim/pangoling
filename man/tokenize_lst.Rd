@@ -15,15 +15,19 @@ tokenize_lst(
 \arguments{
 \item{x}{Strings or token ids.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
+\item{decode}{Should it decode the tokens into readable strings? This is
+relevant for special characters such as accents and diacritics,
+which get mangled in the tokens.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 A list with tokens
@@ -33,7 +37,8 @@ Tokenize a string or token ids.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-tokenize_lst(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
+tokenize_lst(x = c("The apple doesn't fall far from the tree."), 
+             model = "gpt2")
 \dontshow{\}) # examplesIf}
 }
 \seealso{

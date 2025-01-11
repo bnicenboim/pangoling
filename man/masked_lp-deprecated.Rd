@@ -2,9 +2,11 @@
 % Please edit documentation in R/deprecated.R
 \name{masked_lp-deprecated}
 \alias{masked_lp-deprecated}
-\title{Get the log probability of a target word (or phrase) given a left and right context}
+\title{Get the log probability of a target word (or phrase) given a left and
+right context}
 \description{
-This function is deprecated. Use \code{masked_targets_pred()} instead.
+This function is deprecated. Use \code{masked_targets_pred()}
+instead.
 }
 \seealso{
 \code{\link{pangoling-deprecated}}

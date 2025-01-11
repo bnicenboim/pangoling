@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_masked.R
 \name{masked_tokens_pred_tbl}
 \alias{masked_tokens_pred_tbl}
-\title{Get the possible tokens and their log probabilities for each mask in a sentence}
+\title{Get the possible tokens and their log probabilities for each mask in a
+sentence}
 \usage{
 masked_tokens_pred_tbl(
   masked_sentences,
@@ -21,7 +22,9 @@ masked_tokens_pred_tbl(
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).
+To get surprisal in bits (rather than predictability), set
+\code{log.p = 1/2}.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -29,19 +32,23 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surpris
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 A table with the masked sentences, the tokens (\code{token}),
 predictability (\code{pred}), and the respective mask number (\code{mask_n}).
 }
 \description{
-For each mask, indicated with \verb{[MASK]}, in a sentence, get the possible tokens and their  predictability (by default the natural logarithm of the word probability) using a masked transformer.
+For each mask, indicated with \verb{[MASK]}, in a sentence, get the possible
+tokens and their  predictability (by default the natural logarithm of the
+word probability) using a masked transformer.
 }
 \details{
 A masked language model (also called BERT-like, or encoder model) is a type
@@ -60,8 +67,8 @@ A list of possible masked can be found in
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details. In case of errors check the status of
 \url{https://status.huggingface.co/}
 }
 \section{More examples}{

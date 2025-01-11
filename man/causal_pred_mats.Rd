@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_pred_mats}
 \alias{causal_pred_mats}
-\title{Get a list of matrices with the predictability of possible word given its previous context using a causal transformer}
+\title{Get a list of matrices with the predictability of possible word given its
+previous context using a causal transformer}
 \usage{
 causal_pred_mats(
   x,
@@ -23,9 +24,9 @@ causal_pred_mats(
 \arguments{
 \item{x}{Vector of (non-empty) words, phrases or texts.}
 
-\item{by}{Vector that indicates how the text should be split. By default, this is \code{" "},
-but for languages, such as Chinese, which don't separate words,
-this should be set to \code{""}.}
+\item{by}{Vector that indicates how the text should be split. By default,
+this is \code{" "}, but for languages, such as Chinese, which don't
+separate words, this should be set to \code{""}.}
 
 \item{sep}{Character indicating how words are separated in a sentence.}
 
@@ -33,9 +34,13 @@ this should be set to \code{""}.}
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).
+To get surprisal in bits (rather than predictability), set
+\code{log.p = 1/2}.}
 
-\item{sorted}{When default FALSE it will retain the order of groups we are splitting on. When TRUE then sorted (according to \code{by}) list(s) are returned.}
+\item{sorted}{When default FALSE it will retain the order of groups we are
+splitting on. When TRUE then sorted (according to \code{by}) list(s)
+are returned.}
 
 \item{model}{Name of a pre-trained model or folder.}
 
@@ -43,14 +48,18 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surpris
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is relevant for special characters such as accents and diacritics, which get mangled in the tokens.}
+\item{decode}{Should it decode the tokens into readable strings? This is
+relevant for special characters such as accents and diacritics,
+which get mangled in the tokens.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 
 \item{batch_size}{Maximum size of the batch. Larges batches speedup
 processing but take more memory.}
@@ -58,10 +67,12 @@ processing but take more memory.}
 \item{...}{not in use.}
 }
 \value{
-A list of matrices with tokens in their columns and the vocabulary of the model in their rows
+A list of matrices with tokens in their columns and the vocabulary of
+the model in their rows
 }
 \description{
-Get a list of matrices with the predictability (by default the natural logarithm of the word probability) of possible word given
+Get a list of matrices with the predictability (by default the natural
+logarithm of the word probability) of possible word given
 its previous context using a causal transformer model.
 }
 \details{

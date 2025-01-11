@@ -18,8 +18,8 @@
 #' Using the  `config_model` and `config_tokenizer` arguments, it's possible to
 #'  control how the model and tokenizer from Hugging Face is accessed, see the
 #'  python method
-#'  [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained) for details. In case of errors
-#'  check the status of
+#'  [`from_pretrained`](https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained)
+#' for details. In case of errors check the status of
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @inheritParams causal_preload
@@ -63,9 +63,12 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
   )$config$to_dict()
 }
 
-#' Get the possible tokens and their log probabilities for each mask in a sentence
+#' Get the possible tokens and their log probabilities for each mask in a 
+#'  sentence
 #'
-#' For each mask, indicated with `[MASK]`, in a sentence, get the possible tokens and their  predictability (by default the natural logarithm of the word probability) using a masked transformer.
+#' For each mask, indicated with `[MASK]`, in a sentence, get the possible 
+#' tokens and their  predictability (by default the natural logarithm of the 
+#' word probability) using a masked transformer.
 #'
 #' @section More examples:
 #' See the
@@ -87,61 +90,66 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #'
 #' @family masked model functions
 #' @export
-masked_tokens_pred_tbl <- function(masked_sentences,
-                                   log.p = getOption("pangoling.log.p"),
-                                   model = getOption("pangoling.masked.default"),
-                                   checkpoint = NULL,
-                                   add_special_tokens = NULL,
-                                   config_model = NULL,
-                                   config_tokenizer = NULL) {
-  message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
-  tkzr <- tokenizer(model,
-                    add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer
-                    )
-  trf <- lang_model(model,
-                    checkpoint = checkpoint,
-                    task = "masked",
-                    config_model = config_model
-                    )
-  vocab <- get_vocab(tkzr)
-  # non_batched:
-  # TODO: speedup using batches
-  tidytable::map_dfr(masked_sentences, function(masked_sentence) {
-    masked_tensor <- encode(list(masked_sentence), tkzr,
-                            add_special_tokens = add_special_tokens
-                            )$input_ids
-    outputs <- trf(masked_tensor)
-    mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
-    logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
-    lp <- reticulate::py_to_r(
-                        torch$log_softmax(logits_masks, dim = -1L)$tolist()
+masked_tokens_pred_tbl <- 
+  function(masked_sentences,
+           log.p = getOption("pangoling.log.p"),
+           model = getOption("pangoling.masked.default"),
+           checkpoint = NULL,
+           add_special_tokens = NULL,
+           config_model = NULL,
+           config_tokenizer = NULL) {
+    message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
+    tkzr <- tokenizer(model,
+                      add_special_tokens = add_special_tokens,
+                      config_tokenizer = config_tokenizer
                       )
-    if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
-    # names(lp) <-  1:length(lp)
-    if (length(mask_pos) == 0) {
-      tidytable::tidytable(
-                   masked_sentence = masked_sentence,
-                   token = NA,
-                   pred = NA,
-                   mask_n = NA
-                 )
-    } else {
-      lp |> tidytable::map_dfr(~
-                                 tidytable::tidytable(
-                                              masked_sentence = masked_sentence,
-                                              token = vocab,
-                                              pred = ln_p_change(.x, log.p = log.p)
-                                            ) |>
-                                 tidytable::arrange(-pred), .id = "mask_n")
-    }
-  }) |>
-    tidytable::relocate(mask_n, .after = tidyselect::everything())
-}
+    trf <- lang_model(model,
+                      checkpoint = checkpoint,
+                      task = "masked",
+                      config_model = config_model
+                      )
+    vocab <- get_vocab(tkzr)
+    # non_batched:
+    # TODO: speedup using batches
+    tidytable::map_dfr(masked_sentences, function(masked_sentence) {
+      masked_tensor <- encode(list(masked_sentence), tkzr,
+                              add_special_tokens = add_special_tokens
+                              )$input_ids
+      outputs <- trf(masked_tensor)
+      mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
+      logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
+      lp <- reticulate::py_to_r(
+                          torch$log_softmax(logits_masks, dim = -1L)$tolist()
+                        )
+      if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
+      # names(lp) <-  1:length(lp)
+      if (length(mask_pos) == 0) {
+        tidytable::tidytable(
+                     masked_sentence = masked_sentence,
+                     token = NA,
+                     pred = NA,
+                     mask_n = NA
+                   )
+      } else {
+        lp |> 
+          tidytable::map_dfr(~
+                               tidytable::tidytable(
+                                            masked_sentence = masked_sentence,
+                                            token = vocab,
+                                            pred = ln_p_change(.x,
+                                                               log.p = log.p)
+                                          ) |>
+                               tidytable::arrange(-pred), .id = "mask_n")
+      }
+    }) |>
+      tidytable::relocate(mask_n, .after = tidyselect::everything())
+  }
 
-#' Get the predictability of a target word (or phrase) given a left and right context
+#' Get the predictability of a target word (or phrase) given a left and right 
+#'   context
 #'
-#' Get the predictability (by default the natural logarithm of the word probability) of a vector of target words (or phrase) given a
+#' Get the predictability (by default the natural logarithm of the word 
+#' probability) of a vector of target words (or phrase) given a
 #' vector of left and of right contexts using a masked transformer.
 #'
 #' @section More examples:
@@ -150,13 +158,16 @@ masked_tokens_pred_tbl <- function(masked_sentences,
 #' in pangoling website for more examples.
 #'
 #'
-#' @param prev_contexts Left context of the target word in left-to-right written languages.
+#' @param prev_contexts Left context of the target word in left-to-right written
+#'                      languages.
 #' @param targets Target words.
-#' @param after_contexts Right context of the target in left-to-right written languages.
+#' @param after_contexts Right context of the target in left-to-right written 
+#'                       languages.
 #' @inheritParams masked_preload
 #' @inheritParams causal_words_pred
 #' @inherit masked_preload details
-#' @return A named vector of predictability values (by default the natural logarithm of the word probability).
+#' @return A named vector of predictability values (by default the natural 
+#'         logarithm of the word probability).
 #' @examplesIf interactive()
 #' masked_targets_pred(
 #'   prev_contexts = c("The", "The"),
@@ -180,8 +191,9 @@ masked_targets_pred <- function(prev_contexts,
                                 add_special_tokens = NULL,
                                 config_model = NULL,
                                 config_tokenizer = NULL) {
-  if(any(!is_really_string(targets))) stop2("`targets` needs to be a vector of non-empty strings.")
-
+  if(any(!is_really_string(targets))) {
+    stop2("`targets` needs to be a vector of non-empty strings.")
+  }
   stride <- 1
   message_verbose_model(model, checkpoint = checkpoint, causal = FALSE)
 
@@ -205,7 +217,9 @@ masked_targets_pred <- function(prev_contexts,
                                      paste0(
                                        l,
                                        " ",
-                                       paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
+                                       paste0(rep(tkzr$mask_token, 
+                                                  length(target)), 
+                                              collapse = ""),
                                        " ",
                                        r
                                      )
@@ -231,11 +245,14 @@ masked_targets_pred <- function(prev_contexts,
                         # l <- prev_contexts[[1]]
                         # r <- after_contexts[[1]]
                         # tensor_lst <- tensors_lst[[1]]
-                        ls_mat <- masked_lp_mat(tensor_lst = lapply(tensor_lst, function(t) t$input_ids),
-                                                trf = trf,
-                                                tkzr = tkzr,
-                                                add_special_tokens = add_special_tokens,
-                                                stride = stride)
+                        ls_mat <- 
+                          masked_lp_mat(tensor_lst =
+                                          lapply(tensor_lst,
+                                                 function(t) t$input_ids),
+                                        trf = trf,
+                                        tkzr = tkzr,
+                                        add_special_tokens = add_special_tokens,
+                                        stride = stride)
                         text <- paste0(words, collapse = " ")
                         tokens <- tkzr$tokenize(text)
                         lapply(ls_mat, function(m) {
@@ -253,7 +270,6 @@ masked_targets_pred <- function(prev_contexts,
                                   config_tokenizer = config_tokenizer
                                   )
                         })
-                        # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
                       }
                     )
   unlist(out, recursive = TRUE) |>

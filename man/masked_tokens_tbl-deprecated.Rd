@@ -2,9 +2,11 @@
 % Please edit documentation in R/deprecated.R
 \name{masked_tokens_tbl-deprecated}
 \alias{masked_tokens_tbl-deprecated}
-\title{Get the possible tokens and their log probabilities for each mask in a sentence}
+\title{Get the possible tokens and their log probabilities for each mask in a
+sentence}
 \description{
-This function is deprecated. Use \code{masked_tokens_pred_tbl()} instead.
+This function is deprecated. Use \code{masked_tokens_pred_tbl()}
+instead.
 }
 \seealso{
 \code{\link{pangoling-deprecated}}

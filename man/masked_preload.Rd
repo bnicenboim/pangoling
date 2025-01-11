@@ -16,12 +16,14 @@ masked_preload(
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 Nothing.
@@ -46,8 +48,8 @@ A list of possible masked can be found in
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details. In case of errors check the status of
 \url{https://status.huggingface.co/}
 }
 \examples{

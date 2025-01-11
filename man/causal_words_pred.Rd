@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_words_pred}
 \alias{causal_words_pred}
-\title{Get the predictability of each element of a vector of words (or phrases) in a series of texts using a causal transformer}
+\title{Get the predictability of each element of a vector of words (or phrases) in a
+series of texts using a causal transformer}
 \usage{
 causal_words_pred(
   x,
@@ -22,9 +23,9 @@ causal_words_pred(
 \arguments{
 \item{x}{Vector of (non-empty) words, phrases or texts.}
 
-\item{by}{Vector that indicates how the text should be split. By default, this is \code{" "},
-but for languages, such as Chinese, which don't separate words,
-this should be set to \code{""}.}
+\item{by}{Vector that indicates how the text should be split. By default,
+this is \code{" "}, but for languages, such as Chinese, which don't
+separate words, this should be set to \code{""}.}
 
 \item{sep}{Character indicating how words are separated in a sentence.}
 
@@ -32,7 +33,9 @@ this should be set to \code{""}.}
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
 If \code{FALSE}, the raw probabilities are returned.
 Alternatively, \code{log.p} can be set to a numeric value specifying
-the base of the logarithm (e.g., \code{2} for base-2 logarithms). To get surprisal #'              in bits (rather than predictability), set \code{log.p = 1/2}.}
+the base of the logarithm (e.g., \code{2} for base-2 logarithms).
+To get surprisal in bits (rather than predictability), set
+\code{log.p = 1/2}.}
 
 \item{ignore_regex}{Can ignore certain characters when calculates the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
@@ -44,12 +47,14 @@ all punctuation  that stands alone in a token.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 
 \item{batch_size}{Maximum size of the batch. Larges batches speedup
 processing but take more memory.}
@@ -60,8 +65,11 @@ processing but take more memory.}
 A named vector of (log) probabilities.
 }
 \description{
-Get the predictability (by default the natural logarithm of the word probability) of each element of a vector of words (or phrases) in a series of texts using a causal transformer model. See the
-\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
+Get the predictability (by default the natural logarithm of the word
+probability) of each element of a vector of words (or phrases) in a series of
+texts using a causal transformer model. See the
+\link{online article}
+(https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 in pangoling website for more examples.
 }
 \details{
@@ -124,7 +132,8 @@ causal_words_pred(
   x = example_data$word,
   by = example_data$sent_n,
   model = "gpt2",
-  log.p = 1/2  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
+  # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
+  log.p = 1/2  
 )
 \dontshow{\}) # examplesIf}
 }
