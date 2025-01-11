@@ -36,6 +36,7 @@ jobs:
             brms
             rstan
             stan-dev/cmdstanr
+            BH
             any::pkgdown
             local::.
           needs: website
