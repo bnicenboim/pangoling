@@ -50,3 +50,14 @@ Encoding(df_jaeger14$sentence) <- "UTF-8"
 usethis::use_data(df_jaeger14, overwrite = TRUE)
 
 ## df_jaeger14 |> print(n=20)
+
+
+sentences <- c(
+  "The apple doesn't fall far from the tree.",
+  "Don't judge a book by its cover."
+)
+df_sent <- strsplit(x = sentences, split = " ") |>
+  tidytable::map_dfr(.f = ~ data.frame(word = .x), .id = "sent_n")
+df_sent
+
+usethis::use_data(df_sent, overwrite = TRUE)

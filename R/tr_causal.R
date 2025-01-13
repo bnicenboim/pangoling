@@ -25,7 +25,9 @@
 #'  In case of errors when a new model is run, check the status of
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
-#' @param model Name of a pre-trained model or folder.
+#' @param model Name of a pre-trained model or folder. One should be able to use
+#' models based on "gpt2". See 
+#' [hugging face website](https://huggingface.co/models?other=gpt2).
 #' @param checkpoint Folder of a checkpoint.
 #' @param add_special_tokens Whether to include special tokens. It has the
 #'                           same default as the
@@ -79,10 +81,10 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
   )$config$to_dict()
 }
 
-#' Get the possible next tokens and their log probabilities its previous context
-#'  using a causal transformer
+#' Get the possible next tokens and their log probabilities based on the 
+#' previous context using a causal transformer
 #'
-#' Get the possible next tokens and their log probabilities based on its
+#' Get the possible next tokens and their log probabilities based on a
 #' previous context using a causal transformer model from 
 #' [Hugging Face](https://huggingface.co).
 #'
@@ -99,7 +101,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' @inheritParams causal_tokens_pred_tbl
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
-#' @examplesIf interactive()
+#' @examples
 #' causal_next_tokens_pred_tbl(
 #'   context = "The apple doesn't fall far from the",
 #'   model = "gpt2"
@@ -470,12 +472,25 @@ causal_mat <- function(tensor,
 
 
 
-#' Get a list of matrices with the predictability of possible word given its 
-#'  previous context using a causal transformer
+#' Generate a list of predictability matrices using a causal transformer model
 #'
-#' Get a list of matrices with the predictability (by default the natural 
-#' logarithm of the word probability) of possible word given
-#' its previous context using a causal transformer model.
+#' This function computes a list of matrices, where each matrix corresponds to a
+#' unique group specified by the `by` argument. Each matrix represents the
+#' predictability of every token in the input text (`x`) based on preceding 
+#' context, as evaluated by a causal transformer model.
+#' The predictability values are given as the natural logarithm of word 
+#' probabilities by default.
+#'
+#' Each matrix contains:
+#' - Rows representing the model's vocabulary.
+#' - Columns corresponding to tokens in the group (e.g., a sentence or 
+#' paragraph).
+#'
+#' @details
+#' The function splits the input `x` into groups specified by the `by` argument 
+#' and processes each group independently. For each group, the causal 
+#' transformer model computes the predictability of every token in the model's 
+#' vocabulary, conditioned on the context leading up to that token.
 #'
 #' @inheritParams causal_words_pred
 #' @inheritParams causal_preload
@@ -488,12 +503,15 @@ causal_mat <- function(tensor,
 #' @return A list of matrices with tokens in their columns and the vocabulary of
 #'         the model in their rows
 #'
-#' @examplesIf interactive()
-#' causal_pred_mats(
-#'   x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
-#'   model = "gpt2"
-#' )
-#'
+#' @examples
+#' list_of_mats <- causal_pred_mats(
+#'                        x = df_sent$word,
+#'                        by = df_sent$sent_n,  
+#'                        model = "gpt2"
+#'                 )
+#' list_of_mats |> str()
+#' list_of_mats[[1]] |> tail()
+#' list_of_mats[[2]] |> tail()
 #' @family causal model functions
 #' @export
 #'

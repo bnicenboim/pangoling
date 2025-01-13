@@ -10,7 +10,9 @@ masked_config(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "bert". See
+\href{https://huggingface.co/models?other=bert}{hugging face website}.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}

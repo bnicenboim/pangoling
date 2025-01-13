@@ -2,8 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_pred_mats}
 \alias{causal_pred_mats}
-\title{Get a list of matrices with the predictability of possible word given its
-previous context using a causal transformer}
+\title{Generate a list of predictability matrices using a causal transformer model}
 \usage{
 causal_pred_mats(
   x,
@@ -42,7 +41,9 @@ To get surprisal in bits (rather than predictability), set
 splitting on. When TRUE then sorted (according to \code{by}) list(s)
 are returned.}
 
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{checkpoint}{Folder of a checkpoint.}
 
@@ -71,33 +72,25 @@ A list of matrices with tokens in their columns and the vocabulary of
 the model in their rows
 }
 \description{
-Get a list of matrices with the predictability (by default the natural
-logarithm of the word probability) of possible word given
-its previous context using a causal transformer model.
+This function computes a list of matrices, where each matrix corresponds to a
+unique group specified by the \code{by} argument. Each matrix represents the
+predictability of every token in the input text (\code{x}) based on preceding
+context, as evaluated by a causal transformer model.
+The predictability values are given as the natural logarithm of word
+probabilities by default.
 }
 \details{
-A causal language model (also called GPT-like, auto-regressive, or decoder
-model) is a type of large language model usually used for text-generation
-that can predict the next word (or more accurately in fact token) based
-on a preceding context.
+Each matrix contains:
+\itemize{
+\item Rows representing the model's vocabulary.
+\item Columns corresponding to tokens in the group (e.g., a sentence or
+paragraph).
+}
 
-If not specified, the causal model that will be used is the one set in
-specified in the global option \code{pangoling.causal.default}, this can be
-accessed via \code{getOption("pangoling.causal.default")} (by default
-"gpt2"). To change the default option
-use \code{options(pangoling.causal.default = "newcausalmodel")}.
-
-A list of possible causal models can be found in
-\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
-
-Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
-control how the model and tokenizer from Hugging Face is accessed, see the
-Python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
-for details.
-
-In case of errors when a new model is run, check the status of
-\url{https://status.huggingface.co/}
+The function splits the input \code{x} into groups specified by the \code{by} argument
+and processes each group independently. For each group, the causal
+transformer model computes the predictability of every token in the model's
+vocabulary, conditioned on the context leading up to that token.
 }
 \section{More examples}{
 
@@ -107,12 +100,14 @@ in pangoling website for more examples.
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-causal_pred_mats(
-  x = c("The", "apple", "doesn't", "fall", "far", "from", "the", "tree."),
-  model = "gpt2"
-)
-\dontshow{\}) # examplesIf}
+list_of_mats <- causal_pred_mats(
+                       x = df_sent$word,
+                       by = df_sent$sent_n,  
+                       model = "gpt2"
+                )
+list_of_mats |> str()
+list_of_mats[[1]] |> tail()
+list_of_mats[[2]] |> tail()
 }
 \seealso{
 Other causal model functions: 

@@ -28,7 +28,9 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms).
 To get surprisal in bits (rather than predictability), set
 \code{log.p = 1/2}.}
 
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{checkpoint}{Folder of a checkpoint.}
 

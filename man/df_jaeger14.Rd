@@ -105,5 +105,9 @@ df_jaeger14 |>
   group_by(region) |>
   summarize(mean_rt = mean(rt, na.rm = TRUE))
 }
+\seealso{
+Other datasets: 
+\code{\link{df_sent}}
+}
 \concept{datasets}
 \keyword{datasets}

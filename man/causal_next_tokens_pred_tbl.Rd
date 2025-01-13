@@ -2,8 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_next_tokens_pred_tbl}
 \alias{causal_next_tokens_pred_tbl}
-\title{Get the possible next tokens and their log probabilities its previous context
-using a causal transformer}
+\title{Get the possible next tokens and their log probabilities based on the
+previous context using a causal transformer}
 \usage{
 causal_next_tokens_pred_tbl(
   context,
@@ -31,7 +31,9 @@ To get surprisal in bits (rather than predictability), set
 relevant for special characters such as accents and
 diacritics, which get mangled in the tokens.}
 
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{checkpoint}{Folder of a checkpoint.}
 
@@ -50,7 +52,7 @@ tokenizer from Hugging Face is accessed.}
 A table with possible next tokens and their log-probabilities.
 }
 \description{
-Get the possible next tokens and their log probabilities based on its
+Get the possible next tokens and their log probabilities based on a
 previous context using a causal transformer model from
 \href{https://huggingface.co}{Hugging Face}.
 }
@@ -86,12 +88,11 @@ in pangoling website for more examples.
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_next_tokens_pred_tbl(
   context = "The apple doesn't fall far from the",
   model = "gpt2"
 )
-\dontshow{\}) # examplesIf}
+
 }
 \seealso{
 Other causal model functions: 

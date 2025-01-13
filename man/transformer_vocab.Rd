@@ -12,7 +12,9 @@ transformer_vocab(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the

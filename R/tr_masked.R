@@ -23,6 +23,9 @@
 #'  [https://status.huggingface.co/](https://status.huggingface.co/)
 #'
 #' @inheritParams causal_preload
+#' @param model Name of a pre-trained model or folder. One should be able to use
+#' models based on "bert". See 
+#' [hugging face website](https://huggingface.co/models?other=bert).
 #' @return Nothing.
 #'
 #' @examplesIf interactive()

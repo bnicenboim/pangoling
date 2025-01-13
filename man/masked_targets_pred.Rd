@@ -39,7 +39,9 @@ To get surprisal in bits (rather than predictability), set
 probabilities. For example \verb{^[[:punct:]]$} will ignore
 all punctuation  that stands alone in a token.}
 
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "bert". See
+\href{https://huggingface.co/models?other=bert}{hugging face website}.}
 
 \item{checkpoint}{Folder of a checkpoint.}
 
