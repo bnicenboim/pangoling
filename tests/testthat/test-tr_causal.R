@@ -21,9 +21,9 @@ test_that("gpt2 load and gets config", {
 
 test_that("empty or small strings", {
   skip_if_no_python_stuff()
-  lp_it <- causal_tokens_pred_tbl(texts = "It")
-  expect_equal(as.data.frame(lp_it), data.frame(token = "It", pred = NA_real_))
-  expect_error(lp_NA <- causal_tokens_pred_tbl(texts = ""))
+  lp_it <- causal_tokens_pred_lst(texts = "It")
+  expect_equal(lp_it, list(c("It" = NA_real_)))
+  expect_error(lp_NA <- causal_tokens_pred_lst(texts = ""))
   #expect_equal(as.data.frame(lp_NA), data.frame(token = "", pred = NA_real_))
   small_str <- c("It", "It", "is")
   lp_small <- causal_words_pred(x = small_str, by = c(1, 2, 2))
@@ -39,13 +39,13 @@ if(0){
     long0 <- paste(rep("x", 1022), collapse = " ")
     long <- paste(rep("x", 1024), collapse = " ")
     longer <- paste(rep("x", 1025), collapse = " ")
-    lp_long0 <- causal_tokens_pred_tbl(texts = c(long0, long, longer),
+    lp_long0 <- causal_tokens_pred_lst(texts = c(long0, long, longer),
                                        add_special_tokens = TRUE,
                                        batch_size = 3,
                                        model = "sshleifer/tiny-gpt2")
     skip_on_os("windows") #the following just doesn't work on windows,
     # but it's not that important
-    lp_long1 <- causal_tokens_pred_tbl(c(long0, long, longer),
+    lp_long1 <- causal_tokens_pred_lst(c(long0, long, longer),
                                        add_special_tokens = TRUE,
                                        batch_size = 1,
                                        model = "sshleifer/tiny-gpt2")
@@ -136,13 +136,11 @@ test_that("gpt2 get prob work", {
 test_that("batches work", {
   skip_if_no_python_stuff()
   texts <- rep(c("This is not it.", "This is it."), 5)
-  lp_batch <- causal_tokens_pred_tbl(texts,
-                                     batch_size = 3, .id = ".id"
-                                     )
+  lp_batch <- causal_tokens_pred_lst(texts,
+                                     batch_size = 3)
 
-  lp_nobatch <- causal_tokens_pred_tbl(texts,
-                                       batch_size = 1, .id = ".id"
-                                       )
+  lp_nobatch <- causal_tokens_pred_lst(texts,
+                                       batch_size = 1)
   expect_equal(lp_batch, lp_nobatch, tolerance = .0001)
   df <- data.frame(
     x = rep(c(prov_words, sent2_words), 3),
@@ -169,18 +167,18 @@ test_that("can handle extra parameters", {
   skip_if_no_python_stuff()
 
   tkns <- tokenize_lst("This isn't it.")[[1]]
-  token_pred <- causal_tokens_pred_tbl("This isn't it.")
-  token_pred2 <- causal_tokens_pred_tbl(texts = "This isn't it.", 
+  token_pred <- causal_tokens_pred_lst("This isn't it.")
+  token_pred2 <- causal_tokens_pred_lst(texts = "This isn't it.", 
                                         add_special_tokens = TRUE)
-  token_pred3 <- causal_tokens_pred_tbl(texts = "<|endoftext|>This isn't it.")
-  expect_equal(token_pred$token, tkns)
-  expect_equal(token_pred$token, token_pred2$token[-1])
+  token_pred3 <- causal_tokens_pred_lst(texts = "<|endoftext|>This isn't it.")
+  expect_equal(names(token_pred[[1]]), tkns)
+  expect_equal(names(token_pred[[1]]), names(token_pred2[[1]])[-1])
   expect_equal(token_pred2, token_pred3)
 
   mat <- causal_pred_mats("This isn't it.")[[1]]
   expect_equal(
-    token_pred$pred,
-    tidytable::map_dbl(seq_along(tkns), ~ mat[token_pred$token[.x], .x])
+    unname(token_pred[[1]]),
+    tidytable::map_dbl(seq_along(tkns), ~ mat[names(token_pred[[1]])[.x], .x])
   )
 })
 
