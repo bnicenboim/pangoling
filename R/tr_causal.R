@@ -8,8 +8,8 @@
 #' that can predict the next word (or more accurately in fact token) based
 #' on a preceding context.
 #'
-#' If not specified, the causal model that will be used is the one set in
-#' specified in the global option `pangoling.causal.default`, this can be
+#' If not specified, the causal model used will be the one set in the global
+#' option `pangoling.causal.default`, this can be
 #' accessed via `getOption("pangoling.causal.default")` (by default
 #' "`r getOption("pangoling.causal.default")`"). To change the default option
 #' use `options(pangoling.causal.default = "newcausalmodel")`.
@@ -83,10 +83,10 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
   )$config$to_dict()
 }
 
-#' Get the possible next tokens and their log probabilities based on the 
+#' Get the possible next tokens and their predictability based on the
 #' previous context using a causal transformer
 #'
-#' Get the possible next tokens and their log probabilities based on a
+#' Get the possible next tokens and their predictabilities based on a
 #' previous context using a causal transformer model from 
 #' [Hugging Face](https://huggingface.co).
 #'
