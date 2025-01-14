@@ -56,30 +56,6 @@ Get the possible next tokens and their log probabilities based on a
 previous context using a causal transformer model from
 \href{https://huggingface.co}{Hugging Face}.
 }
-\details{
-A causal language model (also called GPT-like, auto-regressive, or decoder
-model) is a type of large language model usually used for text-generation
-that can predict the next word (or more accurately in fact token) based
-on a preceding context.
-
-If not specified, the causal model that will be used is the one set in
-specified in the global option \code{pangoling.causal.default}, this can be
-accessed via \code{getOption("pangoling.causal.default")} (by default
-"gpt2"). To change the default option
-use \code{options(pangoling.causal.default = "newcausalmodel")}.
-
-A list of possible causal models can be found in
-\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
-
-Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
-control how the model and tokenizer from Hugging Face is accessed, see the
-Python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
-for details.
-
-In case of errors when a new model is run, check the status of
-\url{https://status.huggingface.co/}
-}
 \section{More examples}{
 
 See the

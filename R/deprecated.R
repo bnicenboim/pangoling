@@ -353,7 +353,7 @@ causal_lp <- function(x,
 
 #' @title Get the log probability of each token in a sentence (or group of 
 #'        sentences) using a causal transformer
-#' @description This function is deprecated. Use `causal_tokens_pred_tbl()` 
+#' @description This function is deprecated. Use `causal_tokens_pred_lst()` 
 #'              instead.
 #' @name causal_tokens_lp_tbl-deprecated
 #' @seealso \code{\link{pangoling-deprecated}}

@@ -36,7 +36,8 @@ Nothing.
 \description{
 Preloads a causal language model to speed up next runs.
 }
-\details{
+\section{More details about causal models}{
+
 A causal language model (also called GPT-like, auto-regressive, or decoder
 model) is a type of large language model usually used for text-generation
 that can predict the next word (or more accurately in fact token) based
@@ -60,10 +61,10 @@ for details.
 In case of errors when a new model is run, check the status of
 \url{https://status.huggingface.co/}
 }
+
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_preload(model = "gpt2")
-\dontshow{\}) # examplesIf}
+
 }
 \seealso{
 Other causal model helper functions: 

@@ -1,7 +1,8 @@
 #' Preloads a causal language model
 #'
 #' Preloads a causal language model to speed up next runs.
-#'
+#' 
+#' @section More details about causal models:
 #' A causal language model (also called GPT-like, auto-regressive, or decoder
 #' model) is a type of large language model usually used for text-generation
 #' that can predict the next word (or more accurately in fact token) based
@@ -40,7 +41,7 @@
 #'
 #' @return Nothing.
 #'
-#' @examplesIf interactive()
+#' @examples
 #' causal_preload(model = "gpt2")
 #'
 #' @family causal model helper functions
@@ -65,8 +66,9 @@ causal_preload <- function(model = getOption("pangoling.causal.default"),
 #'
 #' @inheritParams causal_preload
 #' @inherit  causal_preload details
+#' @inheritSection causal_preload More details about causal models
 #' @return A list with the configuration of the model.
-#' @examplesIf interactive()
+#' @examples
 #' causal_config(model = "gpt2")
 #'
 #' @family causal model helper functions
@@ -164,36 +166,46 @@ causal_next_tokens_pred_tbl <-
 
 #' Compute predictability using a causal transformer model
 #'
-#' These functions calculate the predictability of words or phrases using a 
-#' causal transformer model. 
-#' Depending on the use case, the following functions are available:
+#' These functions calculate the predictability of words, phrases, or tokens 
+#' using a causal transformer model. 
 #'
-#' - **`causal_targets_pred()`**: Evaluates specific target words or phrases 
-#'   based on their given contexts.
-#' - **`causal_words_pred()`**: Computes predictability for all elements of a 
-#'   vector grouped by a specified variable.
-#' - **`causal_tokens_pred_lst()`**: Computes the predictability of each token in a sentence (or group of sentences) and returns a list of results for each sentence.
 #'
 #'
 #' @details
 #' These functions calculate the predictability (by default the natural 
-#' logarithm of the word probability) of words or phrases using a causal 
+#' logarithm of the word probability) of words, phrases or tokens using a causal 
 #' transformer model:
 #' 
-#' - Use `causal_targets_pred()` when you have explicit context-target pairs to evaluate, with each target word or phrase paired with a single preceding context.
-#' - Use `causal_words_pred()` when working with entire texts split into groups, such as sentences, where predictability is computed for every word or phrase in each group.
-#' - Use `causal_tokens_pred_lst()` when you want to calculate the predictability of every token in one or more sentences, returning results as a list that can be converted into a data frame if needed.
+#' - **`causal_targets_pred()`**: Evaluates specific target words or phrases 
+#'   based on their given contexts. Use when when you have explicit 
+#'   context-target pairs to evaluate, with each target word or phrase paired 
+#'   with a single preceding context.
+#' - **`causal_words_pred()`**: Computes predictability for all elements of a 
+#'   vector grouped by a specified variable. Use when working with words or 
+#'   phrases split into groups, such as sentences or paragraphs, where 
+#'   predictability is computed for every word or phrase in each group.
+#' - **`causal_tokens_pred_lst()`**: Computes the predictability of each token 
+#'   in a sentence (or group of sentences) and returns a list of results for 
+#'   each sentence. Use when you want to calculate the predictability of 
+#'   every token in one or more sentences.
 #'
 #' See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #' 
-#' @param targets A character vector of target words or phrases (for `causal_targets_pred()`).
-#' @param contexts A character vector of contexts corresponding to each target (for `causal_targets_pred()`).
-#' @param x A character vector of words, phrases, or texts to evaluate (for `causal_words_pred()`).
-#' @param by A grouping variable indicating how texts are split into groups (for `causal_words_pred()`).
-#' @param sep A string specifying how words are separated within contexts or groups. Default is `" "`. For languages that don't have spaces between words (e.g., Chinese), set `sep = ""`.
-#' @param texts A vector or list of sentences or paragraphs (for `causal_tokens_pred_lst()`).
+#' @param targets A character vector of target words or phrases (for 
+#'                `causal_targets_pred()`).
+#' @param contexts A character vector of contexts corresponding to each target 
+#'                 (for `causal_targets_pred()`).
+#' @param x A character vector of words, phrases, or texts to evaluate (for 
+#'          `causal_words_pred()`).
+#' @param by A grouping variable indicating how texts are split into groups (for
+#'          `causal_words_pred()`).
+#' @param sep A string specifying how words are separated within contexts or 
+#'            groups. Default is `" "`. For languages that don't have spaces 
+#'            between words (e.g., Chinese), set `sep = ""`.
+#' @param texts A vector or list of sentences or paragraphs (for
+#'              `causal_tokens_pred_lst()`).
 #' @param log.p Base of the logarithm used for the output predictability values.
 #'              If `TRUE` (default), the natural logarithm (base *e*) is used.
 #'              If `FALSE`, the raw probabilities are returned.
@@ -207,8 +219,8 @@ causal_next_tokens_pred_tbl <-
 #' @param batch_size Maximum size of the batch. Larger batches speedup
 #'                   processing but take more memory.
 #' @inheritParams causal_preload
+#' @inheritSection causal_preload More details about causal models
 #' @inheritSection causal_next_tokens_pred_tbl More examples
-#' @inherit  causal_preload details
 #' @param ... Currently not in use.
 #' @return For `causal_targets_pred()` and `causal_words_pred()`, 
 #'   a named numeric vector of predictability scores. For 

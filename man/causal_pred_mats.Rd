@@ -21,11 +21,15 @@ causal_pred_mats(
 )
 }
 \arguments{
-\item{x}{A character vector of words, phrases, or texts to evaluate (for \code{causal_words_pred()}).}
+\item{x}{A character vector of words, phrases, or texts to evaluate (for
+\code{causal_words_pred()}).}
 
-\item{by}{A grouping variable indicating how texts are split into groups (for \code{causal_words_pred()}).}
+\item{by}{A grouping variable indicating how texts are split into groups (for
+\code{causal_words_pred()}).}
 
-\item{sep}{A string specifying how words are separated within contexts or groups. Default is \code{" "}. For languages that don't have spaces between words (e.g., Chinese), set \code{sep = ""}.}
+\item{sep}{A string specifying how words are separated within contexts or
+groups. Default is \code{" "}. For languages that don't have spaces
+between words (e.g., Chinese), set \code{sep = ""}.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.

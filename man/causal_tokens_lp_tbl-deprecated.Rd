@@ -5,7 +5,7 @@
 \title{Get the log probability of each token in a sentence (or group of
 sentences) using a causal transformer}
 \description{
-This function is deprecated. Use \code{causal_tokens_pred_tbl()}
+This function is deprecated. Use \code{causal_tokens_pred_lst()}
 instead.
 }
 \seealso{

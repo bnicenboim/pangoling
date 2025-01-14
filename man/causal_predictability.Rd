@@ -48,11 +48,15 @@ causal_targets_pred(
 )
 }
 \arguments{
-\item{x}{A character vector of words, phrases, or texts to evaluate (for \code{causal_words_pred()}).}
+\item{x}{A character vector of words, phrases, or texts to evaluate (for
+\code{causal_words_pred()}).}
 
-\item{by}{A grouping variable indicating how texts are split into groups (for \code{causal_words_pred()}).}
+\item{by}{A grouping variable indicating how texts are split into groups (for
+\code{causal_words_pred()}).}
 
-\item{sep}{A string specifying how words are separated within contexts or groups. Default is \code{" "}. For languages that don't have spaces between words (e.g., Chinese), set \code{sep = ""}.}
+\item{sep}{A string specifying how words are separated within contexts or
+groups. Default is \code{" "}. For languages that don't have spaces
+between words (e.g., Chinese), set \code{sep = ""}.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -88,11 +92,14 @@ processing but take more memory.}
 
 \item{...}{Currently not in use.}
 
-\item{texts}{A vector or list of sentences or paragraphs (for \code{causal_tokens_pred_lst()}).}
+\item{texts}{A vector or list of sentences or paragraphs (for
+\code{causal_tokens_pred_lst()}).}
 
-\item{targets}{A character vector of target words or phrases (for \code{causal_targets_pred()}).}
+\item{targets}{A character vector of target words or phrases (for
+\code{causal_targets_pred()}).}
 
-\item{contexts}{A character vector of contexts corresponding to each target (for \code{causal_targets_pred()}).}
+\item{contexts}{A character vector of contexts corresponding to each target
+(for \code{causal_targets_pred()}).}
 }
 \value{
 For \code{causal_targets_pred()} and \code{causal_words_pred()},
@@ -101,32 +108,58 @@ a named numeric vector of predictability scores. For
 each sentence or group.
 }
 \description{
-These functions calculate the predictability of words or phrases using a
-causal transformer model.
-Depending on the use case, the following functions are available:
+These functions calculate the predictability of words, phrases, or tokens
+using a causal transformer model.
 }
 \details{
-\itemize{
-\item \strong{\code{causal_targets_pred()}}: Evaluates specific target words or phrases
-based on their given contexts.
-\item \strong{\code{causal_words_pred()}}: Computes predictability for all elements of a
-vector grouped by a specified variable.
-\item \strong{\code{causal_tokens_pred_lst()}}: Computes the predictability of each token in a sentence (or group of sentences) and returns a list of results for each sentence.
-}
-
 These functions calculate the predictability (by default the natural
-logarithm of the word probability) of words or phrases using a causal
+logarithm of the word probability) of words, phrases or tokens using a causal
 transformer model:
 \itemize{
-\item Use \code{causal_targets_pred()} when you have explicit context-target pairs to evaluate, with each target word or phrase paired with a single preceding context.
-\item Use \code{causal_words_pred()} when working with entire texts split into groups, such as sentences, where predictability is computed for every word or phrase in each group.
-\item Use \code{causal_tokens_pred_lst()} when you want to calculate the predictability of every token in one or more sentences, returning results as a list that can be converted into a data frame if needed.
+\item \strong{\code{causal_targets_pred()}}: Evaluates specific target words or phrases
+based on their given contexts. Use when when you have explicit
+context-target pairs to evaluate, with each target word or phrase paired
+with a single preceding context.
+\item \strong{\code{causal_words_pred()}}: Computes predictability for all elements of a
+vector grouped by a specified variable. Use when working with words or
+phrases split into groups, such as sentences or paragraphs, where
+predictability is computed for every word or phrase in each group.
+\item \strong{\code{causal_tokens_pred_lst()}}: Computes the predictability of each token
+in a sentence (or group of sentences) and returns a list of results for
+each sentence. Use when you want to calculate the predictability of
+every token in one or more sentences.
 }
 
 See the
 \href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
 in pangoling website for more examples.
 }
+\section{More details about causal models}{
+
+A causal language model (also called GPT-like, auto-regressive, or decoder
+model) is a type of large language model usually used for text-generation
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.
+
+If not specified, the causal model that will be used is the one set in
+specified in the global option \code{pangoling.causal.default}, this can be
+accessed via \code{getOption("pangoling.causal.default")} (by default
+"gpt2"). To change the default option
+use \code{options(pangoling.causal.default = "newcausalmodel")}.
+
+A list of possible causal models can be found in
+\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
+
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
+control how the model and tokenizer from Hugging Face is accessed, see the
+Python method
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details.
+
+In case of errors when a new model is run, check the status of
+\url{https://status.huggingface.co/}
+}
+
 \section{More examples}{
 
 See the

@@ -161,8 +161,10 @@ given its context and `"."` given its context.
 We can verify this in the following way.
 
 ```{r}
-df_token_lp <- causal_tokens_pred_tbl(
-  "The apple doesn't fall far from the tree.")
+df_token_lp <- causal_tokens_pred_lst(
+  "The apple doesn't fall far from the tree.") |>
+  # convert the list into a data frame
+  map_dfr(~ data.frame(token = names(.x), pred = .x))
 df_token_lp
 
 (tree_lp <- df_token_lp |> 
