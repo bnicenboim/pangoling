@@ -15,9 +15,8 @@ tokenize_lst(
 \arguments{
 \item{x}{Strings or token ids.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is
-relevant for special characters such as accents and
-diacritics, which get mangled in the tokens.}
+\item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
+strings, handling special characters and diacritics. Default is \code{FALSE}.}
 
 \item{model}{Name of a pre-trained model or folder. One should be able to use
 models based on "gpt2". See
@@ -38,10 +37,8 @@ A list with tokens
 Tokenize a string or token ids.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 tokenize_lst(x = c("The apple doesn't fall far from the tree."), 
              model = "gpt2")
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other token-related functions: 

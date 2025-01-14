@@ -2,8 +2,7 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_next_tokens_pred_tbl}
 \alias{causal_next_tokens_pred_tbl}
-\title{Get the possible next tokens and their log probabilities based on the
-previous context using a causal transformer}
+\title{Generate next tokens after a context and their predictability using a causal transformer model}
 \usage{
 causal_next_tokens_pred_tbl(
   context,
@@ -17,7 +16,8 @@ causal_next_tokens_pred_tbl(
 )
 }
 \arguments{
-\item{context}{The context.}
+\item{context}{A single string representing the context for which the next
+tokens and their predictabilities are predicted.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -27,9 +27,8 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms).
 To get surprisal in bits (rather than predictability), set
 \code{log.p = 1/2}.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is
-relevant for special characters such as accents and
-diacritics, which get mangled in the tokens.}
+\item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
+strings, handling special characters and diacritics. Default is \code{FALSE}.}
 
 \item{model}{Name of a pre-trained model or folder. One should be able to use
 models based on "gpt2". See
@@ -52,15 +51,45 @@ tokenizer from Hugging Face is accessed.}
 A table with possible next tokens and their log-probabilities.
 }
 \description{
-Get the possible next tokens and their log probabilities based on a
-previous context using a causal transformer model from
-\href{https://huggingface.co}{Hugging Face}.
+This function predicts the possible next tokens and their predictability
+(log-probabilities by default). The function sorts tokens in descending order of their predictability.
 }
-\section{More examples}{
+\details{
+The function uses a causal transformer model to compute the predictability
+of all tokens in the model's vocabulary, given a single input context. It
+returns a table where each row represents a token, along with its
+predictability score. By default, the function returns log-probabilities in
+natural logarithm (base \emph{e}), but you can specify a different logarithm base
+(e.g., \code{log.p = 1/2} for surprisal in bits).
 
-See the
-\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
-in pangoling website for more examples.
+If \code{decode = TRUE}, the tokens are converted into human-readable strings,
+handling special characters like accents and diacritics. This ensures that
+tokens are more interpretable, especially for languages with complex tokenization.
+}
+\section{More details about causal models}{
+
+A causal language model (also called GPT-like, auto-regressive, or decoder
+model) is a type of large language model usually used for text-generation
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.
+
+If not specified, the causal model used will be the one set in the global
+option \code{pangoling.causal.default}, this can be
+accessed via \code{getOption("pangoling.causal.default")} (by default
+"gpt2"). To change the default option
+use \code{options(pangoling.causal.default = "newcausalmodel")}.
+
+A list of possible causal models can be found in
+\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
+
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
+control how the model and tokenizer from Hugging Face is accessed, see the
+Python method
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details.
+
+In case of errors when a new model is run, check the status of
+\url{https://status.huggingface.co/}
 }
 
 \examples{

@@ -33,8 +33,8 @@ model) is a type of large language model usually used for text-generation
 that can predict the next word (or more accurately in fact token) based
 on a preceding context.
 
-If not specified, the causal model that will be used is the one set in
-specified in the global option \code{pangoling.causal.default}, this can be
+If not specified, the causal model used will be the one set in the global
+option \code{pangoling.causal.default}, this can be
 accessed via \code{getOption("pangoling.causal.default")} (by default
 "gpt2"). To change the default option
 use \code{options(pangoling.causal.default = "newcausalmodel")}.

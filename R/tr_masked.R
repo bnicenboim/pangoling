@@ -28,7 +28,7 @@
 #' [hugging face website](https://huggingface.co/models?other=bert).
 #' @return Nothing.
 #'
-#' @examplesIf interactive()
+#' @examples
 #' causal_preload(model = "bert-base-uncased")
 #'
 #' @family masked model helper functions
@@ -52,7 +52,7 @@ masked_preload <- function(model = getOption("pangoling.masked.default"),
 #' @inheritParams masked_preload
 #' @inherit  masked_preload details
 #' @return A list with the configuration of the model.
-#' @examplesIf interactive()
+#' @examples
 #' masked_config(model = "bert-base-uncased")
 #'
 #' @family masked model helper functions
@@ -86,7 +86,7 @@ masked_config <- function(model = getOption("pangoling.masked.default"),
 #' @return A table with the masked sentences, the tokens (`token`),
 #'         predictability (`pred`), and the respective mask number (`mask_n`).
 #'
-#' @examplesIf interactive()
+#' @examples
 #' masked_tokens_pred_tbl("The [MASK] doesn't fall far from the tree.",
 #'   model = "bert-base-uncased"
 #' )
@@ -171,7 +171,7 @@ masked_tokens_pred_tbl <-
 #' @inherit masked_preload details
 #' @return A named vector of predictability values (by default the natural 
 #'         logarithm of the word probability).
-#' @examplesIf interactive()
+#' @examples
 #' masked_targets_pred(
 #'   prev_contexts = c("The", "The"),
 #'   targets = c("apple", "pear"),

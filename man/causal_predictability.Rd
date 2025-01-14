@@ -87,7 +87,7 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
 
-\item{batch_size}{Maximum size of the batch. Larger batches speedup
+\item{batch_size}{Maximum size of the batch. Larger batches speed up
 processing but take more memory.}
 
 \item{...}{Currently not in use.}
@@ -117,7 +117,7 @@ logarithm of the word probability) of words, phrases or tokens using a causal
 transformer model:
 \itemize{
 \item \strong{\code{causal_targets_pred()}}: Evaluates specific target words or phrases
-based on their given contexts. Use when when you have explicit
+based on their given contexts. Use when you have explicit
 context-target pairs to evaluate, with each target word or phrase paired
 with a single preceding context.
 \item \strong{\code{causal_words_pred()}}: Computes predictability for all elements of a
@@ -141,8 +141,8 @@ model) is a type of large language model usually used for text-generation
 that can predict the next word (or more accurately in fact token) based
 on a preceding context.
 
-If not specified, the causal model that will be used is the one set in
-specified in the global option \code{pangoling.causal.default}, this can be
+If not specified, the causal model used will be the one set in the global
+option \code{pangoling.causal.default}, this can be
 accessed via \code{getOption("pangoling.causal.default")} (by default
 "gpt2"). To change the default option
 use \code{options(pangoling.causal.default = "newcausalmodel")}.
@@ -158,13 +158,6 @@ for details.
 
 In case of errors when a new model is run, check the status of
 \url{https://status.huggingface.co/}
-}
-
-\section{More examples}{
-
-See the
-\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
-in pangoling website for more examples.
 }
 
 \examples{
@@ -189,8 +182,10 @@ preds <- causal_tokens_pred_lst(
             "Don't judge a book by its cover."),
   model = "gpt2"
 )
+preds
+
 # Convert the output to a tidy table
-library(tidytable)
+suppressPackageStartupMessages(library(tidytable))
 map2_dfr(preds, seq_along(preds), 
 ~ data.frame(tokens = names(.x), pred = .x, id = .y))
 

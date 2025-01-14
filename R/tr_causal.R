@@ -83,25 +83,33 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
   )$config$to_dict()
 }
 
-#' Get the possible next tokens and their predictability based on the
-#' previous context using a causal transformer
+
+#' Generate next tokens after a context and their predictability using a causal transformer model
 #'
-#' Get the possible next tokens and their predictabilities based on a
-#' previous context using a causal transformer model from 
-#' [Hugging Face](https://huggingface.co).
+#' This function predicts the possible next tokens and their predictability
+#' (log-probabilities by default). The function sorts tokens in descending order of their predictability.
 #'
-#' @section More examples:
-#' See the
-#' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
-#' on the pangoling website for more examples.
 #'
-#' @param context The context.
-#' @param decode Should it decode the tokens into readable strings? This is 
-#'               relevant for special characters such as accents and 
-#'               diacritics, which get mangled in the tokens.
+#' @details
+#' The function uses a causal transformer model to compute the predictability
+#' of all tokens in the model's vocabulary, given a single input context. It
+#' returns a table where each row represents a token, along with its
+#' predictability score. By default, the function returns log-probabilities in
+#' natural logarithm (base *e*), but you can specify a different logarithm base
+#' (e.g., `log.p = 1/2` for surprisal in bits).
+#'
+#' If `decode = TRUE`, the tokens are converted into human-readable strings,
+#' handling special characters like accents and diacritics. This ensures that
+#' tokens are more interpretable, especially for languages with complex tokenization.
+#'
+#' @param context A single string representing the context for which the next
+#'                tokens and their predictabilities are predicted.
+#' @param decode Logical. If `TRUE`, decodes the tokens into human-readable
+#'               strings, handling special characters and diacritics. Default is `FALSE`.
 #' @inheritParams causal_preload
 #' @inheritParams causal_tokens_pred_lst
-#' @inherit  causal_preload details
+#' @inherit causal_preload details
+#' @inheritSection causal_preload More details about causal models
 #' @return A table with possible next tokens and their log-probabilities.
 #' @examples
 #' causal_next_tokens_pred_tbl(
@@ -218,7 +226,6 @@ causal_next_tokens_pred_tbl <-
 #'                   processing but take more memory.
 #' @inheritParams causal_preload
 #' @inheritSection causal_preload More details about causal models
-#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @param ... Currently not in use.
 #' @return For `causal_targets_pred()` and `causal_words_pred()`, 
 #'   a named numeric vector of predictability scores. For 
@@ -247,8 +254,10 @@ causal_next_tokens_pred_tbl <-
 #'             "Don't judge a book by its cover."),
 #'   model = "gpt2"
 #' )
+#' preds
+#'
 #' # Convert the output to a tidy table
-#' library(tidytable)
+#' suppressPackageStartupMessages(library(tidytable))
 #' map2_dfr(preds, seq_along(preds), 
 #' ~ data.frame(tokens = names(.x), pred = .x, id = .y))
 #'
@@ -493,7 +502,7 @@ causal_mat <- function(tensor,
 #' - Rows representing the model's vocabulary.
 #' - Columns corresponding to tokens in the group (e.g., a sentence or
 #' paragraph).
-#' - By default, values are  the natural logarithm of word probabilities.
+#' - By default, values in the matrices are the natural logarithm of word probabilities.
 #'
 #' @inheritParams causal_words_pred
 #' @inheritParams causal_preload
@@ -503,7 +512,6 @@ causal_mat <- function(tensor,
 #'               are returned. 
 #' @inherit  causal_preload details
 #' @inheritSection causal_preload More details about causal models
-#' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A list of matrices with tokens in their columns and the vocabulary of
 #'         the model in their rows
 #'
@@ -513,8 +521,14 @@ causal_mat <- function(tensor,
 #'                        by = df_sent$sent_n,  
 #'                        model = "gpt2"
 #'                 )
+#'
+#' # View the structure of the resulting list
 #' list_of_mats |> str()
+#'
+#' # Inspect the last rows of the first matrix
 #' list_of_mats[[1]] |> tail()
+#'
+#' # Inspect the last rows of the second matrix
 #' list_of_mats[[2]] |> tail()
 #' @family causal model functions
 #' @export

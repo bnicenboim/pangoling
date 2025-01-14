@@ -6,7 +6,7 @@
 #' @inheritParams causal_next_tokens_pred_tbl
 #'
 #' @return A vector with the vocabulary of a model.
-#' @examplesIf interactive()
+#' @examples
 #' transformer_vocab(model = "gpt2")
 #' @export
 #'
@@ -32,7 +32,7 @@ transformer_vocab <- function(model = getOption("pangoling.causal.default"),
 #' @inheritParams causal_next_tokens_pred_tbl
 #' @return A list with tokens
 #'
-#' @examplesIf interactive()
+#' @examples
 #' tokenize_lst(x = c("The apple doesn't fall far from the tree."), 
 #'              model = "gpt2")
 #' @family token-related functions
@@ -97,7 +97,7 @@ tokenize_ids_lst <- function(x, decode = decode, tkzr = tkzr){
 #' @return The number of tokens in a string or vector of words.
 #'
 #'
-#' @examplesIf interactive()
+#' @examples
 #' ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
 #' @family token-related functions
 #' @export

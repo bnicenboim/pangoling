@@ -40,7 +40,7 @@ To get surprisal in bits (rather than predictability), set
 \code{log.p = 1/2}.}
 
 \item{sorted}{When default FALSE it will retain the order of groups we are
-splitting on. When TRUE then sorted (according to \code{by}) list(s)
+splitting by. When TRUE then sorted (according to \code{by}) list(s)
 are returned.}
 
 \item{model}{Name of a pre-trained model or folder. One should be able to use
@@ -54,9 +54,8 @@ same default as the
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
 method in Python.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is
-relevant for special characters such as accents and
-diacritics, which get mangled in the tokens.}
+\item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
+strings, handling special characters and diacritics. Default is \code{FALSE}.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
@@ -64,7 +63,7 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
 
-\item{batch_size}{Maximum size of the batch. Larger batches speedup
+\item{batch_size}{Maximum size of the batch. Larger batches speed up
 processing but take more memory.}
 
 \item{...}{Currently not in use.}
@@ -78,27 +77,44 @@ This function computes a list of matrices, where each matrix corresponds to a
 unique group specified by the \code{by} argument. Each matrix represents the
 predictability of every token in the input text (\code{x}) based on preceding
 context, as evaluated by a causal transformer model.
-The predictability values are given as the natural logarithm of word
-probabilities by default.
 }
 \details{
+The function splits the input \code{x} into groups specified by the \code{by} argument
+and processes each group independently. For each group, the model computes
+the predictability of each token in its vocabulary based on preceding context.
+
 Each matrix contains:
 \itemize{
 \item Rows representing the model's vocabulary.
 \item Columns corresponding to tokens in the group (e.g., a sentence or
 paragraph).
+\item By default, values in the matrices are the natural logarithm of word probabilities.
 }
-
-The function splits the input \code{x} into groups specified by the \code{by} argument
-and processes each group independently. For each group, the causal
-transformer model computes the predictability of every token in the model's
-vocabulary, conditioned on the context leading up to that token.
 }
-\section{More examples}{
+\section{More details about causal models}{
 
-See the
-\href{https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html}{online article}
-in pangoling website for more examples.
+A causal language model (also called GPT-like, auto-regressive, or decoder
+model) is a type of large language model usually used for text-generation
+that can predict the next word (or more accurately in fact token) based
+on a preceding context.
+
+If not specified, the causal model used will be the one set in the global
+option \code{pangoling.causal.default}, this can be
+accessed via \code{getOption("pangoling.causal.default")} (by default
+"gpt2"). To change the default option
+use \code{options(pangoling.causal.default = "newcausalmodel")}.
+
+A list of possible causal models can be found in
+\href{https://huggingface.co/models?pipeline_tag=text-generation}{Hugging Face website}.
+
+Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
+control how the model and tokenizer from Hugging Face is accessed, see the
+Python method
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details.
+
+In case of errors when a new model is run, check the status of
+\url{https://status.huggingface.co/}
 }
 
 \examples{
@@ -107,8 +123,14 @@ list_of_mats <- causal_pred_mats(
                        by = df_sent$sent_n,  
                        model = "gpt2"
                 )
+
+# View the structure of the resulting list
 list_of_mats |> str()
+
+# Inspect the last rows of the first matrix
 list_of_mats[[1]] |> tail()
+
+# Inspect the last rows of the second matrix
 list_of_mats[[2]] |> tail()
 }
 \seealso{

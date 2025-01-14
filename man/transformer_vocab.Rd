@@ -21,9 +21,8 @@ same default as the
 \href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
 method in Python.}
 
-\item{decode}{Should it decode the tokens into readable strings? This is
-relevant for special characters such as accents and
-diacritics, which get mangled in the tokens.}
+\item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
+strings, handling special characters and diacritics. Default is \code{FALSE}.}
 
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
@@ -35,9 +34,7 @@ A vector with the vocabulary of a model.
 Returns the (decoded) vocabulary of a model.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 transformer_vocab(model = "gpt2")
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other token-related functions: 
