@@ -21,13 +21,11 @@ causal_pred_mats(
 )
 }
 \arguments{
-\item{x}{Vector of (non-empty) words, phrases or texts.}
+\item{x}{A character vector of words, phrases, or texts to evaluate (for \code{causal_words_pred()}).}
 
-\item{by}{Vector that indicates how the text should be split. By default,
-this is \code{" "}, but for languages, such as Chinese, which don't
-separate words, this should be set to \code{""}.}
+\item{by}{A grouping variable indicating how texts are split into groups (for \code{causal_words_pred()}).}
 
-\item{sep}{Character indicating how words are separated in a sentence.}
+\item{sep}{A string specifying how words are separated within contexts or groups. Default is \code{" "}. For languages that don't have spaces between words (e.g., Chinese), set \code{sep = ""}.}
 
 \item{log.p}{Base of the logarithm used for the output predictability values.
 If \code{TRUE} (default), the natural logarithm (base \emph{e}) is used.
@@ -62,10 +60,10 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
 
-\item{batch_size}{Maximum size of the batch. Larges batches speedup
+\item{batch_size}{Maximum size of the batch. Larger batches speedup
 processing but take more memory.}
 
-\item{...}{not in use.}
+\item{...}{Currently not in use.}
 }
 \value{
 A list of matrices with tokens in their columns and the vocabulary of
@@ -112,8 +110,6 @@ list_of_mats[[2]] |> tail()
 \seealso{
 Other causal model functions: 
 \code{\link{causal_next_tokens_pred_tbl}()},
-\code{\link{causal_targets_pred}()},
-\code{\link{causal_tokens_pred_tbl}()},
 \code{\link{causal_words_pred}()}
 }
 \concept{causal model functions}

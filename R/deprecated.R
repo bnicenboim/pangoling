@@ -362,7 +362,7 @@ NULL
 
 #' @rdname pangoling-deprecated
 #' @section \code{causal_tokens_lp_tbl}:
-#' For \code{causal_tokens_lp_tbl}, use \code{\link{causal_tokens_pred_tbl}}.
+#' For \code{causal_tokens_lp_tbl}, use \code{\link{causal_tokens_pred_lst}}.
 #' @export
 causal_tokens_lp_tbl <- function(texts,
                                  model = getOption("pangoling.causal.default"),
@@ -373,7 +373,7 @@ causal_tokens_lp_tbl <- function(texts,
                                  batch_size = 1,
                                  .id = NULL) {
 
-  .Deprecated(new = "causal_tokens_pred_tbl()")
+  .Deprecated(new = "causal_tokens_pred_lst()")
   stride <- 1
   message_verbose("Processing using causal model '", 
                   file.path(model, checkpoint), 

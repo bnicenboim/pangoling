@@ -35,7 +35,7 @@ the base of the logarithm (e.g., \code{2} for base-2 logarithms).
 To get surprisal in bits (rather than predictability), set
 \code{log.p = 1/2}.}
 
-\item{ignore_regex}{Can ignore certain characters when calculates the log
+\item{ignore_regex}{Can ignore certain characters when calculating the log
 probabilities. For example \verb{^[[:punct:]]$} will ignore
 all punctuation  that stands alone in a token.}
 

@@ -106,7 +106,7 @@ For \code{causal_lp}, use \code{\link{causal_targets_pred}} or
 
 \section{\code{causal_tokens_lp_tbl}}{
 
-For \code{causal_tokens_lp_tbl}, use \code{\link{causal_tokens_pred_tbl}}.
+For \code{causal_tokens_lp_tbl}, use \code{\link{causal_tokens_pred_lst}}.
 }
 
 \section{\code{causal_lp_mats}}{

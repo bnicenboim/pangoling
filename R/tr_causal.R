@@ -98,7 +98,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #'               relevant for special characters such as accents and 
 #'               diacritics, which get mangled in the tokens.
 #' @inheritParams causal_preload
-#' @inheritParams causal_tokens_pred_tbl
+#' @inheritParams causal_tokens_pred_lst
 #' @inherit  causal_preload details
 #' @return A table with possible next tokens and their log-probabilities.
 #' @examples
@@ -161,73 +161,90 @@ causal_next_tokens_pred_tbl <-
   }
 
 
-#' Get the predictability of each element of a vector of words (or phrases) in a
-#'  series of texts using a causal transformer
+
+#' Compute predictability using a causal transformer model
 #'
-#' Get the predictability (by default the natural logarithm of the word 
-#' probability) of each element of a vector of words (or phrases) in a series of
-#'  texts using a causal transformer model. See the
+#' These functions calculate the predictability of words or phrases using a 
+#' causal transformer model. 
+#' Depending on the use case, the following functions are available:
+#'
+#' - **`causal_targets_pred()`**: Evaluates specific target words or phrases 
+#'   based on their given contexts.
+#' - **`causal_words_pred()`**: Computes predictability for all elements of a 
+#'   vector grouped by a specified variable.
+#' - **`causal_tokens_pred_lst()`**: Computes the predictability of each token in a sentence (or group of sentences) and returns a list of results for each sentence.
+#'
+#'
+#' @details
+#' These functions calculate the predictability (by default the natural 
+#' logarithm of the word probability) of words or phrases using a causal 
+#' transformer model:
+#' 
+#' - Use `causal_targets_pred()` when you have explicit context-target pairs to evaluate, with each target word or phrase paired with a single preceding context.
+#' - Use `causal_words_pred()` when working with entire texts split into groups, such as sentences, where predictability is computed for every word or phrase in each group.
+#' - Use `causal_tokens_pred_lst()` when you want to calculate the predictability of every token in one or more sentences, returning results as a list that can be converted into a data frame if needed.
+#'
+#' See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
-#'
-#'
-#' @param x Vector of (non-empty) words, phrases or texts.
-#' @param by Vector that indicates how the text should be split. By default, 
-#'           this is `" "`, but for languages, such as Chinese, which don't 
-#'           separate words, this should be set to `""`.
-#' @param sep Character indicating how words are separated in a sentence.
+#' 
+#' @param targets A character vector of target words or phrases (for `causal_targets_pred()`).
+#' @param contexts A character vector of contexts corresponding to each target (for `causal_targets_pred()`).
+#' @param x A character vector of words, phrases, or texts to evaluate (for `causal_words_pred()`).
+#' @param by A grouping variable indicating how texts are split into groups (for `causal_words_pred()`).
+#' @param sep A string specifying how words are separated within contexts or groups. Default is `" "`. For languages that don't have spaces between words (e.g., Chinese), set `sep = ""`.
+#' @param texts A vector or list of sentences or paragraphs (for `causal_tokens_pred_lst()`).
 #' @param log.p Base of the logarithm used for the output predictability values.
 #'              If `TRUE` (default), the natural logarithm (base *e*) is used.
 #'              If `FALSE`, the raw probabilities are returned.
 #'              Alternatively, `log.p` can be set to a numeric value specifying
 #'              the base of the logarithm (e.g., `2` for base-2 logarithms).
-#'              To get surprisal in bits (rather than predictability), set 
+#'              To get surprisal in bits (rather than predictability), set
 #'              `log.p = 1/2`.
-#' @param ... not in use.
-#' @inheritParams causal_preload
-#' @param ignore_regex Can ignore certain characters when calculates the log
+#' @param ignore_regex Can ignore certain characters when calculating the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
 #'                      all punctuation  that stands alone in a token.
-#' @param batch_size Maximum size of the batch. Larges batches speedup
+#' @param batch_size Maximum size of the batch. Larger batches speedup
 #'                   processing but take more memory.
-#' @inherit  causal_preload details
+#' @inheritParams causal_preload
 #' @inheritSection causal_next_tokens_pred_tbl More examples
-#' @return A named vector of (log) probabilities.
+#' @inherit  causal_preload details
+#' @param ... Currently not in use.
+#' @return For `causal_targets_pred()` and `causal_words_pred()`, 
+#'   a named numeric vector of predictability scores. For 
+#'   `causal_tokens_pred_lst()`, a list of named numeric vectors, one for 
+#'   each sentence or group.
 #'
-#' @examplesIf interactive()
-#' example_data <- tribble(
-#'    ~sent_n, ~word,
-#'        1,  "The",
-#'        1,  "apple",
-#'        1,  "doesn't",
-#'        1,  "fall",
-#'        1,  "far",
-#'        1,  "from",
-#'        1,  "the",
-#'        1,  "tree.",
-#'        2,  "Don't",
-#'        2,  "judge",
-#'        2,  "a",
-#'        2,  "book",
-#'        2,  "by",
-#'        2,  "its",
-#'        2,  "cover."
-#' )
-#' causal_words_pred(
-#'   x = example_data$word,
-#'   by = example_data$sent_n,
+#' @examples
+#' # Using causal_targets_pred
+#' causal_targets_pred(
+#'   targets = c("tree.", "cover."),
+#'   contexts = c("The apple doesn't fall far from the",
+#'                "Don't judge a book by its"),
 #'   model = "gpt2"
 #' )
+#'
+#' # Using causal_words_pred
 #' causal_words_pred(
-#'   x = example_data$word,
-#'   by = example_data$sent_n,
-#'   model = "gpt2",
-#'   # surprisal values in bits (-log2(prob) = log(prob, base = 1/2))
-#'   log.p = 1/2  
+#'   x = df_sent$word,
+#'   by = df_sent$sent_n,
+#'   model = "gpt2"
 #' )
+#' 
+#' # Using causal_tokens_pred_lst
+#' preds <- causal_tokens_pred_lst(
+#'   texts = c("The apple doesn't fall far from the tree.",
+#'             "Don't judge a book by its cover."),
+#'   model = "gpt2"
+#' )
+#' # Convert the output to a tidy table
+#' library(tidytable)
+#' map2_dfr(preds, seq_along(preds), 
+#' ~ data.frame(tokens = names(.x), pred = .x, id = .y))
 #'
 #' @family causal model functions
 #' @export
+#' @rdname causal_predictability
 causal_words_pred <- function(x,
                               by = rep(1, length(x)),
                               sep = " ",
@@ -318,6 +335,7 @@ causal_words_pred <- function(x,
                       }
                     )
 
+  message_verbose("***\n")
   lps <- out |> unsplit(by, drop = TRUE)
   names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
     unsplit(by, drop = TRUE)
@@ -326,32 +344,10 @@ causal_words_pred <- function(x,
 
 
 
-#' Get the predictability of each token in a sentence (or group of sentences) 
-#' using a causal transformer
-#'
-#' Get the predictability (by default the natural logarithm of the word 
-#' probability) of each token in a sentence (or group of sentences) using a 
-#' causal transformer model.
-#'
-#'
-#' @param texts Vector or list of texts.
-#' @param .id Name of the column with the sentence id.
-#' @inheritParams causal_preload
-#' @inheritParams causal_words_pred
-#' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_pred_tbl More examples
-#' @return A table with token names (`token`), predictability (`pred`) and 
-#'         optionally sentence id.
-#'
-#' @examplesIf interactive()
-#' causal_tokens_pred_tbl(
-#'   texts = c("The apple doesn't fall far from the tree."),
-#'   model = "gpt2"
-#' )
-#'
-#' @family causal model functions
+
+#' @rdname causal_predictability
 #' @export
-causal_tokens_pred_tbl <- 
+causal_tokens_pred_lst <- 
   function(texts,
            log.p = getOption("pangoling.log.p"),
            model = getOption("pangoling.causal.default"),
@@ -359,8 +355,7 @@ causal_tokens_pred_tbl <-
            add_special_tokens = NULL,
            config_model = NULL,
            config_tokenizer = NULL,
-           batch_size = 1,
-           .id = NULL) {
+           batch_size = 1) {
     if(any(!is_really_string(texts))){
       stop2("`texts` needs to be a vector of non-empty strings.")
     }
@@ -390,22 +385,21 @@ causal_tokens_pred_tbl <-
     }) |>
       unlist(recursive = FALSE)
 
-    tidytable::map_dfr(ls_mat, function(mat) {
+    lapply(ls_mat, function(mat) {
       if (ncol(mat) == 1 && colnames(mat) == "") {
-        tidytable::tidytable(
-                     token = "",
+        
                      pred = NA_real_
-                   )
+                   names(pred) =""
       } else {
-        tidytable::tidytable(
-                     token = colnames(mat),
-                     pred = tidytable::map2_dbl(colnames(mat),
+               pred = tidytable::map2_dbl(colnames(mat),
                                                 seq_len(ncol(mat)),
                                                 ~ mat[.x, .y]) |>
                        ln_p_change(log.p = log.p)
-                   )
+               names(pred) = colnames(mat)
+               
       }
-    }, .id = .id)
+      pred
+    })
   }
 
 
@@ -583,34 +577,8 @@ causal_pred_mats <- function(x,
 }
 
 
-
-#' Get the predictability of each element of a vector of words (or phrases) 
-#'   using a causal transformer
-#'
-#' Get the predictability (by default the natural logarithm of the 
-#' word probability) of each element of a vector of words (or phrases) given a
-#' vector of left contexts using a using a causal transformer model. 
-#'
-#' @param targets Target words.
-#' @param contexts Context for each word in `x`. If `contexts` is used,
-#'        `by` is ignored. Set `by = NULL` to avoid a message notifying that.
-#' @inheritParams causal_words_pred
-#' @param ... not in use.
-#' @inheritParams causal_preload
-#' @inherit  causal_preload details
-#' @inheritSection causal_next_tokens_pred_tbl More examples
-#' @return A named vector of predictability values (by default the natural 
-#'         logarithm of the word probability).
-#'
-#' @examplesIf interactive()
-#' causal_targets_pred(
-#'   targets = c("tree.","cover."),
-#'   contexts = c("The apple doesn't fall far from the",
-#'                  "Don't judge a book by its"),
-#'   model = "gpt2"
-#' )
-#' @family causal model functions
 #' @export
+#' @rdname causal_predictability
 causal_targets_pred <- function(targets,
                                 contexts = NULL,
                                 sep = " ",
@@ -699,7 +667,7 @@ causal_targets_pred <- function(targets,
                                 )
                       }
                     )
-
+  message_verbose("***\n")
   keep <- c(FALSE, TRUE)
 
   out <- out |> lapply(function(x) x[keep])
