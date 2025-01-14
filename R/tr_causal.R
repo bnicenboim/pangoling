@@ -93,7 +93,7 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #' @section More examples:
 #' See the
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
-#' in pangoling website for more examples.
+#' on the pangoling website for more examples.
 #'
 #' @param context The context.
 #' @param decode Should it decode the tokens into readable strings? This is 
@@ -169,15 +169,13 @@ causal_next_tokens_pred_tbl <-
 #' These functions calculate the predictability of words, phrases, or tokens 
 #' using a causal transformer model. 
 #'
-#'
-#'
 #' @details
 #' These functions calculate the predictability (by default the natural 
 #' logarithm of the word probability) of words, phrases or tokens using a causal 
 #' transformer model:
 #' 
 #' - **`causal_targets_pred()`**: Evaluates specific target words or phrases 
-#'   based on their given contexts. Use when when you have explicit 
+#'   based on their given contexts. Use when you have explicit
 #'   context-target pairs to evaluate, with each target word or phrase paired 
 #'   with a single preceding context.
 #' - **`causal_words_pred()`**: Computes predictability for all elements of a 
@@ -216,7 +214,7 @@ causal_next_tokens_pred_tbl <-
 #' @param ignore_regex Can ignore certain characters when calculating the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
 #'                      all punctuation  that stands alone in a token.
-#' @param batch_size Maximum size of the batch. Larger batches speedup
+#' @param batch_size Maximum size of the batch. Larger batches speed up
 #'                   processing but take more memory.
 #' @inheritParams causal_preload
 #' @inheritSection causal_preload More details about causal models
@@ -484,27 +482,27 @@ causal_mat <- function(tensor,
 #' unique group specified by the `by` argument. Each matrix represents the
 #' predictability of every token in the input text (`x`) based on preceding 
 #' context, as evaluated by a causal transformer model.
-#' The predictability values are given as the natural logarithm of word 
-#' probabilities by default.
 #'
-#' Each matrix contains:
-#' - Rows representing the model's vocabulary.
-#' - Columns corresponding to tokens in the group (e.g., a sentence or 
-#' paragraph).
 #'
 #' @details
 #' The function splits the input `x` into groups specified by the `by` argument 
-#' and processes each group independently. For each group, the causal 
-#' transformer model computes the predictability of every token in the model's 
-#' vocabulary, conditioned on the context leading up to that token.
+#' and processes each group independently. For each group, the model computes
+#' the predictability of each token in its vocabulary based on preceding context.
+#'
+#' Each matrix contains:
+#' - Rows representing the model's vocabulary.
+#' - Columns corresponding to tokens in the group (e.g., a sentence or
+#' paragraph).
+#' - By default, values are  the natural logarithm of word probabilities.
 #'
 #' @inheritParams causal_words_pred
 #' @inheritParams causal_preload
 #' @inheritParams causal_next_tokens_pred_tbl
 #' @param sorted When default FALSE it will retain the order of groups we are 
-#'               splitting on. When TRUE then sorted (according to `by`) list(s)
+#'               splitting by. When TRUE then sorted (according to `by`) list(s)
 #'               are returned. 
 #' @inherit  causal_preload details
+#' @inheritSection causal_preload More details about causal models
 #' @inheritSection causal_next_tokens_pred_tbl More examples
 #' @return A list of matrices with tokens in their columns and the vocabulary of
 #'         the model in their rows
