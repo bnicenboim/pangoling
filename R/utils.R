@@ -47,6 +47,12 @@
 #' @return
 #' The function returns `NULL` invisibly, but outputs a message on successful 
 #' installation.
+#' @examples
+#' \dontrun{
+#' # Install with default settings:
+#' install_py_pangoling()
+#' }
+#' 
 #' @export
 install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"),
                                  conda = "auto",

@@ -275,6 +275,8 @@ masked_targets_pred <- function(prev_contexts,
                         })
                       }
                     )
+
+  message_verbose("***\n")
   unlist(out, recursive = TRUE) |>
     ln_p_change(log.p = log.p)
 

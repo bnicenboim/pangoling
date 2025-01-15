@@ -2,7 +2,7 @@
 % Please edit documentation in R/tr_utils.R
 \name{set_cache_folder}
 \alias{set_cache_folder}
-\title{Set Cache Folder for HuggingFace Transformers}
+\title{Set cache folder for HuggingFace transformers}
 \usage{
 set_cache_folder(path = NULL)
 }
@@ -30,13 +30,8 @@ information on the default cache directory.
 set_cache_folder("~/new_cache_dir")
 }
 }
-\references{
-HuggingFace Transformers:
-(https://huggingface.co/transformers/index.html)
-}
 \seealso{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{ (https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup)
-}\if{html}{\out{</div>}}
+\href{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}{Installation docs}
 
 Other helper functions: 
 \code{\link{install_py_pangoling}()}

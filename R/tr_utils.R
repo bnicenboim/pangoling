@@ -7,7 +7,8 @@
 #'
 #' @return A vector with the vocabulary of a model.
 #' @examples
-#' transformer_vocab(model = "gpt2")
+#' transformer_vocab(model = "gpt2") |>
+#'  head()
 #' @export
 #'
 #' @family token-related functions
@@ -455,7 +456,7 @@ num_to_token <- function(x, tkzr) {
   })
 }
 
-#' Set Cache Folder for HuggingFace Transformers
+#' Set cache folder for HuggingFace transformers
 #'
 #' This function sets the cache directory for HuggingFace transformers. If a 
 #' path is given, the function checks if the directory exists and then sets the 
@@ -479,9 +480,7 @@ num_to_token <- function(x, tkzr) {
 #' set_cache_folder("~/new_cache_dir")
 #' }
 #' @seealso 
-#'      (https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup)
-#' @references HuggingFace Transformers: 
-#'             (https://huggingface.co/transformers/index.html)
+#' [Installation docs](https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup)
 #' @family helper functions
 set_cache_folder <- function(path = NULL){
   if(!is.null(path)){

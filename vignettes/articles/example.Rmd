@@ -15,15 +15,14 @@ This vignette demonstrates how to use the `pangoling` package to estimate the
 effect of *surprisal* on reading times (RTs) in a psycholinguistic experiment. 
 
 Surprisal is a measure of processing difficulty based on the unexpectedness of a
-word in its context. As introduced by @levy2008, surprisal is defined as 
-$-\log_2 P(\text{word}|\text{context})$, where $P(\text{word}|\text{context})$ 
-is the probability of the word given its preceding context. Higher surprisal 
-values indicate greater processing difficulty and suggest a cognitive processing
-bottleneck, as readers allocate more resources to processing unexpected words.
-@levy2008 argues that human sentence comprehension operates efficiently by 
-leveraging probabilistic expectations. When these expectations are violated 
-(i.e., when surprisal is high), cognitive processing slows down, which can be
-observed through longer reading times in reading tasks.
+word in its context. In information theory, the surprisal [or Shannon's Information,
+see @shannon1948mathematical] of x in bits is defined as $-\log_2 P(x)$. In the context of language, this translates to $-\log_2 P(\text{word}|\text{context})$,
+where $P(\text{word}|\text{context})$ is the probability of the word given its preceding context. Higher surprisal values indicate greater processing 
+difficulty and suggest a cognitive processing bottleneck, as readers allocate 
+more resources to processing unexpected words [@levy2008; 
+@hale2001probabilistic].
+When surprisal is high, cognitive processing are supposed to slow down, which 
+can be observed through longer reading times in reading tasks.
 
 
 Surprisal is computed here using a GPT-2-like causal language model trained on

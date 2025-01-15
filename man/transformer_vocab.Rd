@@ -34,7 +34,8 @@ A vector with the vocabulary of a model.
 Returns the (decoded) vocabulary of a model.
 }
 \examples{
-transformer_vocab(model = "gpt2")
+transformer_vocab(model = "gpt2") |>
+ head()
 }
 \seealso{
 Other token-related functions: 

@@ -61,6 +61,13 @@ environments. It ensures flexibility in dependency management and Python
 version control. If a new environment is created, existing environments with
 the same name are removed.
 }
+\examples{
+\dontrun{
+# Install with default settings:
+install_py_pangoling()
+}
+
+}
 \seealso{
 Other helper functions: 
 \code{\link{set_cache_folder}()}
