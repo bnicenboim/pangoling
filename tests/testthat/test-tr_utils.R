@@ -23,4 +23,16 @@ test_that("messages work", {
   expect_no_message(causal_preload())
 })
 
-message("TEST cache")
+
+test_that("pangoling:::is_really_string handles various cases correctly", {
+  expect_true(pangoling:::is_really_string("hello"))
+  expect_equal(pangoling:::is_really_string(c("a", "b", "c")), c(TRUE, TRUE, TRUE))
+  expect_equal(pangoling:::is_really_string(c("", "a", "b")), c(FALSE, TRUE, TRUE))
+  expect_equal(pangoling:::is_really_string(c(NA, "a", "b")), c(FALSE, TRUE, TRUE))
+  expect_false(pangoling:::is_really_string(NULL))
+  expect_equal(pangoling:::is_really_string(c(1, 2, 3)), c(FALSE, FALSE, FALSE))
+  expect_equal(pangoling:::is_really_string(c(TRUE, FALSE)), c(FALSE, FALSE))
+  expect_equal(pangoling:::is_really_string(c(NA, "a", 1)), c(FALSE, TRUE, FALSE))
+  expect_false(pangoling:::is_really_string(character(0)))
+  expect_equal(pangoling:::is_really_string(c("", "a", NA, "b", NULL)), c(FALSE, TRUE, FALSE, TRUE))
+})

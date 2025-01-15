@@ -158,7 +158,8 @@ is_really_string <- function(x){
   tidytable::case_when(is.na(x) ~ FALSE,
                        is.null(x) ~ FALSE,
                        x == "" ~ FALSE,
-                       is.character(x) ~ TRUE)
+                       is.character(x) ~ TRUE,
+                       TRUE ~ FALSE)
 }
 
 # #' Replacement of str_match
