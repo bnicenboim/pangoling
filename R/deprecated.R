@@ -501,3 +501,18 @@ causal_lp_mats <- function(x,
   lmat |>
     unlist(recursive = FALSE)
 }
+
+
+#' deprecated aux function
+char_to_token <- function(x, tkzr = NULL) {
+  tokenizer <- tkzr
+  id <- get_id(x, tkzr = tokenizer)
+  lapply(id, function(i) num_to_token(i, tokenizer))
+}
+
+#' deprecated aux function
+num_to_token <- function(x, tkzr) {
+  tidytable::map_chr(as.integer(x), function(x) {
+    tkzr$convert_ids_to_tokens(x)
+  })
+}

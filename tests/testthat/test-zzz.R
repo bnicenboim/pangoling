@@ -1,6 +1,4 @@
 test_that("`.onLoad` initializes correctly", {
- 
-  # Test global variable initialization
   expect_true(!is.null(pangoling:::transformers))
   expect_true(!is.null(pangoling:::torch))
   

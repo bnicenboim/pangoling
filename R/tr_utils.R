@@ -444,17 +444,7 @@ word_lp <- function(words,
   word_lp
 }
 
-char_to_token <- function(x, tkzr = NULL) {
-  tokenizer <- tkzr
-  id <- get_id(x, tkzr = tokenizer)
-  lapply(id, function(i) num_to_token(i, tokenizer))
-}
 
-num_to_token <- function(x, tkzr) {
-  tidytable::map_chr(as.integer(x), function(x) {
-    tkzr$convert_ids_to_tokens(x)
-  })
-}
 
 #' Set cache folder for HuggingFace transformers
 #'
