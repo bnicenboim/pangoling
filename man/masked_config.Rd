@@ -10,7 +10,9 @@ masked_config(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "bert". See
+\href{https://huggingface.co/models?other=bert}{hugging face website}.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
@@ -33,24 +35,21 @@ accessed via \code{getOption("pangoling.masked.default")} (by default
 use \code{options(pangoling.masked.default = "newmaskedmodel")}.
 
 A list of possible masked can be found in
-\href{https://huggingface.co/models?pipeline_tag=fill-mask}{Hugging Face website}.
+\href{https://huggingface.co/models?pipeline_tag=fill-mask}{Hugging Face website}
 
 Using the  \code{config_model} and \code{config_tokenizer} arguments, it's possible to
 control how the model and tokenizer from Hugging Face is accessed, see the
 python method
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}} for details. In case of errors
-check the status of
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoProcessor.from_pretrained}{\code{from_pretrained}}
+for details. In case of errors check the status of
 \url{https://status.huggingface.co/}
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 masked_config(model = "bert-base-uncased")
-\dontshow{\}) # examplesIf}
+
 }
 \seealso{
-Other masked model functions: 
-\code{\link{masked_lp}()},
-\code{\link{masked_preload}()},
-\code{\link{masked_tokens_tbl}()}
+Other masked model helper functions: 
+\code{\link{masked_preload}()}
 }
-\concept{masked model functions}
+\concept{masked model helper functions}

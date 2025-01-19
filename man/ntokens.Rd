@@ -14,13 +14,17 @@ ntokens(
 \arguments{
 \item{x}{character input}
 
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{add_special_tokens}{Whether to include special tokens. It has the
 same default as the
-\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer} method in Python.}
+\href{https://huggingface.co/docs/transformers/v4.25.1/en/model_doc/auto#transformers.AutoTokenizer}{AutoTokenizer}
+method in Python.}
 
-\item{config_tokenizer}{List with other arguments that control how the tokenizer from Hugging Face is accessed.}
+\item{config_tokenizer}{List with other arguments that control how the
+tokenizer from Hugging Face is accessed.}
 }
 \value{
 The number of tokens in a string or vector of words.
@@ -29,9 +33,7 @@ The number of tokens in a string or vector of words.
 The number of tokens in a string or vector of strings
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ntokens(x = c("The apple doesn't fall far from the tree."), model = "gpt2")
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 Other token-related functions: 

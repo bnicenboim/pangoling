@@ -34,8 +34,4 @@ perplexity_calc(probs, log.p = FALSE)
 lprobs <- log(probs)
 perplexity_calc(lprobs, log.p = TRUE)
 }
-\seealso{
-Other general functions: 
-\code{\link{set_cache_folder}()}
-}
 \concept{general functions}

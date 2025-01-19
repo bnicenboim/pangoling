@@ -16,40 +16,60 @@ install_py_pangoling(method = c("auto", "virtualenv", "conda"),
                      python_version = NULL)
 }
 \arguments{
-\item{method}{A character vector specifying the environment management method.
-Options are 'auto', 'virtualenv', and 'conda'. Default is 'auto'.}
+\item{method}{A character vector specifying the environment management
+method. Options are 'auto', 'virtualenv', and 'conda'. Default
+is 'auto'.}
 
 \item{conda}{Specifies the conda binary to use. Default is 'auto'.}
 
-\item{version}{The Python version to use. Default is 'default', automatically selected.}
+\item{version}{The Python version to use. Default is 'default', automatically
+selected.}
 
 \item{envname}{Name of the virtual environment. Default is 'r-pangoling'.}
 
-\item{restart_session}{Logical, whether to restart the R session after installation.
+\item{restart_session}{Logical, whether to restart the R session after
+installation.
 Default is TRUE.}
 
 \item{conda_python_version}{Python version for conda environments.}
 
 \item{...}{Additional arguments passed to \code{reticulate::py_install}.}
 
-\item{pip_ignore_installed}{Logical, whether to ignore already installed packages.
-Default is FALSE.}
+\item{pip_ignore_installed}{Logical, whether to ignore already installed
+packages. Default is FALSE.}
 
-\item{new_env}{Logical, whether to create a new environment if \code{envname} is 'r-pangoling'.
-Default is the identity of \code{envname}.}
+\item{new_env}{Logical, whether to create a new environment if \code{envname} is
+'r-pangoling'. Default is the identity of \code{envname}.}
 
 \item{python_version}{Specifies the Python version for the environment.}
 }
 \value{
-The function returns \code{NULL} invisibly, but outputs a message on successful installation.
+The function returns \code{NULL} invisibly, but outputs a message on successful
+installation.
 }
 \description{
-\code{install_py_pangoling} function facilitates the installation of Python packages needed for using \code{pangoling} within an R environment,
-utilizing the \code{reticulate} package for managing Python environments. It supports various installation methods,
+\code{install_py_pangoling} function facilitates the installation of Python
+packages needed for using \code{pangoling} within an R environment,
+utilizing the \code{reticulate} package for managing Python environments. It
+supports various installation methods,
 environment settings, and Python versions.
 }
 \details{
-This function automatically selects the appropriate method for environment management and Python installation,
-with a focus on virtual and conda environments. It ensures flexibility in dependency management and Python version control.
-If a new environment is created, existing environments with the same name are removed.
+This function automatically selects the appropriate method for environment
+management and Python installation, with a focus on virtual and conda
+environments. It ensures flexibility in dependency management and Python
+version control. If a new environment is created, existing environments with
+the same name are removed.
 }
+\examples{
+\dontrun{
+# Install with default settings:
+install_py_pangoling()
+}
+
+}
+\seealso{
+Other helper functions: 
+\code{\link{set_cache_folder}()}
+}
+\concept{helper functions}

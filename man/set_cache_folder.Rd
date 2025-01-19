@@ -2,33 +2,38 @@
 % Please edit documentation in R/tr_utils.R
 \name{set_cache_folder}
 \alias{set_cache_folder}
-\title{Set Cache Folder for HuggingFace Transformers}
+\title{Set cache folder for HuggingFace transformers}
 \usage{
 set_cache_folder(path = NULL)
 }
 \arguments{
-\item{path}{Character string, the path to set as the cache directory. If NULL, the function will look for the cache directory in a number of environment variables. Default is NULL.}
+\item{path}{Character string, the path to set as the cache directory.
+If NULL, the function will look for the cache directory in a
+number of environment variables. Default is NULL.}
 }
 \value{
-Nothing is returned, this function is called for its side effect of setting the \code{TRANSFORMERS_CACHE} environment variable, or providing information to the user.
+Nothing is returned, this function is called for its side effect of
+setting the \code{TRANSFORMERS_CACHE} environment variable, or providing
+information to the user.
 }
 \description{
-This function sets the cache directory for HuggingFace transformers. If a path is given, the function checks if the directory exists and then sets the \code{TRANSFORMERS_CACHE} environment variable to this path.
-If no path is provided, the function checks for the existing cache directory in a number of environment variables.
-If none of these environment variables are set, it provides the user with information on the default cache directory.
+This function sets the cache directory for HuggingFace transformers. If a
+path is given, the function checks if the directory exists and then sets the
+\code{TRANSFORMERS_CACHE} environment variable to this path.
+If no path is provided, the function checks for the existing cache directory
+in a number of environment variables.
+If none of these environment variables are set, it provides the user with
+information on the default cache directory.
 }
 \examples{
 \dontrun{
 set_cache_folder("~/new_cache_dir")
 }
 }
-\references{
-HuggingFace Transformers: \url{https://huggingface.co/transformers/index.html}
-}
 \seealso{
-\url{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}
+\href{https://huggingface.co/docs/transformers/installation?highlight=transformers_cache#cache-setup}{Installation docs}
 
-Other general functions: 
-\code{\link{perplexity_calc}()}
+Other helper functions: 
+\code{\link{install_py_pangoling}()}
 }
-\concept{general functions}
+\concept{helper functions}

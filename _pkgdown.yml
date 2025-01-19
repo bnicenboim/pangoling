@@ -26,6 +26,7 @@ articles:
   contents:
   - '`articles/intro-gpt2`'
   - '`articles/intro-bert`'
+  - '`articles/example`'
   - '`articles/troubleshooting`'
 
 reference:
@@ -34,13 +35,19 @@ reference:
   - '`pangoling`'
 - title: "Causal (or GPT-like) modeling"
   contents:
-  - starts_with("causal")
+  - has_concept("causal model functions")
 - title: "Masked (or BERT-like) modeling"
   contents:
-  - starts_with("masked")
+  - has_concept("masked model functions")
+- title: "Helper functions for causal and masked models"
+  contents:
+  - has_concept("causal model helper functions")
+  - has_concept("masked model helper functions")
+  - has_concept("helper functions")
 - title: "Vocabulary and tokenization"
   contents:
   - has_concept("token-related functions")
 - title: "Others"
   contents:
   - has_concept("general functions")
+  - has_concept("datasets")

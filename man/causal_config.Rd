@@ -11,7 +11,9 @@ causal_config(
 )
 }
 \arguments{
-\item{model}{Name of a pre-trained model or folder.}
+\item{model}{Name of a pre-trained model or folder. One should be able to use
+models based on "gpt2". See
+\href{https://huggingface.co/models?other=gpt2}{hugging face website}.}
 
 \item{checkpoint}{Folder of a checkpoint.}
 
@@ -24,14 +26,15 @@ A list with the configuration of the model.
 \description{
 Returns the configuration of a causal model
 }
-\details{
+\section{More details about causal models}{
+
 A causal language model (also called GPT-like, auto-regressive, or decoder
 model) is a type of large language model usually used for text-generation
 that can predict the next word (or more accurately in fact token) based
 on a preceding context.
 
-If not specified, the causal model that will be used is the one set in
-specified in the global option \code{pangoling.causal.default}, this can be
+If not specified, the causal model used will be the one set in the global
+option \code{pangoling.causal.default}, this can be
 accessed via \code{getOption("pangoling.causal.default")} (by default
 "gpt2"). To change the default option
 use \code{options(pangoling.causal.default = "newcausalmodel")}.
@@ -48,17 +51,13 @@ for details.
 In case of errors when a new model is run, check the status of
 \url{https://status.huggingface.co/}
 }
+
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 causal_config(model = "gpt2")
-\dontshow{\}) # examplesIf}
+
 }
 \seealso{
-Other causal model functions: 
-\code{\link{causal_lp}()},
-\code{\link{causal_lp_mats}()},
-\code{\link{causal_next_tokens_tbl}()},
-\code{\link{causal_preload}()},
-\code{\link{causal_tokens_lp_tbl}()}
+Other causal model helper functions: 
+\code{\link{causal_preload}()}
 }
-\concept{causal model functions}
+\concept{causal model helper functions}
