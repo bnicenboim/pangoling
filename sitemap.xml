@@ -1,87 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/404.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/articles/intro-bert.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/articles/troubleshooting.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/index.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_config.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp_mats.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_next_tokens_tbl.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_preload.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/causal_tokens_lp_tbl.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_config.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_lp.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_preload.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/masked_tokens_tbl.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/ntokens.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/pangoling-package.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/perplexity_calc.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/set_cache_folder.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/tokenize_lst.html</loc>
-  </url>
-  <url>
-    <loc>http://bruno.nicenboim.me/pangoling/reference/transformer_vocab.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://bruno.nicenboim.me/pangoling/404.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/CONTRIBUTING.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/LICENSE-text.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/LICENSE.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/articles/example.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/articles/index.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/articles/intro-bert.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/articles/troubleshooting.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/authors.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/index.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/news/index.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_config.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_lp_mats-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_next_tokens_pred_tbl.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_next_tokens_tbl-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_pred_mats.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_predictability.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_preload.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/causal_tokens_lp_tbl-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/df_jaeger14.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/df_sent.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/index.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/install_py_pangoling.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_config.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_lp-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_preload.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_targets_pred.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_tokens_pred_tbl.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/masked_tokens_tbl-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/ntokens.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/pangoling-deprecated.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/pangoling-package.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/perplexity_calc.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/set_cache_folder.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/tokenize_lst.html</loc></url>
+<url><loc>http://bruno.nicenboim.me/pangoling/reference/transformer_vocab.html</loc></url>
 </urlset>
+
