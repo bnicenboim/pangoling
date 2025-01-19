@@ -203,19 +203,19 @@ causal_next_tokens_pred_tbl <-
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #' 
+#' @param x A character vector of words, phrases, or texts to evaluate (for
+#'          `causal_words_pred()`).
+#' @param texts A vector or list of sentences or paragraphs (for
+#'              `causal_tokens_pred_lst()`).
 #' @param targets A character vector of target words or phrases (for 
 #'                `causal_targets_pred()`).
 #' @param contexts A character vector of contexts corresponding to each target 
 #'                 (for `causal_targets_pred()`).
-#' @param x A character vector of words, phrases, or texts to evaluate (for 
-#'          `causal_words_pred()`).
 #' @param by A grouping variable indicating how texts are split into groups (for
 #'          `causal_words_pred()`).
 #' @param sep A string specifying how words are separated within contexts or 
 #'            groups. Default is `" "`. For languages that don't have spaces 
 #'            between words (e.g., Chinese), set `sep = ""`.
-#' @param texts A vector or list of sentences or paragraphs (for
-#'              `causal_tokens_pred_lst()`).
 #' @param log.p Base of the logarithm used for the output predictability values.
 #'              If `TRUE` (default), the natural logarithm (base *e*) is used.
 #'              If `FALSE`, the raw probabilities are returned.
@@ -521,6 +521,8 @@ causal_mat <- function(tensor,
 #'         the model in their rows
 #'
 #' @examples
+#' data("df_sent")
+#' df_sent
 #' list_of_mats <- causal_pred_mats(
 #'                        x = df_sent$word,
 #'                        by = df_sent$sent_n,  

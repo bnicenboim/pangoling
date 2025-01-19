@@ -26,7 +26,7 @@ sentence. BERT is an example of a masked language model
 
 First load the following packages:
 
-```{r setup, message = FALSE, include = FALSE}
+```{r setup, message = FALSE}
 library(pangoling)
 library(tidytable) # fast alternative to dplyr
 ```

@@ -21,7 +21,7 @@ where $P(\text{word}|\text{context})$ is the probability of the word given its p
 difficulty and suggest a cognitive processing bottleneck, as readers allocate 
 more resources to processing unexpected words [@levy2008; 
 @hale2001probabilistic].
-When surprisal is high, cognitive processing are supposed to slow down, which 
+When surprisal is high, cognitive processing is supposed to slow down, which 
 can be observed through longer reading times in reading tasks.
 
 
@@ -57,7 +57,7 @@ df_jaeger14
 ```
 
 To avoid redundant computations, we extract unique combinations of items, 
-conditions, and words. (We don't want to run `pangoling` on the entire dataset
+conditions, and words. (We don't want to run our functions on the entire dataset
 because there will be repetition across subjects, and thus the model will run 
 several times on identical words in identical sentences):
 
@@ -131,7 +131,6 @@ selection), see Section 4.2 and Chapter 5 of @nicenboim2025introduction,
 
 
 ```{r brms, message = FALSE}
-tic()
 fit_surp <-
   brm(rt ~ surprisal + (surprisal| subject) + (surprisal| item),
       data = df_jaeger14,
@@ -142,7 +141,6 @@ fit_surp <-
                 prior(normal(0, .1), class = b),
                 prior(lkj(2), class = cor)),
       iter = 3000)
-toc()
 ```
 
 We visualize the posterior distributions and model diagnostics:

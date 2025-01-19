@@ -32,7 +32,7 @@ probability of a word given a certain context can be extracted from the models.
 
 Load the following packages first:
 
-```{r setup, message = FALSE, include=FALSE}
+```{r setup, message = FALSE}
 library(pangoling)
 library(tidytable) # fast alternative to dplyr
 library(tictoc) # measure time
