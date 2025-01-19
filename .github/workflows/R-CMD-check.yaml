@@ -52,7 +52,7 @@ jobs:
         run: |
           python_packages <-
             c("transformers","torch"
-            # ,"intel-openmp","nomkl" # might be needed for Mac
+             ,"intel-openmp","nomkl" # might be needed for Mac
             )
 
           library(reticulate)
