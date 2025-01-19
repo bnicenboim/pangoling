@@ -52,9 +52,9 @@ jobs:
         run: |
           python_packages <-
             c("transformers","torch"
-            # ,"intel-openmp"
-             ,"nomkl" # might be needed for Mac
+            "nomkl"
             )
+
           library(reticulate)
           virtualenv_create("r-reticulate", Sys.which("python"))
           virtualenv_install("r-reticulate", python_packages)
@@ -62,10 +62,9 @@ jobs:
           path_to_python <- virtualenv_python("r-reticulate")
           writeLines(sprintf("RETICULATE_PYTHON=%s", path_to_python),
                      Sys.getenv("GITHUB_ENV"))
+          py_run_string("import os; os.environ['KMP_DUPLICATE_LIB_OK']='True'")  #Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized
 
-         #mac weird error:
-         #Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized.
-         py_run_string("import os; os.environ['KMP_DUPLICATE_LIB_OK']='True'")
+
 
 
       - uses: r-lib/actions/check-r-package@v2
