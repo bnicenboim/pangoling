@@ -51,9 +51,8 @@ jobs:
         shell: Rscript {0}
         run: |
           python_packages <-
-            c("transformers","torch"
-            "nomkl"
-            )
+            c("transformers","torch",
+            "nomkl")
 
           library(reticulate)
           virtualenv_create("r-reticulate", Sys.which("python"))
