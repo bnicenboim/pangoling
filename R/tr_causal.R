@@ -84,10 +84,12 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 }
 
 
-#' Generate next tokens after a context and their predictability using a causal transformer model
+#' Generate next tokens after a context and their predictability using a causal 
+#' transformer model
 #'
 #' This function predicts the possible next tokens and their predictability
-#' (log-probabilities by default). The function sorts tokens in descending order of their predictability.
+#' (log-probabilities by default). The function sorts tokens in descending order
+#'  of their predictability.
 #'
 #'
 #' @details
@@ -100,12 +102,14 @@ causal_config <- function(model = getOption("pangoling.causal.default"),
 #'
 #' If `decode = TRUE`, the tokens are converted into human-readable strings,
 #' handling special characters like accents and diacritics. This ensures that
-#' tokens are more interpretable, especially for languages with complex tokenization.
+#' tokens are more interpretable, especially for languages with complex 
+#' tokenization.
 #'
 #' @param context A single string representing the context for which the next
 #'                tokens and their predictabilities are predicted.
 #' @param decode Logical. If `TRUE`, decodes the tokens into human-readable
-#'               strings, handling special characters and diacritics. Default is `FALSE`.
+#'               strings, handling special characters and diacritics. Default is
+#'                `FALSE`.
 #' @inheritParams causal_preload
 #' @inheritParams causal_tokens_pred_lst
 #' @inherit causal_preload details
@@ -179,8 +183,8 @@ causal_next_tokens_pred_tbl <-
 #'
 #' @details
 #' These functions calculate the predictability (by default the natural 
-#' logarithm of the word probability) of words, phrases or tokens using a causal 
-#' transformer model:
+#' logarithm of the word probability) of words, phrases or tokens using a 
+#' causal transformer model:
 #' 
 #' - **`causal_targets_pred()`**: Evaluates specific target words or phrases 
 #'   based on their given contexts. Use when you have explicit
@@ -406,16 +410,15 @@ causal_tokens_pred_lst <-
 
     lapply(ls_mat, function(mat) {
       if (ncol(mat) == 1 && colnames(mat) == "") {
-        
-                     pred = NA_real_
-                   names(pred) =""
+        pred <-  NA_real_
+        names(pred) <- ""
       } else {
-               pred = tidytable::map2_dbl(colnames(mat),
-                                                seq_len(ncol(mat)),
-                                                ~ mat[.x, .y]) |>
-                       ln_p_change(log.p = log.p)
-               names(pred) = colnames(mat)
-               
+        pred <- tidytable::map2_dbl(colnames(mat),
+                                   seq_len(ncol(mat)),
+                                   ~ mat[.x, .y]) |>
+          ln_p_change(log.p = log.p)
+        names(pred) <- colnames(mat)
+
       }
       pred
     })
@@ -496,13 +499,15 @@ causal_mat <- function(tensor,
 #' @details
 #' The function splits the input `x` into groups specified by the `by` argument 
 #' and processes each group independently. For each group, the model computes
-#' the predictability of each token in its vocabulary based on preceding context.
+#' the predictability of each token in its vocabulary based on preceding 
+#' context.
 #'
 #' Each matrix contains:
 #' - Rows representing the model's vocabulary.
 #' - Columns corresponding to tokens in the group (e.g., a sentence or
 #' paragraph).
-#' - By default, values in the matrices are the natural logarithm of word probabilities.
+#' - By default, values in the matrices are the natural logarithm of word 
+#' probabilities.
 #'
 #' @inheritParams causal_words_pred
 #' @inheritParams causal_preload

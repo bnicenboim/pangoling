@@ -17,7 +17,8 @@ test_that("Deprecated functions issue warnings and return valid results", {
   expect_true(is.numeric(result))  # Should return a numeric value
   
   expect_warning(
-    result <- causal_next_tokens_tbl(context = "The apple doesn't fall far from the"),
+    result <- causal_next_tokens_tbl(
+      context = "The apple doesn't fall far from the"),
     "causal_next_tokens_pred_tbl"
   )
   expect_true(is.data.frame(result))  # Should return a dataframe

@@ -16,7 +16,8 @@ tokenize_lst(
 \item{x}{Strings or token ids.}
 
 \item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
-strings, handling special characters and diacritics. Default is \code{FALSE}.}
+strings, handling special characters and diacritics. Default is
+\code{FALSE}.}
 
 \item{model}{Name of a pre-trained model or folder. One should be able to use
 models based on "gpt2". See

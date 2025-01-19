@@ -22,7 +22,8 @@ same default as the
 method in Python.}
 
 \item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
-strings, handling special characters and diacritics. Default is \code{FALSE}.}
+strings, handling special characters and diacritics. Default is
+\code{FALSE}.}
 
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}

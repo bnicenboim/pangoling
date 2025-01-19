@@ -55,7 +55,8 @@ same default as the
 method in Python.}
 
 \item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
-strings, handling special characters and diacritics. Default is \code{FALSE}.}
+strings, handling special characters and diacritics. Default is
+\code{FALSE}.}
 
 \item{config_model}{List with other arguments that control how the
 model from Hugging Face is accessed.}
@@ -81,14 +82,16 @@ context, as evaluated by a causal transformer model.
 \details{
 The function splits the input \code{x} into groups specified by the \code{by} argument
 and processes each group independently. For each group, the model computes
-the predictability of each token in its vocabulary based on preceding context.
+the predictability of each token in its vocabulary based on preceding
+context.
 
 Each matrix contains:
 \itemize{
 \item Rows representing the model's vocabulary.
 \item Columns corresponding to tokens in the group (e.g., a sentence or
 paragraph).
-\item By default, values in the matrices are the natural logarithm of word probabilities.
+\item By default, values in the matrices are the natural logarithm of word
+probabilities.
 }
 }
 \section{More details about causal models}{

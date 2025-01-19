@@ -189,7 +189,8 @@ causal_lp <- function(x,
                       ...) {
   .Deprecated(new = 
                 paste0("causal_targets_pred() supporting the l_context",
-                       " argument or causal_words_pred() for the x and by arguments."))
+                       " argument or causal_words_pred() for the x and ",
+                       "by arguments."))
   dots <- list(...)
   # Check for the deprecated .by argument
   if (!is.null(dots$.by)) {

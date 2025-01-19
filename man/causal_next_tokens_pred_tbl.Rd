@@ -2,7 +2,8 @@
 % Please edit documentation in R/tr_causal.R
 \name{causal_next_tokens_pred_tbl}
 \alias{causal_next_tokens_pred_tbl}
-\title{Generate next tokens after a context and their predictability using a causal transformer model}
+\title{Generate next tokens after a context and their predictability using a causal
+transformer model}
 \usage{
 causal_next_tokens_pred_tbl(
   context,
@@ -28,7 +29,8 @@ To get surprisal in bits (rather than predictability), set
 \code{log.p = 1/2}.}
 
 \item{decode}{Logical. If \code{TRUE}, decodes the tokens into human-readable
-strings, handling special characters and diacritics. Default is \code{FALSE}.}
+strings, handling special characters and diacritics. Default is
+\code{FALSE}.}
 
 \item{model}{Name of a pre-trained model or folder. One should be able to use
 models based on "gpt2". See
@@ -52,7 +54,8 @@ A table with possible next tokens and their log-probabilities.
 }
 \description{
 This function predicts the possible next tokens and their predictability
-(log-probabilities by default). The function sorts tokens in descending order of their predictability.
+(log-probabilities by default). The function sorts tokens in descending order
+of their predictability.
 }
 \details{
 The function uses a causal transformer model to compute the predictability
@@ -64,7 +67,8 @@ natural logarithm (base \emph{e}), but you can specify a different logarithm bas
 
 If \code{decode = TRUE}, the tokens are converted into human-readable strings,
 handling special characters like accents and diacritics. This ensures that
-tokens are more interpretable, especially for languages with complex tokenization.
+tokens are more interpretable, especially for languages with complex
+tokenization.
 }
 \section{More details about causal models}{
 

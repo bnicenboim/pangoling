@@ -97,7 +97,8 @@
 #'
 #' @format A data frame with 15 rows and 2 columns:
 #' \describe{
-#'   \item{sent_n}{(integer) Sentence number, indicating which sentence each word belongs to.}
+#'   \item{sent_n}{(integer) Sentence number, indicating which sentence each 
+#'                 word belongs to.}
 #'   \item{word}{(character) Tokenized words from the sentences.}
 #' }
 #' @family datasets
