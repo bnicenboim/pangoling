@@ -23,7 +23,13 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 
-`pangoling`^[The logo of the package was created with [stable diffusion ](https://huggingface.co/spaces/stabilityai/stable-diffusion) and the R package [hexSticker](https://github.com/GuangchuangYu/hexSticker).] is an R package for estimating the log-probabilities of words in a given context using transformer models. The package provides an interface for utilizing pre-trained transformer models (such as GPT-2 or BERT) to obtain word probabilities.  These log-probabilities are often utilized as predictors in psycholinguistic studies. This package can be useful for researchers in the field of psycholinguistics who want to leverage the power of transformer models in their work.
+`pangoling`^[The logo of the package was created with [stable diffusion ](https://huggingface.co/spaces/stabilityai/stable-diffusion) and the R package [hexSticker](https://github.com/GuangchuangYu/hexSticker).] is an R package for 
+estimating the predictability of words in a given context using transformer
+models. The package provides an interface for utilizing pre-trained transformer 
+models (such as GPT-2 or BERT) to obtain word probabilities. These word 
+probabilities are often utilized as predictors in psycholinguistic studies. This
+package can be useful for researchers in the field of psycholinguistics who want
+to leverage the power of transformer models in their work.
 
 The package is mostly a wrapper of the python package [`transformers`](https://pypi.org/project/transformers/) to process data in a convenient format. 
 

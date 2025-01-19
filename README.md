@@ -16,19 +16,19 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 Review](https://badges.ropensci.org/575_status.svg)](https://github.com/ropensci/software-review/issues/575)
 <!-- badges: end -->
 
-`pangoling`\[1\] is an R package for estimating the log-probabilities of
+`pangoling`[^1] is an R package for estimating the predictability of
 words in a given context using transformer models. The package provides
 an interface for utilizing pre-trained transformer models (such as GPT-2
-or BERT) to obtain word probabilities. These log-probabilities are often
-utilized as predictors in psycholinguistic studies. This package can be
-useful for researchers in the field of psycholinguistics who want to
-leverage the power of transformer models in their work.
+or BERT) to obtain word probabilities. These word probabilities are
+often utilized as predictors in psycholinguistic studies. This package
+can be useful for researchers in the field of psycholinguistics who want
+to leverage the power of transformer models in their work.
 
 The package is mostly a wrapper of the python package
 [`transformers`](https://pypi.org/project/transformers/) to process data
 in a convenient format.
 
-## Important\! Limitations and bias
+## Important! Limitations and bias
 
 The training data of the most popular models (such as GPT-2) haven’t
 been released, so one cannot inspect it. It’s clear that the data
@@ -42,7 +42,7 @@ website](https://huggingface.co/gpt2).
 ## Installation
 
 There is still no released version of `pangoling`. The package is in the
-\*\*early\*\* stages of development, and it will probably be subject to
+\*\* early\*\* stages of development, and it will probably be subject to
 changes. To install the latest version from github use:
 
 ``` r
@@ -50,7 +50,7 @@ changes. To install the latest version from github use:
 remotes::install_github("bnicenboim/pangoling")
 ```
 
-`install_py_pangoling()` function facilitates the installation of Python
+`install_py_pangoling` function facilitates the installation of Python
 packages needed for using pangoling within an R environment, using the
 `reticulate` package for managing Python environments. This needs to be
 done once.
@@ -155,7 +155,7 @@ Another R package that act as a wrapper for
 [`text`](https://r-text.org//) However, `text` is more general, and its
 focus is on Natural Language Processing and Machine Learning.
 
-1.  The logo of the package was created with [stable
+[^1]: The logo of the package was created with [stable
     diffusion](https://huggingface.co/spaces/stabilityai/stable-diffusion)
     and the R package
     [hexSticker](https://github.com/GuangchuangYu/hexSticker).

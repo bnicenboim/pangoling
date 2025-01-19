@@ -55,7 +55,6 @@ jobs:
             # ,"intel-openmp"
              ,"nomkl" # might be needed for Mac
             )
-
           library(reticulate)
           virtualenv_create("r-reticulate", Sys.which("python"))
           virtualenv_install("r-reticulate", python_packages)
@@ -64,7 +63,9 @@ jobs:
           writeLines(sprintf("RETICULATE_PYTHON=%s", path_to_python),
                      Sys.getenv("GITHUB_ENV"))
 
-
+         #mac weird error:
+         #Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized.
+         py_run_string("import os; os.environ['KMP_DUPLICATE_LIB_OK']='True'")
 
 
       - uses: r-lib/actions/check-r-package@v2
