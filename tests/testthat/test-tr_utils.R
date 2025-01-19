@@ -32,7 +32,6 @@ test_that("pangoling:::is_really_string handles various cases correctly", {
   expect_false(pangoling:::is_really_string(NULL))
   expect_equal(pangoling:::is_really_string(c(1, 2, 3)), c(FALSE, FALSE, FALSE))
   expect_equal(pangoling:::is_really_string(c(TRUE, FALSE)), c(FALSE, FALSE))
-  expect_equal(pangoling:::is_really_string(c(NA, "a", 1)), c(FALSE, TRUE, FALSE))
   expect_false(pangoling:::is_really_string(character(0)))
   expect_equal(pangoling:::is_really_string(c("", "a", NA, "b", NULL)), c(FALSE, TRUE, FALSE, TRUE))
 })

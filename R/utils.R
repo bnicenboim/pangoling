@@ -54,7 +54,7 @@
 #' }
 #' 
 #' @export
-install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"),
+install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"), 
                                  conda = "auto",
                                  version = "default", 
                                  envname = "r-pangoling", 
@@ -64,7 +64,7 @@ install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"),
                                  pip_ignore_installed = FALSE,
                                  new_env = identical(envname, "r-pangoling"),
                                  python_version = NULL
-                                 ){
+                                 ){ # nocov start
 
   method <- match.arg(method)
   
@@ -118,7 +118,7 @@ install_py_pangoling <- function(method = c("auto", "virtualenv", "conda"),
   
   invisible(NULL)
 
-}
+} # nocov end
 
 
 #' @noRd

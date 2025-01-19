@@ -1,9 +1,5 @@
 options(pangoling.verbose = FALSE)
 
-
-
-
-
 test_that("Deprecated functions issue warnings and return valid results", {
   skip_if_no_python_stuff()
   expect_warning(
@@ -33,7 +29,8 @@ test_that("Deprecated functions issue warnings and return valid results", {
   expect_true(is.numeric(result))  # Should return a numeric vector
   
   expect_warning(
-    result <- causal_tokens_lp_tbl(texts = "The apple doesn't fall far from the tree."),
+    result <- causal_tokens_lp_tbl(
+      texts = "The apple doesn't fall far from the tree."),
     "causal_tokens_pred_lst"
   )
   expect_true(is.data.frame(result))  # Should return a dataframe

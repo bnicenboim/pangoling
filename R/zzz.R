@@ -5,7 +5,7 @@ torch <- NULL
 .datatable.aware <- TRUE
 
 #' @noRd
-.onLoad <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) { # nocov start
 
   reticulate::use_virtualenv("r-pangoling", required = FALSE)
 
@@ -38,7 +38,7 @@ torch <- NULL
   utils::globalVariables(c("mask_n","pred"))
 
   invisible()
-}
+} # nocov end
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage(pkgname,

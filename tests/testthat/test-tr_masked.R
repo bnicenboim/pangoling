@@ -161,5 +161,5 @@ test_that("bert works in hebrew", {
                     ),
                     model = "onlplab/alephbert-base"
                   ))
-
+  expect_true(is.numeric(lw))
 })

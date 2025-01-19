@@ -45,23 +45,23 @@ masked_tokens_tbl <- function(masked_sentences,
     mask_pos <- which(masked_tensor$tolist()[[1]] == tkzr$mask_token_id)
     logits_masks <- outputs$logits[0][mask_pos - 1] # python starts in 0
     lp <- reticulate::py_to_r(
-      torch$log_softmax(logits_masks, dim = -1L)$tolist()
-    )
+                        torch$log_softmax(logits_masks, dim = -1L)$tolist()
+                      )
     if (length(mask_pos) <= 1) lp <- list(lp) # to keep it consistent
     # names(lp) <-  1:length(lp)
     if (length(mask_pos) == 0) {
       tidytable::tidytable(
-        masked_sentence = masked_sentence,
-        token = NA,
-        lp = NA,
-        mask_n = NA
-      )
+                   masked_sentence = masked_sentence,
+                   token = NA,
+                   lp = NA,
+                   mask_n = NA
+                 )
     } else {
       lp |> tidytable::map_dfr(~
                                  tidytable::tidytable(
-                                   masked_sentence = masked_sentence,
-                                   token = vocab, lp = .x
-                                 ) |>
+                                              masked_sentence = masked_sentence,
+                                              token = vocab, lp = .x
+                                            ) |>
                                  tidytable::arrange(-lp), .id = "mask_n")
     }
   }) |>
@@ -93,76 +93,14 @@ masked_lp <- function(l_contexts,
                       config_model = NULL,
                       config_tokenizer = NULL) {
   .Deprecated(new = "masked_targets_pred()")
-  stride <- 1
-  tkzr <- tokenizer(model,
-                    add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer
-                    )
-  trf <- lang_model(model,
-                    task = "masked",
-                    config_model = config_model
-                    )
-
-  message_verbose("Processing using masked model '", model, "'...")
-
-  target_tokens <- char_to_token(targets, tkzr)
-  masked_sentences <- tidytable::pmap_chr(
-    list(
-      l_contexts,
-      target_tokens,
-      r_contexts
-    ),
-    function(l, target, r) {
-      paste0(
-        l,
-        " ",
-        paste0(rep(tkzr$mask_token, length(target)), collapse = ""),
-        " ",
-        r
-      )
-    }
-  )
-
-  # named tensor list:
-  tensors_lst <- tidytable::map2(masked_sentences, targets, function(t, w) {
-    l <- create_tensor_lst(t,
-                           tkzr,
-                           add_special_tokens = add_special_tokens,
-                           stride = stride
-                           )
-    names(l) <- w
-    l
-  })
-
-  out <- tidytable::pmap(
-    list(targets, l_contexts, r_contexts, tensors_lst),
-    function(words, l, r, tensor_lst) {
-      # TODO: make it by batches
-      ls_mat <- masked_lp_mat(lapply(tensor_lst, function(t) t$input_ids),
-                              trf = trf,
-                              tkzr = tkzr,
-                              add_special_tokens = add_special_tokens,
-                              stride = stride
-                              )
-      text <- paste0(words, collapse = " ")
-      tokens <- char_to_token(text, tkzr)[[1]]
-      lapply(ls_mat, function(m) {
-        # m <- ls_mat[[1]]
-        message_verbose(l, " [", words, "] ", r)
-
-        word_lp(words,
-                mat = m,
-                sep = " ",
-                ignore_regex = ignore_regex,
-                model = model,
-                add_special_tokens = add_special_tokens,
-                config_tokenizer = config_tokenizer
-                )
-      })
-      # out_ <- lapply(1:length(out[[1]]), function(i) lapply(out, "[", i))
-    }
-  )
-  unlist(out, recursive = TRUE)
+  masked_targets_pred(prev_contexts = l_contexts,
+                      targets = targets,
+                      after_contexts = r_contexts, 
+                      ignore_regex = ignore_regex,
+                      model = model,
+                      add_special_tokens = add_special_tokens,
+                      config_model = config_model,
+                      config_tokenizer = config_tokenizer)
 }
 
 
@@ -251,7 +189,7 @@ causal_lp <- function(x,
                       ...) {
   .Deprecated(new = 
                 paste0("causal_targets_pred() supporting the l_context",
-                " argument or causal_words_pred() for the x and by arguments."))
+                       " argument or causal_words_pred() for the x and by arguments."))
   dots <- list(...)
   # Check for the deprecated .by argument
   if (!is.null(dots$.by)) {
@@ -265,88 +203,31 @@ causal_lp <- function(x,
       stop("Unknown arguments: ", paste(unknown_args, collapse = ", "), ".")
     }
   }
-
-  stride <- 1 # fixed for now
-  message_verbose("Processing using causal model '", 
-                  file.path(model, checkpoint), 
-                  "'...")
-  if(!is.null(l_contexts)){
-    if(all(!is.null(by))) message_verbose("Ignoring `by` argument")
-    x <- c(rbind(l_contexts, x))
-    by <- rep(seq_len(length(x)/2), each = 2)
-  }
-  word_by_word_texts <- split(x, by, drop = TRUE)
   
-  pasted_texts <- lapply(
-    word_by_word_texts,
-    function(word) paste0(word, collapse = " ")
-  )
-  tkzr <- tokenizer(model,
-                    add_special_tokens = add_special_tokens,
-                    config_tokenizer = config_tokenizer
-                    )
-  trf <- lang_model(model,
-                    checkpoint = checkpoint,
-                    task = "causal",
-                    config_model = config_model
-                    )
-  tensors <- create_tensor_lst(
-    texts = unname(pasted_texts),
-    tkzr = tkzr,
-    add_special_tokens = add_special_tokens,
-    stride = stride,
-    batch_size = batch_size
-  )
-
-  lmats <- lapply(tensors, function(tensor) {
-    causal_mat(tensor,
-               trf,
-               tkzr,
-               add_special_tokens = add_special_tokens,
-               stride = stride
-               )
-  }) |>
-    unlist(recursive = FALSE)
-  out <- tidytable::pmap(
-    list(
-      word_by_word_texts,
-      names(word_by_word_texts),
-      lmats
-    ),
-    function(words, item, mat) {
-      # words <- word_by_word_texts[[1]]
-      # item <- names(word_by_word_texts)[[1]]
-      # mat <- lmats[[1]]
-
-      message_verbose(
-        "Text id: ", item, "\n`",
-        paste(words, collapse = " "),
-        "`"
-      )
-      word_lp(words,
-              mat = mat,
-              sep = " ",
-              ignore_regex = ignore_regex,
-              model = model,
-              add_special_tokens = add_special_tokens,
-              config_tokenizer = config_tokenizer
-              )
-    }
-  )
-  if(!is.null(l_contexts)) {
-    # remove the contexts
-    keep <- c(FALSE, TRUE)
+  if(is.null(l_contexts)){
+    causal_words_pred(x = x,
+                      by = by,
+                      ignore_regex = ignore_regex,
+                      model = model,
+                      add_special_tokens = add_special_tokens,
+                      checkpoint = checkpoint,
+                      config_model = config_model,
+                      config_tokenizer = config_tokenizer,
+                      batch_size = batch_size,
+                      ...)
   } else {
-    keep <- TRUE
+    causal_targets_pred(targets = x,
+                        contexts = l_contexts,
+                        ignore_regex = ignore_regex,
+                        model = model,
+                        add_special_tokens = add_special_tokens,
+                        checkpoint = checkpoint,
+                        config_model = config_model,
+                        config_tokenizer = config_tokenizer,
+                        batch_size = batch_size,
+                        ...)
   }
-  # split(x, by) |> unsplit(by)
-  #   tidytable::map2_dfr(, ~ tidytable::tidytable(x = .x))
-  out <- out |> lapply(function(x) x[keep])
-  lps <- out |> unsplit(by[keep], drop = TRUE)
-
-  names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
-    unsplit(by[keep], drop = TRUE)
-  lps
+  
 }
 
 
@@ -400,7 +281,8 @@ causal_tokens_lp_tbl <- function(texts,
                trf,
                tkzr,
                add_special_tokens = add_special_tokens,
-               stride = stride
+               stride = stride, 
+               decode = FALSE
                )
   }) |>
     unlist(recursive = FALSE)
@@ -408,16 +290,16 @@ causal_tokens_lp_tbl <- function(texts,
   tidytable::map_dfr(ls_mat, function(mat) {
     if (ncol(mat) == 1 && colnames(mat) == "") {
       tidytable::tidytable(
-        token = "",
-        lp = NA_real_
-      )
+                   token = "",
+                   lp = NA_real_
+                 )
     } else {
       tidytable::tidytable(
-        token = colnames(mat),
-        lp = tidytable::map2_dbl(colnames(mat), 
-                                 seq_len(ncol(mat)),
-                                 ~ mat[.x, .y])
-      )
+                   token = colnames(mat),
+                   lp = tidytable::map2_dbl(colnames(mat),
+                                            seq_len(ncol(mat)),
+                                            ~ mat[.x, .y])
+                 )
     }
   }, .id = .id)
 }
@@ -486,16 +368,17 @@ causal_lp_mats <- function(x,
                                batch_size = batch_size
                                )
   lmat <- tidytable::map(
-    tensors,
-    function(tensor) {
-      causal_mat(tensor,
-                 trf,
-                 tkzr,
-                 add_special_tokens = add_special_tokens,
-                 stride = stride
-                 )
-    }
-  )
+                       tensors,
+                       function(tensor) {
+                         causal_mat(tensor,
+                                    trf,
+                                    tkzr,
+                                    add_special_tokens = add_special_tokens,
+                                    stride = stride,
+                                    decode = FALSE
+                                    )
+                       }
+                     )
   names(lmat) <- levels(as.factor(by))
   if(!sorted) lmat <- lmat[unique(as.factor(by))]
   lmat |>
@@ -504,6 +387,7 @@ causal_lp_mats <- function(x,
 
 
 #' deprecated aux function
+#' @noRd
 char_to_token <- function(x, tkzr = NULL) {
   tokenizer <- tkzr
   id <- get_id(x, tkzr = tokenizer)
@@ -511,6 +395,7 @@ char_to_token <- function(x, tkzr = NULL) {
 }
 
 #' deprecated aux function
+#' @noRd
 num_to_token <- function(x, tkzr) {
   tidytable::map_chr(as.integer(x), function(x) {
     tkzr$convert_ids_to_tokens(x)
