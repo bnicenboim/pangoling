@@ -203,16 +203,11 @@ causal_next_tokens_pred_tbl <-
 #' [online article](https://bruno.nicenboim.me/pangoling/articles/intro-gpt2.html)
 #' in pangoling website for more examples.
 #' 
-#' @param x A character vector of words, phrases, or texts to evaluate (for
-#'          `causal_words_pred()`).
-#' @param texts A vector or list of sentences or paragraphs (for
-#'              `causal_tokens_pred_lst()`).
-#' @param targets A character vector of target words or phrases (for 
-#'                `causal_targets_pred()`).
-#' @param contexts A character vector of contexts corresponding to each target 
-#'                 (for `causal_targets_pred()`).
-#' @param by A grouping variable indicating how texts are split into groups (for
-#'          `causal_words_pred()`).
+#' @param x A character vector of words, phrases, or texts to evaluate.
+#' @param texts A vector or list of sentences or paragraphs.
+#' @param targets A character vector of target words or phrases.
+#' @param contexts A character vector of contexts corresponding to each target.
+#' @param by A grouping variable indicating how texts are split into groups.
 #' @param sep A string specifying how words are separated within contexts or 
 #'            groups. Default is `" "`. For languages that don't have spaces 
 #'            between words (e.g., Chinese), set `sep = ""`.
