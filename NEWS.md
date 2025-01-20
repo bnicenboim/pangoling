@@ -67,7 +67,7 @@ via the `decode` parameter.
 - Updated `install_py_pangoling()` to enhance Python environment handling.
 - Added `perplexity_calc()` for computing perplexity from probabilities.
 
-### Deprecations:
+## Deprecations:
 - Deprecated `causal_next_tokens_tbl()`, `causal_lp()`, 
 `causal_tokens_lp_tbl()`, and `causal_lp_mats()`. Use 
 `causal_next_tokens_pred_tbl()`, `causal_targets_pred()`, 
