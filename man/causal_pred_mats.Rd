@@ -21,11 +21,9 @@ causal_pred_mats(
 )
 }
 \arguments{
-\item{x}{A character vector of words, phrases, or texts to evaluate (for
-\code{causal_words_pred()}).}
+\item{x}{A character vector of words, phrases, or texts to evaluate.}
 
-\item{by}{A grouping variable indicating how texts are split into groups (for
-\code{causal_words_pred()}).}
+\item{by}{A grouping variable indicating how texts are split into groups.}
 
 \item{sep}{A string specifying how words are separated within contexts or
 groups. Default is \code{" "}. For languages that don't have spaces
@@ -121,6 +119,8 @@ In case of errors when a new model is run, check the status of
 }
 
 \examples{
+data("df_sent")
+df_sent
 list_of_mats <- causal_pred_mats(
                        x = df_sent$word,
                        by = df_sent$sent_n,  

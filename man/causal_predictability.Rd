@@ -48,11 +48,9 @@ causal_targets_pred(
 )
 }
 \arguments{
-\item{x}{A character vector of words, phrases, or texts to evaluate (for
-\code{causal_words_pred()}).}
+\item{x}{A character vector of words, phrases, or texts to evaluate.}
 
-\item{by}{A grouping variable indicating how texts are split into groups (for
-\code{causal_words_pred()}).}
+\item{by}{A grouping variable indicating how texts are split into groups.}
 
 \item{sep}{A string specifying how words are separated within contexts or
 groups. Default is \code{" "}. For languages that don't have spaces
@@ -92,14 +90,11 @@ processing but take more memory.}
 
 \item{...}{Currently not in use.}
 
-\item{texts}{A vector or list of sentences or paragraphs (for
-\code{causal_tokens_pred_lst()}).}
+\item{texts}{A vector or list of sentences or paragraphs.}
 
-\item{targets}{A character vector of target words or phrases (for
-\code{causal_targets_pred()}).}
+\item{targets}{A character vector of target words or phrases.}
 
-\item{contexts}{A character vector of contexts corresponding to each target
-(for \code{causal_targets_pred()}).}
+\item{contexts}{A character vector of contexts corresponding to each target.}
 }
 \value{
 For \code{causal_targets_pred()} and \code{causal_words_pred()},
@@ -113,8 +108,8 @@ using a causal transformer model.
 }
 \details{
 These functions calculate the predictability (by default the natural
-logarithm of the word probability) of words, phrases or tokens using a causal
-transformer model:
+logarithm of the word probability) of words, phrases or tokens using a
+causal transformer model:
 \itemize{
 \item \strong{\code{causal_targets_pred()}}: Evaluates specific target words or phrases
 based on their given contexts. Use when you have explicit
