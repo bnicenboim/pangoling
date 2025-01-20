@@ -76,13 +76,11 @@ context, as evaluated by a causal transformer model.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A character vector of words, phrases, or texts to evaluate (for
-<code><a href="causal_predictability.html">causal_words_pred()</a></code>).</p></dd>
+<dd><p>A character vector of words, phrases, or texts to evaluate.</p></dd>
 
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
-<dd><p>A grouping variable indicating how texts are split into groups (for
-<code><a href="causal_predictability.html">causal_words_pred()</a></code>).</p></dd>
+<dd><p>A grouping variable indicating how texts are split into groups.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
@@ -198,7 +196,27 @@ for details.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">list_of_mats</span> <span class="op">&lt;-</span> <span class="fu">causal_pred_mats</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"df_sent"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df_sent</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tidytable: 15 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    sent_n word   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 The    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 apple  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1 doesn't</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 fall   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 far    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 from   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 the    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 tree.  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      2 Don't  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      2 judge  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span>      2 a      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span>      2 book   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span>      2 by     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span>      2 its    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span>      2 cover. </span>
+<span class="r-in"><span><span class="va">list_of_mats</span> <span class="op">&lt;-</span> <span class="fu">causal_pred_mats</span><span class="op">(</span></span></span>
 <span class="r-in"><span>                       x <span class="op">=</span> <span class="va">df_sent</span><span class="op">$</span><span class="va">word</span>,</span></span>
 <span class="r-in"><span>                       by <span class="op">=</span> <span class="va">df_sent</span><span class="op">$</span><span class="va">sent_n</span>,  </span></span>
 <span class="r-in"><span>                       model <span class="op">=</span> <span class="st">"gpt2"</span></span></span>

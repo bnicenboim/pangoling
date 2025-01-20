@@ -95,13 +95,11 @@ using a causal transformer model.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A character vector of words, phrases, or texts to evaluate (for
-<code>causal_words_pred()</code>).</p></dd>
+<dd><p>A character vector of words, phrases, or texts to evaluate.</p></dd>
 
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
-<dd><p>A grouping variable indicating how texts are split into groups (for
-<code>causal_words_pred()</code>).</p></dd>
+<dd><p>A grouping variable indicating how texts are split into groups.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
@@ -163,18 +161,15 @@ processing but take more memory.</p></dd>
 
 
 <dt id="arg-texts">texts<a class="anchor" aria-label="anchor" href="#arg-texts"></a></dt>
-<dd><p>A vector or list of sentences or paragraphs (for
-<code>causal_tokens_pred_lst()</code>).</p></dd>
+<dd><p>A vector or list of sentences or paragraphs.</p></dd>
 
 
 <dt id="arg-targets">targets<a class="anchor" aria-label="anchor" href="#arg-targets"></a></dt>
-<dd><p>A character vector of target words or phrases (for
-<code>causal_targets_pred()</code>).</p></dd>
+<dd><p>A character vector of target words or phrases.</p></dd>
 
 
 <dt id="arg-contexts">contexts<a class="anchor" aria-label="anchor" href="#arg-contexts"></a></dt>
-<dd><p>A character vector of contexts corresponding to each target
-(for <code>causal_targets_pred()</code>).</p></dd>
+<dd><p>A character vector of contexts corresponding to each target.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -187,8 +182,8 @@ each sentence or group.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>These functions calculate the predictability (by default the natural
-logarithm of the word probability) of words, phrases or tokens using a causal
-transformer model:</p><ul><li><p><strong><code>causal_targets_pred()</code></strong>: Evaluates specific target words or phrases
+logarithm of the word probability) of words, phrases or tokens using a
+causal transformer model:</p><ul><li><p><strong><code>causal_targets_pred()</code></strong>: Evaluates specific target words or phrases
 based on their given contexts. Use when you have explicit
 context-target pairs to evaluate, with each target word or phrase paired
 with a single preceding context.</p></li>
