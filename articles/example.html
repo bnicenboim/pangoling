@@ -341,7 +341,7 @@ spaces.</li>
 <span><span class="co">#&gt; `縣長候選人質疑了那位昨天作家採訪了兩個小時的記者而且揚言報復。`</span></span>
 <span><span class="co">#&gt; ***</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 21.844 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 22.605 sec elapsed</span></span></code></pre></div>
 <p>Inspect the calculated surprisal values:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_stim</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
@@ -405,7 +405,7 @@ Bayesian Data Analysis for Cognitive Science</em></a>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://paulbuerkner.com/brms/reference/posterior_summary.html" class="external-link">posterior_summary</a></span><span class="op">(</span><span class="va">fit_surp</span>, variable <span class="op">=</span> <span class="st">"b_surprisal"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                Estimate   Est.Error        Q2.5       Q97.5</span></span>
-<span><span class="co">#&gt; b_surprisal 0.007125563 0.001166711 0.004827602 0.009443966</span></span></code></pre></div>
+<span><span class="co">#&gt; b_surprisal 0.007102503 0.001138611 0.004859484 0.009319012</span></span></code></pre></div>
 <p>The conditional effects of surprisal on the original millisecond
 scale can be plotted as well:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">

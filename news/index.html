@@ -90,12 +90,35 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9010" id="pangoling-0009010">pangoling 0.0.0.9010<a class="anchor" aria-label="anchor" href="#pangoling-0009010"></a></h2>
-<ul><li>New function names.</li>
-<li>Added <code>sep</code> argument to support for languages without space between words (e.g. Chinese).</li>
-<li>New <code>log.p</code> argument to indicate how the predictability is calculated.</li>
-<li>Better checks for valid input.</li>
-<li>Argument <code>decode</code> deals with encoding problems of the tokens with special characters.</li>
+<div class="section level3">
+<h3 id="new-features-0-0-0-9010">New Features:<a class="anchor" aria-label="anchor" href="#new-features-0-0-0-9010"></a></h3>
+<ul><li>Added <code>checkpoint</code> parameter to <code><a href="../reference/causal_preload.html">causal_preload()</a></code> and <code><a href="../reference/masked_preload.html">masked_preload()</a></code> to allow loading models from checkpoints.</li>
+<li>Introduced <code><a href="../reference/causal_next_tokens_pred_tbl.html">causal_next_tokens_pred_tbl()</a></code>, which replaces <code><a href="../reference/pangoling-deprecated.html">causal_next_tokens_tbl()</a></code> and provides improved predictability calculations.</li>
+<li>Added <code><a href="../reference/causal_predictability.html">causal_words_pred()</a></code>, <code><a href="../reference/causal_predictability.html">causal_targets_pred()</a></code>, and <code><a href="../reference/causal_predictability.html">causal_tokens_pred_lst()</a></code> to compute predictability for words, phrases, or tokens, replacing <code><a href="../reference/pangoling-deprecated.html">causal_lp()</a></code> and <code><a href="../reference/pangoling-deprecated.html">causal_tokens_lp_tbl()</a></code>.</li>
+<li>Introduced <code><a href="../reference/masked_tokens_pred_tbl.html">masked_tokens_pred_tbl()</a></code>, replacing <code><a href="../reference/pangoling-deprecated.html">masked_tokens_tbl()</a></code>, for retrieving possible tokens and their log probabilities.</li>
+<li>Introduced <code><a href="../reference/masked_targets_pred.html">masked_targets_pred()</a></code>, replacing <code><a href="../reference/pangoling-deprecated.html">masked_lp()</a></code>, for calculating predictability based on left and right context.</li>
+<li>Introduced <code><a href="../reference/transformer_vocab.html">transformer_vocab()</a></code> with an optional <code>decode</code> parameter to return decoded tokenized words.</li>
+<li>
+<strong>New dataset <code>df_jaeger14</code></strong>: Self-paced reading data on Chinese relative clauses.</li>
+<li>
+<strong>New dataset <code>df_sent</code></strong>: Example dataset with two word-by-word tokenized sentences.</li>
+<li>
+<strong>New vignette</strong>: Added a worked-out example of a causal model.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="enhancements-0-0-0-9010">Enhancements:<a class="anchor" aria-label="anchor" href="#enhancements-0-0-0-9010"></a></h3>
+<ul><li>Added <code>sep</code> argument in <code><a href="../reference/causal_predictability.html">causal_words_pred()</a></code> to support languages without spaces between words (e.g., Chinese).</li>
+<li>New <code>log.p</code> argument across multiple functions to specify how predictability is calculated (e.g., log base <em>e</em>, log base 2 for bits, or raw probabilities).</li>
+<li>Improved tokenization utilities: <code><a href="../reference/tokenize_lst.html">tokenize_lst()</a></code> now supports decoded outputs via the <code>decode</code> parameter.</li>
+<li>Updated <code><a href="../reference/install_py_pangoling.html">install_py_pangoling()</a></code> to enhance Python environment handling.</li>
+<li>Added <code><a href="../reference/perplexity_calc.html">perplexity_calc()</a></code> for computing perplexity from probabilities.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecations-0-0-0-9010">Deprecations:<a class="anchor" aria-label="anchor" href="#deprecations-0-0-0-9010"></a></h3>
+<ul><li>Deprecated <code><a href="../reference/pangoling-deprecated.html">causal_next_tokens_tbl()</a></code>, <code><a href="../reference/pangoling-deprecated.html">causal_lp()</a></code>, <code><a href="../reference/pangoling-deprecated.html">causal_tokens_lp_tbl()</a></code>, and <code><a href="../reference/pangoling-deprecated.html">causal_lp_mats()</a></code>. Use <code><a href="../reference/causal_next_tokens_pred_tbl.html">causal_next_tokens_pred_tbl()</a></code>, <code><a href="../reference/causal_predictability.html">causal_targets_pred()</a></code>, <code><a href="../reference/causal_predictability.html">causal_words_pred()</a></code>, and <code><a href="../reference/causal_pred_mats.html">causal_pred_mats()</a></code> instead.</li>
+<li>Deprecated <code><a href="../reference/pangoling-deprecated.html">masked_tokens_tbl()</a></code> and <code><a href="../reference/pangoling-deprecated.html">masked_lp()</a></code>. Use <code><a href="../reference/masked_tokens_pred_tbl.html">masked_tokens_pred_tbl()</a></code> and <code><a href="../reference/masked_targets_pred.html">masked_targets_pred()</a></code> instead.</li>
+</ul></div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
