@@ -6,7 +6,10 @@ torch <- NULL
 
 #' @noRd
 .onLoad <- function(libname, pkgname) { # nocov start
-
+  if (is_mac()) {
+    # Workaround for R's built-in OpenMP conflicts
+    Sys.setenv(KMP_DUPLICATE_LIB_OK = 'TRUE')
+  }
   reticulate::use_virtualenv("r-pangoling", required = FALSE)
 
   # use superassignment to update global reference
@@ -51,4 +54,8 @@ torch <- NULL
                         "time they are used.\n",
                         "For changing the cache folder use:\n",
                         "set_cache_folder(my_new_path)")
+}
+
+is_mac <- function(){
+  grepl("darwin", R.Version()$platform)
 }
