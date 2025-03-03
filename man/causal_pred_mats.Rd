@@ -62,8 +62,10 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
 
-\item{batch_size}{Maximum size of the batch. Larger batches speed up
-processing but take more memory.}
+\item{batch_size}{Maximum number of sentences/texts processed in parallel.
+Larger batches increase speed but use more memory. Since
+all texts in a batch must have the same length, shorter
+ones are padded with placeholder tokens.}
 
 \item{...}{Currently not in use.}
 }

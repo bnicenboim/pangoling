@@ -133,6 +133,55 @@ test_that("gpt2 get prob work", {
 
 })
 
+test_that("word_n works",{
+  df_sent$word_n <- seq_len(nrow(df_sent)) 
+  lp <- causal_words_pred(df_sent$word,
+                          by = df_sent$sent_n)
+  lp_a <- causal_words_pred(df_sent$word,
+                            word_n = df_sent$word_n,
+                            by = df_sent$sent_n)
+  
+  expect_equal(lp, lp_a)
+  df_sent_2 <- df_sent |> 
+    tidytable::mutate(word_n= 1:n(), .by = sent_n) 
+  lp_2 <- causal_words_pred(df_sent_2$word,
+                            word_n =df_sent_2$word_n,
+                            by = df_sent_2$sent_n)
+  expect_equal(lp, lp_2)
+  df_sent_3 <- df_sent |> 
+    tidytable::mutate(sent_n = ifelse(sent_n == 1,2,1)) |>
+    tidytable::mutate(word_n= 1:n(), .by = sent_n) 
+  lp_3 <- causal_words_pred(df_sent_3$word,
+                            by = df_sent_3$sent_n)
+  expect_equal(lp, lp_3)
+  lp_3b <- causal_words_pred(df_sent_3$word,
+                            word_n = df_sent_3$word_n,
+                            by = df_sent_3$sent_n)
+  expect_equal(lp, lp_3b)
+  df_sent_4 <- df_sent_3 |> 
+    tidytable::mutate(word_n= 1:n() + sent_n*10) 
+  lp_4 <- causal_words_pred(df_sent_4$word,
+                             word_n = df_sent_4$word_n,
+                             by = df_sent_4$sent_n)
+  expect_equal(lp, lp_4)
+  df_sent_5 <- df_sent_4
+  df_sent_5$sent_n <- factor(df_sent_5$sent_n, levels = c(0,1,2,3))
+  lp_5 <- causal_words_pred(df_sent_5$word,
+                            word_n = df_sent_5$word_n,
+                            by = df_sent_5$sent_n)
+  expect_equal(lp, lp_5)
+  
+  df_sent_randomized <- df_sent[sample(nrow(df_sent)), ]
+  lp_rnd <- causal_words_pred(x = df_sent_randomized$word,
+                                 word_n = df_sent_randomized$word_n,
+                                 by = df_sent_randomized$sent_n)
+  
+  expect_equal(lp, 
+               lp_rnd[order(df_sent_randomized$word_n)])
+  
+  
+  
+})
 test_that("batches work", {
   skip_if_no_python_stuff()
   texts <- rep(c("This is not it.", "This is it."), 5)

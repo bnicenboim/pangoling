@@ -167,8 +167,11 @@ causal_next_tokens_pred_tbl <-
                      " Some words will have NA predictability."))
       lp <- c(lp, rep(NA, diff_words))
     } else if(diff_words < 0) {
-      stop2("Tokenizer's vocabulary is smaller than the model's.")
-    }
+      message_verbose("Tokenizer's vocabulary is smaller than the model's.", 
+                      " The model might reserve extra embeddings for padding, dynamic additions,",
+                      " or GPU efficiency.")
+      vocab <- c(vocab, rep("", -diff_words))
+      }
     tidytable::tidytable(token = vocab,
                          pred = lp |> ln_p_change(log.p = log.p)) |>
       tidytable::arrange(-pred)
@@ -204,6 +207,7 @@ causal_next_tokens_pred_tbl <-
 #' in pangoling website for more examples.
 #' 
 #' @param x A character vector of words, phrases, or texts to evaluate.
+#' @param word_n Word order, by default this is the word order of the vector x.
 #' @param texts A vector or list of sentences or paragraphs.
 #' @param targets A character vector of target words or phrases.
 #' @param contexts A character vector of contexts corresponding to each target.
@@ -221,8 +225,10 @@ causal_next_tokens_pred_tbl <-
 #' @param ignore_regex Can ignore certain characters when calculating the log
 #'                      probabilities. For example `^[[:punct:]]$` will ignore
 #'                      all punctuation  that stands alone in a token.
-#' @param batch_size Maximum size of the batch. Larger batches speed up
-#'                   processing but take more memory.
+#' @param batch_size Maximum number of sentences/texts processed in parallel. 
+#'                   Larger batches increase speed but use more memory. Since 
+#'                   all texts in a batch must have the same length, shorter 
+#'                   ones are padded with placeholder tokens.
 #' @inheritParams causal_preload
 #' @inheritSection causal_preload More details about causal models
 #' @param ... Currently not in use.
@@ -265,6 +271,7 @@ causal_next_tokens_pred_tbl <-
 #' @rdname causal_predictability
 causal_words_pred <- function(x,
                               by = rep(1, length(x)),
+                              word_n = NULL,
                               sep = " ",
                               log.p = getOption("pangoling.log.p"),
                               ignore_regex = "",
@@ -289,7 +296,12 @@ causal_words_pred <- function(x,
   if (length(x) != length(by)) {
     stop2("The argument `by` has an incorrect length.")
   }
-
+  if(is.null(word_n)){
+    word_n <- stats::ave(seq_along(by), by, FUN = seq_along)
+  }
+  if (length(word_n) != length(by)) {
+    stop2("The argument `word_n` has an incorrect length.")
+  }
   if(any(x != trimws(x)) & sep == " ") {
     message_verbose(paste0("Notice that some words have white spaces,",
                            ' argument `sep` should probably set to "".'))
@@ -297,10 +309,12 @@ causal_words_pred <- function(x,
   
   stride <- 1 # fixed for now
   message_verbose_model(model, checkpoint = checkpoint)
-
+  
   word_by_word_texts <- split(x, by, drop = TRUE)
-
-
+  
+  word_n_by <- split(word_n, by, drop = TRUE)
+  word_by_word_texts <- tidytable::map2(word_by_word_texts, word_n_by, ~ .x[order(.y)])
+  
   pasted_texts <- conc_words(word_by_word_texts, sep = sep)
   tkzr <- tokenizer(model,
                     add_special_tokens = add_special_tokens,
@@ -319,8 +333,8 @@ causal_words_pred <- function(x,
 
   lmats <- lapply(tensors, function(tensor) {
     causal_mat(tensor,
-               trf,
-               tkzr,
+               trf = trf,
+               tkzr = tkzr,
                add_special_tokens = add_special_tokens,
                decode = FALSE,
                stride = stride)
@@ -354,9 +368,13 @@ causal_words_pred <- function(x,
                     )
 
   message_verbose("***\n")
-  lps <- out |> unsplit(by, drop = TRUE)
-  names(lps) <- out |> lapply(function(x) paste0(names(x),"")) |>
-    unsplit(by, drop = TRUE)
+  
+  out_reordered <- tidytable::map2(out, word_n_by, 
+                                   ~ .x[as.integer(as.factor(.y))])
+  lps <- out_reordered |> unsplit(by, drop = TRUE)
+    names(lps) <- x 
+  # out |> lapply(function(x) paste0(names(x),"")) |>
+  #   unsplit(by, drop = TRUE)
   lps |> ln_p_change(log.p = log.p)
 }
 
@@ -471,7 +489,9 @@ causal_mat <- function(tensor,
     if(diff_words > 0) {
       warning("Tokenizer's vocabulary is larger than the model's.")
     } else if(diff_words < 0) {
-      stop2("Tokenizer's vocabulary is smaller than the model's.")
+      message_verbose("Tokenizer's vocabulary is smaller than the model's.", 
+      " The model might reserve extra embeddings for padding, dynamic additions,",
+      " or GPU efficiency.")
     }
     rownames(mat) <- vocab[seq_len(nrow(mat))]
     colnames(mat) <- unlist(tokens)
