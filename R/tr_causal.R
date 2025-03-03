@@ -294,7 +294,7 @@ causal_words_pred <- function(x,
     stop2("The argument `by` has an incorrect length.")
   }
   if(is.null(word_n)){
-    word_n <- ave(seq_along(by), by, FUN = seq_along)
+    word_n <- stats::ave(seq_along(by), by, FUN = seq_along)
   }
   if (length(word_n) != length(by)) {
     stop2("The argument `word_n` has an incorrect length.")
