@@ -167,8 +167,11 @@ causal_next_tokens_pred_tbl <-
                      " Some words will have NA predictability."))
       lp <- c(lp, rep(NA, diff_words))
     } else if(diff_words < 0) {
-      stop2("Tokenizer's vocabulary is smaller than the model's.")
-    }
+      message_verbose("Tokenizer's vocabulary is smaller than the model's.", 
+                      " The model might reserve extra embeddings for padding, dynamic additions,",
+                      " or GPU efficiency.")
+      vocab <- c(vocab, rep("", -diff_words))
+      }
     tidytable::tidytable(token = vocab,
                          pred = lp |> ln_p_change(log.p = log.p)) |>
       tidytable::arrange(-pred)
@@ -330,8 +333,8 @@ causal_words_pred <- function(x,
 
   lmats <- lapply(tensors, function(tensor) {
     causal_mat(tensor,
-               trf,
-               tkzr,
+               trf = trf,
+               tkzr = tkzr,
                add_special_tokens = add_special_tokens,
                decode = FALSE,
                stride = stride)
@@ -486,7 +489,9 @@ causal_mat <- function(tensor,
     if(diff_words > 0) {
       warning("Tokenizer's vocabulary is larger than the model's.")
     } else if(diff_words < 0) {
-      stop2("Tokenizer's vocabulary is smaller than the model's.")
+      message_verbose("Tokenizer's vocabulary is smaller than the model's.", 
+      " The model might reserve extra embeddings for padding, dynamic additions,",
+      " or GPU efficiency.")
     }
     rownames(mat) <- vocab[seq_len(nrow(mat))]
     colnames(mat) <- unlist(tokens)

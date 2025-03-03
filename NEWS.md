@@ -79,3 +79,4 @@ via the `decode` parameter.
 # pangoling 0.0.0.9011
 
 - Added `word_n` argument in `causal_words_pred()` to indicate word order of teh texts.
+- Allows for models with larger vocabulary than tokenizer.
