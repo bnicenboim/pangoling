@@ -9,6 +9,7 @@
 causal_words_pred(
   x,
   by = rep(1, length(x)),
+  word_n = NULL,
   sep = " ",
   log.p = getOption("pangoling.log.p"),
   ignore_regex = "",
@@ -52,6 +53,8 @@ causal_targets_pred(
 
 \item{by}{A grouping variable indicating how texts are split into groups.}
 
+\item{word_n}{Word order, by default this is the word order of the vector x.}
+
 \item{sep}{A string specifying how words are separated within contexts or
 groups. Default is \code{" "}. For languages that don't have spaces
 between words (e.g., Chinese), set \code{sep = ""}.}
@@ -85,8 +88,10 @@ model from Hugging Face is accessed.}
 \item{config_tokenizer}{List with other arguments that control how the
 tokenizer from Hugging Face is accessed.}
 
-\item{batch_size}{Maximum size of the batch. Larger batches speed up
-processing but take more memory.}
+\item{batch_size}{Maximum number of sentences/texts processed in parallel.
+Larger batches increase speed but use more memory. Since
+all texts in a batch must have the same length, shorter
+ones are padded with placeholder tokens.}
 
 \item{...}{Currently not in use.}
 
