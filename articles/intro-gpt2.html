@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,7 @@ from the”.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 4.31 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 4.54 sec elapsed</span></span></code></pre></div>
 <p>(The pretrained models and tokenizers will be downloaded from <a href="https://huggingface.co/" class="external-link uri">https://huggingface.co/</a>
 the first time they are used.)</p>
 <p>The most likely continuation is “tree”, which makes sense. The first
@@ -156,7 +156,7 @@ the same session are much faster. We can also preload a model with
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Ġtop    -<span style="color: #BB0000;">5.36</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.23 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.156 sec elapsed</span></span></code></pre></div>
 <p>Notice that the tokens–that is, the way GPT-2 interprets words– that
 are predicted start with <code>Ġ</code>, this indicates that they are
 not the first word of a sentence.</p>
@@ -211,7 +211,7 @@ notice that the predictions are quite bad.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ĠRh           -<span style="color: #BB0000;">10.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50,247 more rows</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 0.087 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.09 sec elapsed</span></span></code></pre></div>
 <p>All in all, the package <code>pangoling</code> would be most useful
 in the following situation. (And see also the <a href="example.html">worked-out example vignette</a>.)</p>
 <p>Given a (toy) dataset where sentences are organized with one word or

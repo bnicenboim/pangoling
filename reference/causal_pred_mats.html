@@ -13,7 +13,7 @@ context, as evaluated by a causal transformer model."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -139,8 +139,10 @@ tokenizer from Hugging Face is accessed.</p></dd>
 
 
 <dt id="arg-batch-size">batch_size<a class="anchor" aria-label="anchor" href="#arg-batch-size"></a></dt>
-<dd><p>Maximum size of the batch. Larger batches speed up
-processing but take more memory.</p></dd>
+<dd><p>Maximum number of sentences/texts processed in parallel.
+Larger batches increase speed but use more memory. Since
+all texts in a batch must have the same length, shorter
+ones are padded with placeholder tokens.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

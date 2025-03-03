@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -341,7 +341,7 @@ spaces.</li>
 <span><span class="co">#&gt; `縣長候選人質疑了那位昨天作家採訪了兩個小時的記者而且揚言報復。`</span></span>
 <span><span class="co">#&gt; ***</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 20.791 sec elapsed</span></span></code></pre></div>
+<span><span class="co">#&gt; 22.741 sec elapsed</span></span></code></pre></div>
 <p>Inspect the calculated surprisal values:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_stim</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
@@ -404,8 +404,8 @@ Bayesian Data Analysis for Cognitive Science</em></a>.</p>
 <p>The effect of surprisal (in bits) on log-RT is summarized below:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://paulbuerkner.com/brms/reference/posterior_summary.html" class="external-link">posterior_summary</a></span><span class="op">(</span><span class="va">fit_surp</span>, variable <span class="op">=</span> <span class="st">"b_surprisal"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                Estimate   Est.Error        Q2.5      Q97.5</span></span>
-<span><span class="co">#&gt; b_surprisal 0.007105797 0.001171488 0.004726614 0.00939844</span></span></code></pre></div>
+<span><span class="co">#&gt;                Estimate   Est.Error        Q2.5       Q97.5</span></span>
+<span><span class="co">#&gt; b_surprisal 0.007087394 0.001157347 0.004751983 0.009353576</span></span></code></pre></div>
 <p>The conditional effects of surprisal on the original millisecond
 scale can be plotted as well:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">

@@ -9,7 +9,7 @@ using a causal transformer model."><meta property="og:image" content="http://bru
 
     <a class="navbar-brand me-2" href="../index.html">pangoling</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@ using a causal transformer model.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">causal_words_pred</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  word_n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sep <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  log.p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"pangoling.log.p"</span><span class="op">)</span>,</span>
 <span>  ignore_regex <span class="op">=</span> <span class="st">""</span>,</span>
@@ -100,6 +101,10 @@ using a causal transformer model.</p>
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p>A grouping variable indicating how texts are split into groups.</p></dd>
+
+
+<dt id="arg-word-n">word_n<a class="anchor" aria-label="anchor" href="#arg-word-n"></a></dt>
+<dd><p>Word order, by default this is the word order of the vector x.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
@@ -152,8 +157,10 @@ tokenizer from Hugging Face is accessed.</p></dd>
 
 
 <dt id="arg-batch-size">batch_size<a class="anchor" aria-label="anchor" href="#arg-batch-size"></a></dt>
-<dd><p>Maximum size of the batch. Larger batches speed up
-processing but take more memory.</p></dd>
+<dd><p>Maximum number of sentences/texts processed in parallel.
+Larger batches increase speed but use more memory. Since
+all texts in a batch must have the same length, shorter
+ones are padded with placeholder tokens.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
